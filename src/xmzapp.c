@@ -23,8 +23,24 @@ xmz_app_init (XMZApp *app)
 static void
 xmz_app_activate (GApplication *app)
 {
+    GdkGeometry hints;
+
+    hints.base_width = 1024;
+        hints.base_height = 600;
+        hints.min_width = 1024;
+        hints.min_height = 600;
+        hints.max_width = 1024;
+        hints.max_height = 600;
+
     XMZAppWindow *win;
     win = xmz_app_window_new (XMZ_APP (app));
+    gtk_window_set_geometry_hints (GTK_WINDOW (win),
+                                    GTK_WIDGET (win),
+                                    &hints,
+                                    GDK_HINT_RESIZE_INC |
+                                    GDK_HINT_MIN_SIZE |
+                                    GDK_HINT_BASE_SIZE |
+                                    GDK_HINT_MAX_SIZE);
 
     gtk_window_present (GTK_WINDOW (win));
 }
