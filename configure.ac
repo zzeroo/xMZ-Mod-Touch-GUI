@@ -12,8 +12,8 @@ AC_PROG_CC
 
 # Checks for libraries.
 AM_PATH_GTK_3_0
-PKG_CHECK_MODULES([GLIB], [glib-2.0 > 2.19.0])
-AC_SUBST(GLIB_CFLAGS)
+#PKG_CHECK_MODULES([GLIB], [glib-2.0 > 2.19.0])
+#AC_SUBST(GLIB_CFLAGS)
 
 # Checks for header files.
 
