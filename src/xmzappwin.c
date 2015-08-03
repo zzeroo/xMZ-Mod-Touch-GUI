@@ -16,13 +16,16 @@ struct _XMZAppWindowClass
 G_DEFINE_TYPE(XMZAppWindow, xmz_app_window, GTK_TYPE_APPLICATION_WINDOW);
 
 static void
-xmz_app_window_init (XMZAppWindow *app)
+xmz_app_window_init (XMZAppWindow *win)
 {
+    gtk_widget_init_template (GTK_WIDGET (win));
 }
 
 static void
 xmz_app_window_class_init (XMZAppWindowClass *class)
 {
+    gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class),
+                                                "/com/gaswarnanlagen/xmz_mod_touch/window.ui");
 }
 
 XMZAppWindow *
