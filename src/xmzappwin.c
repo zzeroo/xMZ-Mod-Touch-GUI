@@ -6,12 +6,12 @@
 struct _XMZAppWindow
 {
     GtkApplicationWindow parent;
-}
+};
 
 struct _XMZAppWindowClass
 {
     GtkApplicationWindowClass parent_class;
-}
+};
 
 G_DEFINE_TYPE(XMZAppWindow, xmz_app_window, GTK_TYPE_APPLICATION_WINDOW);
 
@@ -26,7 +26,7 @@ xmz_app_window_class_init (XMZAppWindowClass *class)
 }
 
 XMZAppWindow *
-xmz_app_window_new (XMZAppWindowClass *class)
+xmz_app_window_new (XMZApp *app)
 {
     return g_object_new (XMZ_APP_WINDOW_TYPE, "application", app, NULL);
 }
