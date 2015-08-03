@@ -1,0 +1,5 @@
+bin_PROGRAM=xmz
+xmz_SOURCES=main.c
+
+AM_CPPFLAGS = @GTK_CFLAGS@
+LDADD = @GTK_LIBS@
