@@ -5,7 +5,7 @@
 
 
 #define XMZ_APP_TYPE (xmz_app_get_type ())
-#define XMZ_APP (obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), XMZ_APP_TYPE, XMZApp))
+#define XMZ_APP(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), XMZ_APP_TYPE, XMZApp))
 
 
 typedef struct _XMZApp        XMZApp;

@@ -6,12 +6,12 @@
 struct _XMZApp
 {
     GtkApplication parent;
-}
+};
 
 struct _XMZAppClass
 {
     GtkApplicationClass parent_class;
-}
+};
 
 G_DEFINE_TYPE(XMZApp, xmz_app, GTK_TYPE_APPLICATION);
 
