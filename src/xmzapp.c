@@ -24,8 +24,8 @@ static void
 xmz_app_activate (GApplication *app)
 {
     XMZAppWindow *win;
-
     win = xmz_app_window_new (XMZ_APP (app));
+
     gtk_window_present (GTK_WINDOW (win));
 }
 
