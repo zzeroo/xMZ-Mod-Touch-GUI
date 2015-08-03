@@ -2,9 +2,9 @@
 Version=1.0
 Type=Application
 Name=xMZ-Mod-Touch
-Exec=xmz
+Exec=xmz_mod_touch
 Comment=xMZ-Mod-Touch xMesszentrale mit Modbus Interface und Touchscreen
-Icon=xmz
+Icon=xmz_mod_touch
 Terminal=false
 Categories=Utility;Viewer;GTK;
 
