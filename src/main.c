@@ -1,4 +1,4 @@
-#include <gtk/gkt.h>
+#include <gtk/gtk.h>
 
 #include "xmzapp.h"
 
