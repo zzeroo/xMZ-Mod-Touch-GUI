@@ -1,4 +1,4 @@
-bin_PROGRAM=xmz
+bin_PROGRAMS=xmz
 xmz_SOURCES=main.c
 
 AM_CPPFLAGS = @GTK_CFLAGS@
