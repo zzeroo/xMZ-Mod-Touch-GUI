@@ -1,8 +1,8 @@
 ### INITIALIZATION #############################################################
 # In this section we do preparations for initializing our build system.
 
-AC_INIT([App Skeleton], [3], [philip.chimento@gmail.com])
-AC_CONFIG_SRCDIR([src/hello-world.c])
+AC_INIT([xMZ-Mod-Touch], [1], [s.mueller@it.kls-glt.de])
+AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AM_SILENT_RULES([yes])
 
@@ -15,7 +15,7 @@ PKG_PROG_PKG_CONFIG
 ### LIBRARIES ##################################################################
 # In this section we use pkg-config to configure the libraries we are using.
 
-PKG_CHECK_MODULES([APP_SKELETON], [
+PKG_CHECK_MODULES([APP_XMZ], [
 	glib-2.0
 	gtk+-3.0
 ])

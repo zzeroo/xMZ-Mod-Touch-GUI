@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=xMZ-Mod-Touch
+Exec=xmz
+Comment=xMZ-Mod-Touch xMesszentrale mit Modbus Interface und Touchscreen
+Icon=xmz
+Terminal=false
+Categories=Utility;Viewer;GTK;
+
