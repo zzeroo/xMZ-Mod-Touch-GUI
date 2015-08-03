@@ -1,32 +1,21 @@
-### INITIALIZATION #############################################################
-# In this section we do preparations for initializing our build system.
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
 
-AC_INIT([xMZ-Mod-Touch], [1], [s.mueller@it.kls-glt.de])
-AC_CONFIG_SRCDIR([src/main.c])
-AM_INIT_AUTOMAKE([-Wall foreign])
-AM_SILENT_RULES([yes])
+AC_PREREQ([2.69])
+AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_CONFIG_SRCDIR([src/xmzappwin.c])
+AC_CONFIG_HEADERS([config.h])
 
-### SHOPPING LIST ##############################################################
-# In this section we notify autoconf of what tools we will be using.
-
+# Checks for programs.
 AC_PROG_CC
-PKG_PROG_PKG_CONFIG
 
-### LIBRARIES ##################################################################
-# In this section we use pkg-config to configure the libraries we are using.
+# Checks for libraries.
 
-PKG_CHECK_MODULES([APP_XMZ], [
-	glib-2.0
-	gtk+-3.0
-])
+# Checks for header files.
 
-### OUTPUT #####################################################################
-# After checking all this stuff, we must output our results to the rest of the
-# build system. That is what this section does.
+# Checks for typedefs, structures, and compiler characteristics.
 
-AC_CONFIG_FILES([
-	Makefile
-	src/Makefile
-	pixmaps/Makefile
-])
+# Checks for library functions.
+
+AC_CONFIG_FILES([pixmaps/Makefile])
 AC_OUTPUT
