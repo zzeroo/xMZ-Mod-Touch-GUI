@@ -42,6 +42,9 @@ xmz_app_activate (GApplication *app)
                                     GDK_HINT_BASE_SIZE |
                                     GDK_HINT_MAX_SIZE);
 
+#ifdef XDG_RUNTIME_DIR
+    gtk_window_maximize (GTK_WINDOW (win));
+#endif
     gtk_window_present (GTK_WINDOW (win));
 }
 
