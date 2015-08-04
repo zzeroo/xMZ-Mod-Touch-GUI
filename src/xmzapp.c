@@ -45,6 +45,9 @@ xmz_app_activate (GApplication *app)
     if (TRUE)
         gtk_window_maximize (GTK_WINDOW (win));
 
+    // set_decorated sollte verwendet werden.
+    // gtk_window_set_decorated (GTK_WINDOW (win), FALSE);
+
     gtk_window_present (GTK_WINDOW (win));
 }
 
