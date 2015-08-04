@@ -19,6 +19,19 @@
                 <property name="stack">stack</property>
               </object>
             </child>
+            <child>
+              <object class="GtkMenuButton" id="gears">
+                <property name="visible">True</property>
+                <property name="direction">none</property>
+                <property name="use-popover">True</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
+              </object>
+              <packing>
+                <property name="pack-type">end</property>
+              </packing>
+            </child>
           </object>
         </child>
         <child>
