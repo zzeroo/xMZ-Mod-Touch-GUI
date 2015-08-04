@@ -43,7 +43,7 @@ xmz_app_activate (GApplication *app)
                                     GDK_HINT_MAX_SIZE);
 
     if (TRUE)
-        gtk_window_maximze (GTK_WINDOW (win));
+        gtk_window_maximize (GTK_WINDOW (win));
 
     gtk_window_present (GTK_WINDOW (win));
 }
