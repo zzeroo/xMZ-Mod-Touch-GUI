@@ -10,6 +10,19 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CC
 
+# Check for GLIB_COMPILE_RESOURCES
+
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES,[glib-compile-resources],no)
+
+if test x$GLIB_COMPILE_RESOURCES = xno ; then
+AC_MSG_ERROR([glib-compile-resources cannot be found in PATH.
+              It is usually included with GTK+3.0 dev. libraries.
+              Please install this tool first.
+])
+fi
+
+AC_SUBST(GLIB_COMPILE_RESOURCES)
+
 # Checks for libraries.
 AM_PATH_GTK_3_0
 #PKG_CHECK_MODULES([GLIB], [glib-2.0 > 2.19.0])
