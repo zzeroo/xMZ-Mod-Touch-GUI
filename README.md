@@ -6,18 +6,20 @@ xMZ-Mod-Touch Grapical User Interface
 
 ### Abhänigkeiten
 
-Die Software setzt auf Gtk+-3.0, libmodbus und wird mit den Autotools
-und dem GNU C compiler übersetzt. Diese Programme und Bibliotheken müssen
-installiert sein.
+Die Software setzt auf Vala, Gtk+-3.0, und libmodbus.
 
-Unter Debian bzw Ubuntu können die Abhängigkeiten mit folgendem Befehl 
+Unter Debian bzw Ubuntu können die Abhängigkeiten mit folgendem Befehl
 installiert werden.
 
-        sudo apt-get install build-essential libgtk-3-0 libmodbus
+        apt-get install valac libgtk-3-0
 
 ### Übersezung
+#### manuelle Kompilation
 
-Zunächst muss der Quellcode auf den Computer kopiert weden. 
+      valac --pkg gtk+-3.0 src/gtk-sample.vala
+
+#### Kompilation mit Autotools
+Zunächst muss der Quellcode auf den Computer kopiert weden.
 
         git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
 
