@@ -16,6 +16,7 @@ installiert werden.
 ### Übersezung
 #### manuelle Kompilation
 
+      valac --pkg gtk+-3.0 --pkg gmodule-2.0 src/xmz-mod-touch-gui.vala
       valac --pkg gtk+-3.0 src/gtk-sample.vala
 
 #### Kompilation mit Autotools
