@@ -1,5 +1,6 @@
 # Binarys
-src/xmz_mod_touch
+xmz-mod-touch-gui
+xmz_mod_touch
 
 # Automake files
 /autom4te.cache/
