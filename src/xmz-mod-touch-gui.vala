@@ -27,7 +27,7 @@ int main (string[] args) {
     window.show_all ();
 
     /// Update the levelbar and the label
-    int i = 0;
+    var i = 0;
     time.set_callback (() => {
         if (i > 99) {
           i = 0;
