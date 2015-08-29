@@ -23,6 +23,8 @@ int main (string[] args) {
     levelbar_sensor1 = builder.get_object ("levelbar_sensor1") as LevelBar;
     lbl_value_sensor1 = builder.get_object ("lbl_value_sensor1") as Label;
     var window = builder.get_object ("basic_window") as Window;
+    window.maximize ();
+    window.set_default_size (1024, 600);
 
     window.show_all ();
 
