@@ -2,11 +2,11 @@
 <!-- Generated with glade 3.19.0 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <object class="GtkGrid" id="grid_sensor">
+  <template class="SensorWidget" parent="GtkGrid">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkLevelBar" id="levelbar_sensor1">
+      <object class="GtkLevelBar" id="levelbar">
         <property name="width_request">50</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -25,13 +25,13 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_value_sensor1">
+      <object class="GtkLabel" id="lbl_value">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">end</property>
         <property name="margin_bottom">50</property>
-        <property name="label" translatable="yes">00,0</property>
+        <property name="label" translatable="yes">000</property>
         <property name="single_line_mode">True</property>
         <attributes>
           <attribute name="font-desc" value="Sans Bold 100"/>
@@ -44,7 +44,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_si_sensor1">
+      <object class="GtkLabel" id="lbl_si">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -61,11 +61,11 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_name_sensor1">
+      <object class="GtkLabel" id="lbl_name">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">end</property>
-        <property name="label" translatable="yes">Sensor</property>
+        <property name="label" translatable="yes">$SensorName</property>
         <attributes>
           <attribute name="font-desc" value="Sans Bold 65"/>
         </attributes>
@@ -77,7 +77,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor1">
+      <object class="GtkLabel" id="lbl_average_15">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -94,7 +94,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_30_sensor2">
+      <object class="GtkLabel" id="lbl_average_30">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -111,7 +111,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_60_sensor3">
+      <object class="GtkLabel" id="lbl_average_60">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="valign">start</property>
@@ -127,7 +127,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average">
+      <object class="GtkLabel" id="lbl_header_average">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -145,12 +145,12 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor5">
+      <object class="GtkLabel" id="lbl_average_value30">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="label" translatable="yes">00,0</property>
+        <property name="label" translatable="yes">000</property>
         <attributes>
           <attribute name="font-desc" value="Sans 26"/>
         </attributes>
@@ -161,12 +161,12 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor6">
+      <object class="GtkLabel" id="lbl_averate_value60">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="label" translatable="yes">00,0</property>
+        <property name="label" translatable="yes">000</property>
         <attributes>
           <attribute name="font-desc" value="Sans 26"/>
         </attributes>
@@ -177,12 +177,12 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor7">
+      <object class="GtkLabel" id="lbl_average_value15">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="label" translatable="yes">00,0</property>
+        <property name="label" translatable="yes">000</property>
         <attributes>
           <attribute name="font-desc" value="Sans 26"/>
         </attributes>
@@ -193,7 +193,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor8">
+      <object class="GtkLabel" id="lbl_average_si15">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -209,7 +209,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor10">
+      <object class="GtkLabel" id="lbl_average_si30">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -225,7 +225,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_average_15_sensor11">
+      <object class="GtkLabel" id="lbl_average_si60">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
@@ -241,19 +241,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="lbl_name_sensor2">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="halign">start</property>
-        <property name="label" translatable="yes">1</property>
-        <attributes>
-          <attribute name="font-desc" value="Sans Bold 65"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="left_attach">2</property>
-        <property name="top_attach">0</property>
-      </packing>
+      <placeholder/>
     </child>
     <child>
       <placeholder/>
@@ -267,5 +255,5 @@
     <child>
       <placeholder/>
     </child>
-  </object>
+  </template>
 </interface>
