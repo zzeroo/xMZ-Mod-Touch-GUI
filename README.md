@@ -1,36 +1,44 @@
-# xMZ-Mod-Touch-GUI
-xMZ-Mod-Touch Grapical User Interface
 
+##Installation
 
-## Programm aus den Quellen übersetzen
+Dieses Programm kann mit dem bekannten Dreisatz erstellt und installiert werden.
 
-### Abhänigkeiten
+    ./autogen.sh [--prefix=/home/your_username/.local]
+    make
+    make install
 
-Die Software setzt auf Vala, Gtk+-3.0, und libmodbus.
+Diese drei Befehle erstellen die folgenden Dateien.
 
-Unter Debian bzw Ubuntu können die Abhängigkeiten mit folgendem Befehl
-installiert werden.
+aclocal.m4
+autom4te.cache
+config.log
+config.status
+configure
+depcomp
+xmz-mod-touch-gui
+xmz-mod-touch-gui.c
+xmz-mod-touch-gui.desktop
+xmz_mod_touch_gui-xmz-mod-touch-gui.o
+xmz_mod_touch_gui_vala.stamp
+install-sh
+missing
+Makefile.in
+Makefile
 
-        apt-get install valac libgtk-3-0
+Der Befehl `make` linkt alle Bibliothken.
 
-### Übersezung
-#### manuelle Kompilation
+`make install`, installiert die Anwendung in /home/your_username/.local/bin und
+installiert die xmz_mod_touch_gui_vala.desktop Datei nach `/home/your_username/.local/share/applications`
 
-      valac --pkg gtk+-3.0 --pkg gmodule-2.0 src/xmz-mod-touch-gui.vala
-      valac --pkg gtk+-3.0 src/gtk-sample.vala
+##Deinstallation
 
-#### Kompilation mit Autotools
-Zunächst muss der Quellcode auf den Computer kopiert weden.
+Für die Deinstallation bitte diesen Befehl verwenden:
 
-        git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
+    make uninstall
 
-Danach wird in das Verzeichnis mit dem Quellcode gewechselt und
-die Software mit den Autotools Werkzeugen übersetzt.
+##Packing
 
-        cd MZ-Mod-Touch-GUI
-        ./autogen.sh
-        make
-        sudo make install
+Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
-Dem Script autogen.sh können die üblichen Parameter wie `--prefix=/usr`
-übergeben weden.
+    make distcheck
+

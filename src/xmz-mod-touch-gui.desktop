@@ -1,0 +1,11 @@
+[Desktop Enty]
+Version=1.0
+Encoding=UTF-8
+Name=xMZ-Mod-Touch-GUI
+Comment=xMesszentrale mit Modbus Interface und Touchscreen
+Exec=@prefix@/bin/xmz-mod-touch-gui
+Icon=application-default-icon
+Terminal=false
+type=Application
+StartupNotify=true
+Categories=GNOME;GTK;Utility;

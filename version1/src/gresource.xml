@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/com/gaswarnanlagen/xmz-mod-touch">
-    <!--<file>splashscreen.png</file>-->
-    <file compressed="true">basic_window.glade</file>
-    <file compressed="true">sensor.glade</file>
-    <!--<file preprocess="xml-stripblanks">menumarkup.xml</file>-->
-  </gresource>
-</gresources>
