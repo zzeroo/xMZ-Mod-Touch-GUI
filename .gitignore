@@ -1,6 +1,10 @@
 # Binarys
-
+src/xmz-mod-touch-gui
+# Vala c files
+src/*.c
+src/*.stamp
 # Automake files
+src/.deps/
 /autom4te.cache/
 /config/
 Makefile
