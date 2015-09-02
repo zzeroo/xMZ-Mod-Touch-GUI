@@ -1,3 +1,5 @@
+# Glade backup files
+src/#*
 # Binarys
 src/xmz-mod-touch-gui
 # Vala c files
