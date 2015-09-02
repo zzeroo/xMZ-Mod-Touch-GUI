@@ -1,3 +1,12 @@
+class SettingsWindow : Gtk.Box {
+
+  public SettingsWindow () {
+    this.pack_start (new Gtk.Label ("1"), false, false, 0);
+    this.pack_start (new Gtk.Label ("2"), false, false, 0);
+  }
+}
+
+
 class MainWindow : Gtk.Box {
 
   public MainWindow (){
@@ -50,8 +59,8 @@ class XmzModTouchGui : Gtk.Application {
     var main_window = new MainWindow () as Gtk.Box;
     window_stack.add_named (main_window, "Main Window");
 
-    var button2 = new Gtk.Button.with_label ("Button2");
-    window_stack.add_named (button2, "Settings Window");
+    var settings_window = new SettingsWindow () as Gtk.Box;
+    window_stack.add_named (settings_window, "Settings Window");
 
     // Toggle "Main Window" and "Settings Window"
     settings_button.clicked.connect (() => {
