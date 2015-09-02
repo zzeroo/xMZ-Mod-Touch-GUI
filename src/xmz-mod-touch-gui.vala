@@ -1,3 +1,5 @@
+using Gtk;
+
 class SettingsWindow : Gtk.Box {
 
   public SettingsWindow () {
@@ -6,7 +8,6 @@ class SettingsWindow : Gtk.Box {
   }
 }
 
-
 class MainWindow : Gtk.Box {
 
   public MainWindow (){
@@ -14,14 +15,49 @@ class MainWindow : Gtk.Box {
     var stack = new Gtk.Stack ();
     stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
 
+    // FIXME: Create Sensor Object
     for (int i = 1; i < 11; i++) {
       var grid = new Gtk.Grid ();
       var lbl_name = new Gtk.Label ( "Sensor" + i.to_string ());
-      grid.attach(lbl_name, 0, 0, 1, 1);
+      lbl_name.set_hexpand (true);
+      lbl_name.set_vexpand (true);
+      var levelbar_value = new Gtk.LevelBar.for_interval ( 0, 300 );
+      levelbar_value.set_vexpand (true);
+      levelbar_value.set_orientation (Gtk.Orientation.VERTICAL);
+      levelbar_value.set_inverted (true);
+      levelbar_value.set_value (30);
+      var lbl_value = new Gtk.Label ("000");
+      var lbl_value_si = new Gtk.Label ("ppm");
+      var lbl_average_title = new Gtk.Label ("Mittelwerte");
+      var lbl_average15_title = new Gtk.Label ("15 Minuten:");
+      var lbl_average15_value = new Gtk.Label ("000");
+      var lbl_average15_si =    new Gtk.Label ("ppm");
+      var lbl_average30_title = new Gtk.Label ("30 Minuten:");
+      var lbl_average30_value = new Gtk.Label ("000");
+      var lbl_average30_si =    new Gtk.Label ("ppm");
+      var lbl_average60_title = new Gtk.Label ("60 Minuten:");
+      var lbl_average60_value = new Gtk.Label ("000");
+      var lbl_average60_si =    new Gtk.Label ("ppm");
+
+      grid.attach (lbl_name,            0, 0, 10, 1);
+      grid.attach (levelbar_value,           0, 1, 1, 5);
+      grid.attach (lbl_value,           2, 4, 4, 2);
+      grid.attach (lbl_value_si,        6, 5, 2, 1);
+      grid.attach (lbl_average_title,   6, 1, 4, 1);
+      grid.attach (lbl_average15_title, 6, 2, 2, 1);
+      grid.attach (lbl_average15_value, 8, 2, 1, 1);
+      grid.attach (lbl_average15_si,    9, 2, 1, 1);
+      grid.attach (lbl_average30_title, 6, 3, 2, 1);
+      grid.attach (lbl_average30_value, 8, 3, 1, 1);
+      grid.attach (lbl_average30_si,    9, 3, 1, 1);
+      grid.attach (lbl_average60_title, 6, 4, 2, 1);
+      grid.attach (lbl_average60_value, 8, 4, 1, 1);
+      grid.attach (lbl_average60_si,    9, 4, 1, 1);
+
       stack.add_titled (grid, "sensor" + i.to_string (), "Sensor " + i.to_string ());
     }
 
-    this.pack_start (stack, true);
+    this.pack_start (stack, true, true);
 
     /* StackSidebar */
     var stack_sidebar = new Gtk.StackSidebar ();

@@ -1,0 +1,4 @@
+#Fehlende Komponenten
+##Info Bar
+Das Hauptfenster sollte noch ein Gtk.InfoBar erhalten. Hier werden dann alle Nachrichten
+dargestellt.
