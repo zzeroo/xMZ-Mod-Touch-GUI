@@ -1,0 +1,8 @@
+GtkLabel.sensor_name {
+  font: Sans 40;
+  font-weight: bolder;
+}
+
+GtkStackSidebar {
+  font: Sans 20;
+}
