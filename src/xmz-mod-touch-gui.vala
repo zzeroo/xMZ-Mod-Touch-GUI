@@ -135,6 +135,7 @@ class XmzModTouchGui : Gtk.Application {
     header_bar.set_subtitle ("xMesszentrale mit Modbus Interface und Touchscreen");
     header_bar.set_show_close_button (false);
     var settings_button = new Gtk.Button.from_icon_name ("emblem-system", Gtk.IconSize.LARGE_TOOLBAR);
+    settings_button.set_size_request (80, 80);
     header_bar.pack_end (settings_button);
 
     var window_stack = new Gtk.Stack ();
