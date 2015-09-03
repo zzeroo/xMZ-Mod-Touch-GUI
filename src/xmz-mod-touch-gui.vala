@@ -3,8 +3,30 @@ using Gtk;
 class SettingsWindow : Gtk.Box {
 
   public SettingsWindow () {
-    this.pack_start (new Gtk.Label ("1"), false, false, 0);
-    this.pack_start (new Gtk.Label ("2"), false, false, 0);
+    var notebook = new Gtk.Notebook ();
+
+    // Tab Sensoren
+    var title = new Gtk.Label ("Sensoren");
+    var content = new Gtk.Label ("Hier werden die Sensoren verwaltet.");
+    notebook.append_page (content, title);
+
+    // Tab Alarm Gruppen
+    title = new Gtk.Label ("Alarm Gruppen");
+    content = new Gtk.Label ("Hier werden die Alarm Gruppen und Schaltausgänge verwaltet.");
+    notebook.append_page (content, title);
+
+    // Tab Anwendungs Einstellungen
+    title = new Gtk.Label ("GUI Einstellungen");
+    content = new Gtk.Label ("Alle Einstellgungen die die Anwendungsoberfläche betreffen werden hier verwaltet.");
+    notebook.append_page (content, title);
+
+    // Tab Hilfe
+    title = new Gtk.Label ("Hilfe");
+    content = new Gtk.Label ("Hilfesytem");
+    notebook.append_page (content, title);
+
+
+    this.pack_start (notebook, true, true);
   }
 }
 
@@ -96,7 +118,6 @@ class XmzModTouchGui : Gtk.Application {
   }
 
   protected override void activate () {
-    //Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
     var window = new Gtk.ApplicationWindow (this);
     if (GLib.Environment.get_variable("XMZ_HARDWARE") == "0.1.0") {
       window.maximize ();
@@ -114,7 +135,7 @@ class XmzModTouchGui : Gtk.Application {
     header_bar.set_subtitle ("xMesszentrale mit Modbus Interface und Touchscreen");
     header_bar.set_show_close_button (false);
     var settings_button = new Gtk.Button.from_icon_name ("emblem-system", Gtk.IconSize.LARGE_TOOLBAR);
-    header_bar.pack_start (settings_button);
+    header_bar.pack_end (settings_button);
 
     var window_stack = new Gtk.Stack ();
     window_stack.set_transition_type (Gtk.StackTransitionType.SLIDE_DOWN); // SLIDE_LEFT_RIGHT, SLIDE_UP
