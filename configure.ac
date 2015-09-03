@@ -10,6 +10,7 @@ dnl GResources
 dnl ###########################################################################
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
+AC_SUBST(GLIB_COMPILE_RESOURCES)
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile

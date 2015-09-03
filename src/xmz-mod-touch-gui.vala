@@ -88,13 +88,10 @@ class XmzModTouchGui : Gtk.Application {
       window.set_default_size (1024, 600);
     }
     // CSS Provider
-    var provider = new Gtk.CssProvider();
-    try {
-      provider.load_from_path ("src/main.css");
-      Gtk.StyleContext.add_provider_for_screen (window.get_screen (), provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
-    } catch (Error e) {
-      error ("Cannot load CSS stylesheet: %s", e.message);
-    }
+    var css_provider = new CssProvider ();
+    css_provider.load_from_resource ("/com/gaswarnanlagen/xmz-mod-touch-gui/xmz-mod-touch-gui.css");
+    StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), css_provider, STYLE_PROVIDER_PRIORITY_APPLICATION);
+
     // Header bar
     var header_bar = new Gtk.HeaderBar ();
     header_bar.set_title ("xMZ-Mod-Touch");
