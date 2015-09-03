@@ -1,69 +1,33 @@
-# Glade backup files
-src/#*
-# Binarys
-src/xmz-mod-touch-gui
-# Vala c files
-src/*.c
-src/*.stamp
-# Automake files
-src/.deps/
-/autom4te.cache/
-/config/
-Makefile
-Makefile.in
-aclocal.m4
-app.info
-compile
-config.h
-config.h.in
-config.log
-config.status
-configure
-configure.scan
-coverage_report
-depcomp
-install-sh
-libtool
-m4
-missing
-stamp-h1
-libltdl/
-ltmain.sh
-README
-INSTALL
-
-# Backup files
-*~
-
-# Object files
 *.o
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
+.deps
+/*.bak
+/*.gcda
+/*.gcno
+/*.orig
+/*.rej
+/*.tab.c
+/*~
+/.*.sw[nop]
+/.dirstamp
+/.gitignore
+/GPATH
+/GRTAGS
+/GSYMS
+/GTAGS
+/ID
+/Makefile
+/Makefile.in
+/TAGS
+/autom4te.cache
+/config.cache
+/config.h
+/config.log
+/config.lt
+/config.status
+/config.status.lineno
+/configure
+/configure.lineno
+/libtool
+/so_locations
+/stamp-h1
+/tags

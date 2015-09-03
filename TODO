@@ -2,3 +2,7 @@
 ##Info Bar
 Das Hauptfenster sollte noch ein Gtk.InfoBar erhalten. Hier werden dann alle Nachrichten
 dargestellt.
+
+##make data dir more gnome like
+https://git.gnome.org/browse/gnome-sudoku/tree/data
+* move images to data dir
