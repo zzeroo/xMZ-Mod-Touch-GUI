@@ -9,3 +9,5 @@ xmz_mod_touch_gui_SOURCES = xmz-mod-touch-gui.vala
 desktopdir = $(datadir)/applications
 desktop_DATA = \
 	xmz-mod-touch-gui.desktop
+
+-include $(top_srcdir)/git.mk
