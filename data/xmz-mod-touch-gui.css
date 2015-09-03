@@ -3,6 +3,11 @@ GtkLabel.sensor_name {
   font-weight: bolder;
 }
 
+GtkLabel.sensor_value {
+  font: Sans 40;
+  font-weight: bolder;
+}
+
 GtkStackSidebar {
   font: Sans 20;
 }

@@ -16,7 +16,9 @@ class MainWindow : Gtk.Box {
     stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
 
     // FIXME: Create Sensor Object
-    for (int i = 1; i < 11; i++) {
+    for (int i = 1; i < 48; i++) {
+      // Some random values
+      var sensor_value = Random.int_range (1, 300);
       var grid = new Gtk.Grid ();
       var lbl_name = new Gtk.Label ( "Sensor" + i.to_string ());
       lbl_name.get_style_context ().add_class ("sensor_name");
@@ -27,8 +29,9 @@ class MainWindow : Gtk.Box {
       levelbar_value.set_vexpand (true);
       levelbar_value.set_orientation (Gtk.Orientation.VERTICAL);
       levelbar_value.set_inverted (true);
-      levelbar_value.set_value (30);
-      var lbl_value = new Gtk.Label ("000");
+      levelbar_value.set_value (sensor_value);
+      levelbar_value.get_style_context ().add_class ("sensor_value");
+      var lbl_value = new Gtk.Label (sensor_value.to_string ());
       lbl_value.set_halign (Gtk.Align.START);
       var lbl_value_si = new Gtk.Label ("ppm");
       lbl_value_si.set_halign (Gtk.Align.START);
