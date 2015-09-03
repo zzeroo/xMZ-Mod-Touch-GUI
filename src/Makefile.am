@@ -5,12 +5,8 @@ bin_PROGRAMS = xmz-mod-touch-gui
 BUILT_SOURCES = xmz-mod-touch-gui-resources.c
 
 xmz_mod_touch_gui_SOURCES = \
-	config.vapi \
 	xmz-mod-touch-gui.vala \
 	$(BUILT_SOURCES)
-
-# Force linking with a C++ linker.
-nodist_EXTRA_xmz_mod_touch_gui_SOURCES = dummy.cxx
 
 #xmz_mod_touch_gui_CFLAGS = $(gtk_CFLAGS)
 xmz_mod_touch_gui_CFLAGS = -w
