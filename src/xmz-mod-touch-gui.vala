@@ -19,7 +19,10 @@ class MainWindow : Gtk.Box {
     for (int i = 1; i < 48; i++) {
       // Some random values
       var sensor_value = Random.int_range (1, 300);
+
       var grid = new Gtk.Grid ();
+      grid.set_margin_left (40);
+      grid.set_margin_bottom (40);
       var lbl_name = new Gtk.Label ( "Sensor" + i.to_string ());
       lbl_name.get_style_context ().add_class ("sensor_name");
       lbl_name.set_hexpand (true);
@@ -30,19 +33,29 @@ class MainWindow : Gtk.Box {
       levelbar_value.set_orientation (Gtk.Orientation.VERTICAL);
       levelbar_value.set_inverted (true);
       levelbar_value.set_value (sensor_value);
-      levelbar_value.get_style_context ().add_class ("sensor_value");
       var lbl_value = new Gtk.Label (sensor_value.to_string ());
-      lbl_value.set_halign (Gtk.Align.START);
+      lbl_value.get_style_context ().add_class ("sensor_value");
+      lbl_value.set_halign (Gtk.Align.END);
+      lbl_value.set_valign (Gtk.Align.END);
       var lbl_value_si = new Gtk.Label ("ppm");
+      lbl_value_si.get_style_context ().add_class ("sensor_value_si");
       lbl_value_si.set_halign (Gtk.Align.START);
+      lbl_value_si.set_valign (Gtk.Align.END);
+      lbl_value_si.set_vexpand (true);
       var lbl_average_title = new Gtk.Label ("Mittelwerte");
+      lbl_average_title.set_halign (Gtk.Align.START);
+      lbl_average_title.set_valign (Gtk.Align.END);
+      lbl_average_title.get_style_context ().add_class ("average_title");
       var lbl_average15_title = new Gtk.Label ("15 Minuten:");
+      lbl_average15_title.get_style_context ().add_class ("average_title");
       var lbl_average15_value = new Gtk.Label ("000");
       var lbl_average15_si =    new Gtk.Label ("ppm");
       var lbl_average30_title = new Gtk.Label ("30 Minuten:");
+      lbl_average30_title.get_style_context ().add_class ("average_title");
       var lbl_average30_value = new Gtk.Label ("000");
       var lbl_average30_si =    new Gtk.Label ("ppm");
       var lbl_average60_title = new Gtk.Label ("60 Minuten:");
+      lbl_average60_title.get_style_context ().add_class ("average_title");
       var lbl_average60_value = new Gtk.Label ("000");
       var lbl_average60_si =    new Gtk.Label ("ppm");
 

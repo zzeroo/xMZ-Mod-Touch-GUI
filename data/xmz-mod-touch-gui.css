@@ -1,10 +1,15 @@
-GtkLabel.sensor_name {
+GtkLabel.sensor_name,
+.sensor_value_si {
   font: Sans 40;
   font-weight: bolder;
 }
 
 GtkLabel.sensor_value {
-  font: Sans 40;
+  font: Sans 80;
+  font-weight: bolder;
+}
+
+GtkLabel.average_title {
   font-weight: bolder;
 }
 
