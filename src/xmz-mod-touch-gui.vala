@@ -17,8 +17,27 @@ class SettingsWindow : Gtk.Box {
 
     // Tab Anwendungs Einstellungen
     title = new Gtk.Label ("GUI Einstellungen");
-    content = new Gtk.Label ("Alle Einstellgungen die die Anwendungsoberfläche betreffen werden hier verwaltet.");
-    notebook.append_page (content, title);
+    var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+    box.set_margin_left (40);
+    box.set_margin_right (40);
+    box.set_margin_bottom (40);
+    var label  = new Gtk.Label ("Alle Einstellgungen die die Anwendungsoberfläche betreffen werden hier verwaltet.");
+    var lbl_switch = new Gtk.Label ("Dunkles Thema verwenden?");
+    var _switch = new Gtk.Switch ();
+
+    _switch.notify["active"].connect (() => {
+        if (_switch.active) {
+          Gtk.Settings.get_default().set("gtk-application-prefer-dark-theme", true);
+        } else {
+          Gtk.Settings.get_default().set("gtk-application-prefer-dark-theme", false);
+        }
+    });
+
+    box.pack_start (label, false, false);
+    box.pack_start (lbl_switch, false, false);
+    box.pack_start (_switch, true, true );
+    notebook.append_page (box, title);
+
 
     // Tab Hilfe
     title = new Gtk.Label ("Hilfe");
