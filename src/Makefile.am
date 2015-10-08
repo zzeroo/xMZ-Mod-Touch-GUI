@@ -5,8 +5,8 @@ bin_PROGRAMS = xmz-mod-touch-gui
 BUILT_SOURCES = xmz-mod-touch-gui-resources.c
 
 xmz_mod_touch_gui_SOURCES = \
-	xmz-mod-touch-gui.vala \
-	$(BUILT_SOURCES)
+														main.vala \
+														$(BUILT_SOURCES)
 
 #xmz_mod_touch_gui_CFLAGS = $(gtk_CFLAGS)
 xmz_mod_touch_gui_CFLAGS = -w
