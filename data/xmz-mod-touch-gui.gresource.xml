@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/com/gaswarnanlagen/xmz-mod-touch-gui">
     <file alias="xmz-mod-touch-gui.css">xmz-mod-touch-gui.css</file>
+    <file compressed="true" preprocess="xml-stripblanks">xmz-mod-touch-gui.glade</file>
   </gresource>
 </gresources>
