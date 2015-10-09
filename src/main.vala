@@ -11,8 +11,8 @@ public class Application : Gtk.Window {
     this.title = "xMZ-Mod-Touch";
     this.window_position = Gtk.WindowPosition.CENTER;
     if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
-      //this.set_decorated (false);
-      this.set_resizable (false);
+      // this.set_decorated (false);
+      // this.set_resizable (false); // window is dame small under weston if used
       this.set_deletable (false);
       this.set_hide_titlebar_when_maximized (true);
       this.maximize ();
