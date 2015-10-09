@@ -10,7 +10,8 @@ xmz_mod_touch_gui_SOURCES = \
 														$(BUILT_SOURCES)
 
 #xmz_mod_touch_gui_CFLAGS = $(gtk_CFLAGS)
-xmz_mod_touch_gui_CFLAGS = -w
+xmz_mod_touch_gui_CFLAGS = -w \
+													 -rdynamic
 
 xmz_mod_touch_gui_CPPFLAGS = \
 	-DPKGDATADIR=\"$(datadir)/xmz-mod-touch-gui\" \
@@ -23,6 +24,7 @@ xmz_mod_touch_gui_VALAFLAGS = \
 															--pkg gio-2.0 \
 															--pkg gtk+-3.0 \
 															--pkg gee-0.8 \
+															--pkg gmodule-2.0 \
 															--target-glib=$(GLIB_REQUIRED) \
 															--gresources=$(abs_top_srcdir)/data/xmz-mod-touch-gui.gresource.xml
 
