@@ -6,7 +6,8 @@ BUILT_SOURCES = xmz-mod-touch-gui-resources.c
 
 xmz_mod_touch_gui_SOURCES = \
 														main.vala \
-														sensor.vala \
+														SensorNode.vala \
+														SensorModel.vala \
 														$(BUILT_SOURCES)
 
 #xmz_mod_touch_gui_CFLAGS = $(gtk_CFLAGS)
