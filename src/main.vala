@@ -3,7 +3,7 @@ using Gtk;
 public class Application : Gtk.Window {
   [CCode (instance_pos=-1)]
   public void on_button_settings_clicked (Button source) {
-    stdout.printf ("function: on_button_settings_clicked\n");
+    // obsolete stdout.printf ("function: on_button_settings_clicked\n");
   }
 
   public Application () {
@@ -31,8 +31,25 @@ public class Application : Gtk.Window {
     var menu = builder.get_object ("menu") as ButtonBox;
     box.pack_start (menu);
 
-    var stack = builder.get_object ("stack_window") as Stack;
+    var stack = builder.get_object ("stack_main_window") as Stack;
     box.pack_end (stack);
+
+    var settings_button = builder.get_object ("button_settings") as Button;
+    settings_button.clicked.connect(() => {
+                                    stdout.printf ("STACK: %s", stack.get_visible_child_name ());
+                                      switch (stack.get_visible_child_name ()) {
+                                        case "page0":
+                                          stack.set_visible_child_name ("page1");
+                                          break;
+                                        case "page1":
+                                          stack.set_visible_child_name ("page0");
+                                          break;
+                                        default:
+                                          stack.set_visible_child_name ("page0");
+                                          break;
+                                      }
+                                    });
+
 
   }
 
