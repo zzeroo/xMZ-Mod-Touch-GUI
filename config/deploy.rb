@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'xmz-mod-touch-gui'
-set :repo_url, 'git@github.com:zzeroo/xMZ-Mod-Touch-GUI.git'
+set :repo_url, 'https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
