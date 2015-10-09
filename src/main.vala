@@ -23,7 +23,7 @@ public class Application : Gtk.Window {
     var builder = new Builder ();
     //builder.add_from_file ("src/MainWindow.glade");
     try {
-      builder.add_from_resource ("/com/gaswarnanlagen/xmz-mod-touch-gui/MainWindow.glade");
+      builder.add_from_resource ("/com/gaswarnanlagen/xmz-mod-touch-gui/xmz-mod-touch-gui.glade");
     } catch (Error e) {
       error ("%s", e.message);
     }
