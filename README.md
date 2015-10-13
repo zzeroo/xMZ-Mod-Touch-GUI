@@ -42,3 +42,15 @@ Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
     make distcheck
 
+# Database
+
+    sqlite3 src/testdb << EOF
+    CREATE TABLE sensors (id INT, name TEXT, value DOUBLE);
+    INSERT INTO tbl VALUES (1, "Sensor 1", 0);
+    INSERT INTO tbl VALUES (2, "Sensor 2", 0);
+    EOF
+
+
+
+
+
