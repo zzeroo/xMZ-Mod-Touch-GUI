@@ -63,13 +63,6 @@ public class Application : Gtk.Window {
     model.add (4, "Sensor 4 (CO/NO2)");
     model.add (5, "Sensor 5 (CO/NO2)");
 
-    GenericArray<SensorNode> data = new GenericArray<SensorNode> ();
-    data.add (new SensorNode (1, "Sensor 1 (CO)"));
-    data.add (new SensorNode (2, "Sensor 2 (CO)"));
-    data.add (new SensorNode (3, "Sensor 3 (CO/NO2)"));
-    data.add (new SensorNode (4, "Sensor 4 (CO/NO2)"));
-    data.add (new SensorNode (5, "Sensor 5 (CO/NO2)"));
-
     // View
     Gtk.TreeView view = new Gtk.TreeView.with_model (model);
     view.insert_column_with_attributes (-1, "ID",   new Gtk.CellRendererText (), "text", 0);
