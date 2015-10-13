@@ -15,9 +15,9 @@ xmz_mod_touch_gui_CFLAGS = -w \
 													 -rdynamic
 
 xmz_mod_touch_gui_CPPFLAGS = \
-	-DPKGDATADIR=\"$(datadir)/xmz-mod-touch-gui\" \
-	-DLOCALEDIR=\"$(localedir)\" \
-	$(XMZ_MOD_TOUCH_GUI_CFLAGS)
+														 -DPKGDATADIR=\"$(datadir)/xmz-mod-touch-gui\" \
+														 -DLOCALEDIR=\"$(localedir)\" \
+														 $(XMZ_MOD_TOUCH_GUI_CFLAGS)
 
 xmz_mod_touch_gui_LDADD = $(gtk_LIBS)
 xmz_mod_touch_gui_VALAFLAGS = \
@@ -34,9 +34,9 @@ xmz-mod-touch-gui-resources.c: $(top_srcdir)/data/xmz-mod-touch-gui.gresource.xm
 
 desktopdir = $(datadir)/applications
 desktop_DATA = \
-	xmz-mod-touch-gui.desktop
+							 xmz-mod-touch-gui.desktop
 
 CLEANFILES = \
-	xmz-mod-touch-gui-resources.c
+						 xmz-mod-touch-gui-resources.c
 
 -include $(top_srcdir)/git.mk

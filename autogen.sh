@@ -9,9 +9,21 @@ olddir=`pwd`
 cd "$srcdir"
 
 touch README
+[ ! -d benchmark ] && mkdir benchmark
 
-# This will run autoconf, automake, etc. for us
-autoreconf --force --install
+PKG_NAME=`autoconf --trace 'AC_INIT:$1' "$srcdir/configure.ac"`
+
+if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
+	echo "**Warning**: I am going to run \`configure' with no arguments." >&2
+	echo "If you wish to pass any to it, please specify them on the" >&2
+	echo \`$0\'" command line." >&2
+	echo "" >&2
+fi
+
+set -x
+#aclocal --install || exit 1
+autoreconf --verbose --force --install -Wno-portability || exit 1
+set +x
 
 cd "$olddir"
 
