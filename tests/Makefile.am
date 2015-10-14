@@ -5,7 +5,7 @@ noinst_PROGRAMS = $(TEST_PROGS)
 TEST_PROGS += tests
 
 tests_VALASOURCES = \
-										test-test.vala \
+										test-example.vala \
 										testcase.vala \
 										$(NULL)
 
