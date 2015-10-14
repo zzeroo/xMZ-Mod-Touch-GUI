@@ -8,24 +8,32 @@ xmz_mod_touch_gui_SOURCES = \
 														main.vala \
 														SensorNode.vala \
 														SensorModel.vala \
+														DatabaseBackend.vala \
 														$(BUILT_SOURCES)
 
-#xmz_mod_touch_gui_CFLAGS = $(gtk_CFLAGS)
+#xmz_mod_touch_gui_CFLAGS = $(GTK_CFLAGS)
 xmz_mod_touch_gui_CFLAGS = -w \
-													 -rdynamic
+													 -rdynamic \
+													 $(GDA_CFLAGS) \
+													 $(NULL)
 
 xmz_mod_touch_gui_CPPFLAGS = \
 														 -DPKGDATADIR=\"$(datadir)/xmz-mod-touch-gui\" \
 														 -DLOCALEDIR=\"$(localedir)\" \
 														 $(XMZ_MOD_TOUCH_GUI_CFLAGS)
 
-xmz_mod_touch_gui_LDADD = $(gtk_LIBS)
+xmz_mod_touch_gui_LDADD = \
+													$(GTK_LIBS) \
+													$(GDA_LIBS) \
+													$(NULL)
+
 xmz_mod_touch_gui_VALAFLAGS = \
 															--pkg posix \
 															--pkg gio-2.0 \
 															--pkg gtk+-3.0 \
 															--pkg gee-0.8 \
 															--pkg gmodule-2.0 \
+															--pkg sqlite3 \
 															--target-glib=$(GLIB_REQUIRED) \
 															--gresources=$(abs_top_srcdir)/data/xmz-mod-touch-gui.gresource.xml
 
