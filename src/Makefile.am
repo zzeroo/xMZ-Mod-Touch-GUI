@@ -14,7 +14,6 @@ xmz_mod_touch_gui_SOURCES = \
 #xmz_mod_touch_gui_CFLAGS = $(GTK_CFLAGS)
 xmz_mod_touch_gui_CFLAGS = -w \
 													 -rdynamic \
-													 $(GDA_CFLAGS) \
 													 $(NULL)
 
 xmz_mod_touch_gui_CPPFLAGS = \
@@ -24,7 +23,6 @@ xmz_mod_touch_gui_CPPFLAGS = \
 
 xmz_mod_touch_gui_LDADD = \
 													$(GTK_LIBS) \
-													$(GDA_LIBS) \
 													$(NULL)
 
 xmz_mod_touch_gui_VALAFLAGS = \

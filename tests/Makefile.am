@@ -31,7 +31,6 @@ tests_DEPENDENCIES = \
 tests_CFLAGS = \
 							 -w \
 							 -rdynamic \
-							 $(GDA_CFLAGS) \
 							 $(NULL)
 
 tests_CPPFLAGS = \
@@ -43,7 +42,6 @@ tests_CPPFLAGS = \
 tests_LDADD = \
 							$(GTK_LIBS) \
 							$(GLIB_LIBS) \
-							$(GDA_LIBS) \
 							$(NULL)
 
 tests_VALAFLAGS = \
