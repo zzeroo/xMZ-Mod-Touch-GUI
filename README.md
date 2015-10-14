@@ -52,5 +52,18 @@ Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
 
 
+## Development
 
+Das Quellcode Repository ist mit Autotools konfiguriert und wird mit Capistrano verwaltet.
 
+###Autotools
+
+    ./autogen.sh [evtl. Parameter für configure, z.B. --prefix=/usr]
+
+### Capistrano
+
+    cap staging deploy
+
+oder
+
+    cap production deploy
