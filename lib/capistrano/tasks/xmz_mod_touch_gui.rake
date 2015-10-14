@@ -24,6 +24,7 @@ namespace :deploy do
     invoke "deploy:make_install"
   end
 
+
   after :published, :build do
   end
 
@@ -32,5 +33,30 @@ namespace :deploy do
       execute "service xmz restart"
     end
   end
+
+
+  namespace :weston do
+    desc "Stop weston display server"
+    task :stop do
+      on roles(:app) do
+        execute "service weston stop"
+      end
+    end
+
+    desc "Start weston display server"
+    task :start do
+      on roles(:app) do
+        execute "service weston start"
+      end
+    end
+
+    desc "Restart weston display server"
+    task :restart do
+      on roles(:app) do
+        execute "service weston restart"
+      end
+    end
+  end
+
 end
 
