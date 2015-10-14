@@ -8,7 +8,7 @@ test -n "$srcdir" || srcdir=.
 olddir=`pwd`
 cd "$srcdir"
 
-ln README.md README
+[ ! -f README ] && ln README.md README
 [ ! -d benchmark ] && mkdir benchmark
 
 PKG_NAME=`autoconf --trace 'AC_INIT:$1' "$srcdir/configure.ac"`

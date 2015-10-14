@@ -4,10 +4,18 @@ noinst_PROGRAMS = $(TEST_PROGS)
 
 TEST_PROGS += tests
 
+xmz_mod_touch_gui_SOURCES = \
+														../src/SensorNode.vala \
+														../src/SensorModel.vala \
+														$(NULL)
+
 tests_VALASOURCES = \
+										$(xmz_mod_touch_gui_SOURCES) \
 										test-example.vala \
+										test-sensor-model.vala \
 										testmain.vala \
 										testcase.vala \
+										--target-glib=$(GLIB_REQUIRED) \
 										$(NULL)
 
 tests_SOURCES = \
@@ -20,20 +28,29 @@ tests_DEPENDENCIES = \
 
 tests_CFLAGS = \
 							 -w \
+							 -rdynamic \
 							 $(NULL)
 
 tests_CPPFLAGS = \
+								 -I$(top_srcdir)/src \
 								 $(GLIB_CFLAGS) \
+								 $(XMZ_MOD_TOUCH_GUI_CFLAGS) \
 								 $(NULL)
 
 tests_LDADD = \
+							$(GTK_LIBS) \
 							$(GLIB_LIBS) \
 							$(NULL)
 
 tests_VALAFLAGS = \
 									--basedir $(top_srcdir) \
 									--vapidir $(top_srcdir)/vapi \
-									--pkg gee-0.8 --pkg posix \
+									--pkg posix \
+									--pkg gio-2.0 \
+									--pkg gtk+-3.0 \
+									--pkg gee-0.8 \
+									--pkg gmodule-2.0 \
+									--pkg sqlite3 \
 									$(VALAFLAGS) \
 									$(NULL)
 
