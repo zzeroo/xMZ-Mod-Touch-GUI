@@ -24,6 +24,8 @@ namespace :deploy do
     invoke "deploy:make_install"
   end
 
+  after :published, :build do
+  end
 
   after :build, :restart do
     on roles(:app) do
