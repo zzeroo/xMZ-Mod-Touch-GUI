@@ -42,7 +42,7 @@ Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
     make distcheck
 
-# Database
+## Database
 
     sqlite3 src/testdb << EOF
     CREATE TABLE sensors (id INT, name TEXT, value DOUBLE);
@@ -56,6 +56,17 @@ Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
 Das Quellcode Repository ist mit Autotools konfiguriert und wird mit Capistrano verwaltet.
 
+### Unit Tests
+
+Die Unit Tests basieren auf [8][GLib's GTest] und sind nach dieser Anleitung:
+https://esite.ch/2012/06/writing-tests-for-vala/ und den [9][libgee Beispielen]
+aufgebaut.
+
+#### Einzelne Tests mit gtester aufrufen
+
+    gtester --verbose -p /TestExample tests/tests
+
+
 ###Autotools
 
     ./autogen.sh [evtl. Parameter für configure, z.B. --prefix=/usr]
@@ -67,3 +78,8 @@ Das Quellcode Repository ist mit Autotools konfiguriert und wird mit Capistrano 
 oder
 
     cap production deploy
+
+
+[8]: https://developer.gnome.org/glib/unstable/glib-Testing.html
+[9]: http://git.gnome.org/browse/libgee/tree/tests/testcase.vala
+[10]: https://git.gnome.org/browse/libgda/tree/samples/vala/

@@ -6,6 +6,7 @@ TEST_PROGS += tests
 
 tests_VALASOURCES = \
 										test-example.vala \
+										testmain.vala \
 										testcase.vala \
 										$(NULL)
 
