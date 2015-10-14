@@ -1,12 +1,11 @@
 using Gee;
 using Gtk;
 
-class TestSensorModel : Gee.TestCase {
+class SensorModelTest : Gee.TestCase {
 
-  public TestSensorModel () {
-    base ("TestSensorModel");
+  public SensorModelTest () {
+    base ("SensorModelTest");
 
-    add_test ("[SensorModel] test_example", test_example);
     add_test ("[SensorModel] add (id, name)", test_add);
     add_test ("[SensorModel] get_column_type (index)", test_get_column_type);
   }
@@ -19,10 +18,6 @@ class TestSensorModel : Gee.TestCase {
   }
 
   public override void tear_down () {
-  }
-
-  public void test_example () {
-    assert (true);
   }
 
 
@@ -38,7 +33,7 @@ class TestSensorModel : Gee.TestCase {
     model.add (1, "Sensor 1 (CO)");
 
     assert (model.get_column_type (0) == typeof (int));
-    assert (model.get_column_type (0) == typeof (string));
+    assert (model.get_column_type (1) == typeof (string));
   }
 
 }

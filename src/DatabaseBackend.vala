@@ -1,5 +1,7 @@
 using GLib;
 using Sqlite;
+using Gee;
+
 
 public class DatabaseBackend : GLib.Object {
 
@@ -9,4 +11,7 @@ public class DatabaseBackend : GLib.Object {
   ~DatabaseBackend () {
   }
 
+  public void init_sqlite () {
+
+  }
 }

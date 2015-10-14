@@ -7,11 +7,13 @@ TEST_PROGS += tests
 xmz_mod_touch_gui_SOURCES = \
 														../src/SensorNode.vala \
 														../src/SensorModel.vala \
+														../src/DatabaseBackend.vala \
 														$(NULL)
 
 tests_VALASOURCES = \
 										$(xmz_mod_touch_gui_SOURCES) \
 										test-example.vala \
+										test-database-backend.vala \
 										test-sensor-model.vala \
 										testmain.vala \
 										testcase.vala \
@@ -29,6 +31,7 @@ tests_DEPENDENCIES = \
 tests_CFLAGS = \
 							 -w \
 							 -rdynamic \
+							 $(GDA_CFLAGS) \
 							 $(NULL)
 
 tests_CPPFLAGS = \
@@ -40,6 +43,7 @@ tests_CPPFLAGS = \
 tests_LDADD = \
 							$(GTK_LIBS) \
 							$(GLIB_LIBS) \
+							$(GDA_LIBS) \
 							$(NULL)
 
 tests_VALAFLAGS = \

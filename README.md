@@ -28,7 +28,8 @@ Makefile
 Der Befehl `make` linkt alle Bibliothken.
 
 `make install`, installiert die Anwendung in /home/your_username/.local/bin und
-installiert die xmz_mod_touch_gui_vala.desktop Datei nach `/home/your_username/.local/share/applications`
+installiert die xmz_mod_touch_gui_vala.desktop Datei nach
+`/home/your_username/.local/share/applications`
 
 ##Deinstallation
 
@@ -54,13 +55,17 @@ Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
 ## Development
 
-Das Quellcode Repository ist mit Autotools konfiguriert und wird mit Capistrano verwaltet.
+Das Quellcode Repository ist mit Autotools konfiguriert und wird mit
+Capistrano verwaltet.
 
 ### Unit Tests
 
 Die Unit Tests basieren auf [8][GLib's GTest] und sind nach dieser Anleitung:
 https://esite.ch/2012/06/writing-tests-for-vala/ und den [9][libgee Beispielen]
 aufgebaut.
+
+Die tests werden im tests Verzeichnis erstellt. Außerdem müssen die Tests in
+der Datei ./tests/testmain.vala eingetragen werden.
 
 #### Einzelne Tests mit gtester aufrufen
 
