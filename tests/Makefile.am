@@ -100,3 +100,6 @@ clean-local:
 	-rm -rf coverage
 
 .PHONY: coverage-report
+
+-include $(top_srcdir)/git.mk
+
