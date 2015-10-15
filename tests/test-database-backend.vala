@@ -10,6 +10,7 @@ class DatabaseBackendTest : Gee.TestCase {
     add_test ("[DatabaseBackend] init_sqlite", test_init_sqlite);
     add_test ("[DatabaseBackend] store_sensor (SensorNode sensor)", test_store_sensor);
     add_test ("[DatabaseBackend] get_sensor (id)", test_get_sensor);
+    add_test ("[DatabaseBackend] get_sensors", test_get_sensors);
   }
 
   private DatabaseBackend backend;
@@ -46,10 +47,22 @@ class DatabaseBackendTest : Gee.TestCase {
 
   public void test_get_sensor () {
     backend.init_sqlite ();
-    var test_sensor = new SensorNode (666, "Testsensor");
-    var sensor = backend.get_sensor (666);
+    var test_sensor = new SensorNode (1, "Sensor 1");
+    var sensor = backend.get_sensor (1);
 
     assert (sensor.id == test_sensor.id);
+  }
+
+  public void test_get_sensors () {
+    backend.init_sqlite ();
+    GenericArray<SensorNode> sensors = new GenericArray<SensorNode> ();
+
+    sensors = backend.get_sensors ();
+
+    assert (sensors[0].id == 1);
+    assert (sensors[0].name == "Sensor 1");
+    assert (sensors[1].id == 2);
+    assert (sensors[1].name == "Sensor 2");
   }
 }
 

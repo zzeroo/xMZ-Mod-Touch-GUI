@@ -9,9 +9,11 @@ public class DatabaseBackend : GLib.Object {
   private int error_code;
   private string error_msg;
   private const string prepared_query_string = "SELECT * FROM Sensors WHERE id = $UID;";
-  private Sqlite.Statement statement;
+  public static SensorNode sensor;
+  public static GenericArray<SensorNode> sensors = new GenericArray<SensorNode> ();
 
   public DatabaseBackend () {
+    // FIXME: Customize sqlite database path
     error_code = Sqlite.Database.open ("database.db", out database);
     if (error_code != Sqlite.OK) {
       stderr.printf ("Can't open database: %d: %s\n", database.errcode (), database.errmsg ());
@@ -21,6 +23,28 @@ public class DatabaseBackend : GLib.Object {
   ~DatabaseBackend () {
   }
 
+  private static int sensors_callback (int n_columns, string[] values, string[] column_names) {
+    int id = 0;
+    string name = "";
+
+    for (int i = 0; i < n_columns; i++) {
+      switch (column_names[i]) {
+        case "id":
+          id = int.parse (values[i]);
+          break;
+        case "name":
+          name = values[i];
+          break;
+        default:
+          assert_not_reached ();
+      }
+    }
+    sensor = new SensorNode (id, name);
+    sensors.add (sensor);
+
+    return 0;
+  }
+
   public int init_sqlite () {
     string query = """
         CREATE TABLE Sensors (
@@ -28,8 +52,8 @@ public class DatabaseBackend : GLib.Object {
             name	TEXT					NOT NULL
             );
 
-        INSERT INTO Sensors (id, name) VALUES (1, 'Sensor 1 (RA-GAS CO)');
-        INSERT INTO Sensors (id, name) VALUES (2, 'Sensor 2 (RA-GAS CO/N02');
+        INSERT INTO Sensors (id, name) VALUES (1, 'Sensor 1');
+        INSERT INTO Sensors (id, name) VALUES (2, 'Sensor 2');
     """;
 
     error_code = database.exec (query, null, out error_msg);
@@ -48,24 +72,21 @@ public class DatabaseBackend : GLib.Object {
   }
 
   public SensorNode get_sensor (int id) {
-    error_code = database.prepare_v2 (prepared_query_string, prepared_query_string.length, out statement);
+    string query = "SELECT * FROM sensors";
+    error_code = database.exec (query, sensors_callback, out error_msg);
     if (error_code != Sqlite.OK) {
-      error ("Error: %d: %s\n", error_code, error_msg);
+       error ("Error: %s\n", error_msg);
     }
 
-    int param_position = statement.bind_parameter_index ("$UID");
-    assert (param_position > 0);
-
-    statement.bind_int (param_position, 1);
-
-    SensorNode sensor = new SensorNode (666, "Testsensor");
-
-    return sensor;
+    return sensors[id - 1];
   }
 
   public GenericArray<SensorNode> get_sensors () {
-    GenericArray<SensorNode> data = new GenericArray<SensorNode> ();
-
-    return data;
+    string query = "SELECT * FROM sensors";
+    error_code = database.exec (query, sensors_callback, out error_msg);
+    if (error_code != Sqlite.OK) {
+       error ("Error: %s\n", error_msg);
+    }
+    return sensors;
   }
 }
