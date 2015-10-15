@@ -36,12 +36,14 @@ tests_CFLAGS = \
 tests_CPPFLAGS = \
 								 -I$(top_srcdir)/src \
 								 $(GLIB_CFLAGS) \
+								 $(SQLITE_CFLAGS) \
 								 $(XMZ_MOD_TOUCH_GUI_CFLAGS) \
 								 $(NULL)
 
 tests_LDADD = \
 							$(GTK_LIBS) \
 							$(GLIB_LIBS) \
+							$(SQLITE_LIBS) \
 							$(NULL)
 
 tests_VALAFLAGS = \
