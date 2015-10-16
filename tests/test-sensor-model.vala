@@ -24,13 +24,13 @@ class SensorModelTest : Gee.TestCase {
   public void test_add () {
     assert (! model.get_iter_first (out iter));
 
-    model.add (1, "Sensor 1 (CO)");
+    model.add (1, "Sensor 1 (CO)", 0, 0, 0);
 
     assert (model.get_iter_first (out iter));
   }
 
   public void test_get_column_type () {
-    model.add (1, "Sensor 1 (CO)");
+    model.add (1, "Sensor 1 (CO)", 0, 0, 0);
 
     assert (model.get_column_type (0) == typeof (int));
     assert (model.get_column_type (1) == typeof (string));

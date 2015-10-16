@@ -13,8 +13,8 @@ public class SensorModel : Object, Gtk.TreeModel {
     }
   }
 
-  public void add (int id, string name) {
-    data.add (new SensorNode (id, name));
+  public void add (int id, string name, int adc_value, int adc_messgas, int adc_nullgas) {
+    data.add (new SensorNode (id, name, adc_value, adc_messgas, adc_nullgas));
     stamp++;
   }
 
@@ -24,6 +24,12 @@ public class SensorModel : Object, Gtk.TreeModel {
         return typeof (int);
       case 1:
         return typeof (string);
+      case 2:
+        return typeof (int);
+      case 3:
+        return typeof (int);
+      case 4:
+        return typeof (int);
       default:
         return Type.INVALID;
     }
@@ -45,6 +51,18 @@ public class SensorModel : Object, Gtk.TreeModel {
       case 1:
         val = Value (typeof (string));
         val.set_string (node.name);
+        break;
+      case 2:
+        val = Value (typeof (int));
+        val.set_int (node.adc_value);
+        break;
+      case 3:
+        val = Value (typeof (int));
+        val.set_int (node.adc_messgas);
+        break;
+      case 4:
+        val = Value (typeof (int));
+        val.set_int (node.adc_nullgas);
         break;
       default:
         val = Value (Type.INVALID);
