@@ -65,10 +65,23 @@ public class Application : Gtk.Window {
     Gtk.TreeView view = new Gtk.TreeView.with_model (model);
     view.insert_column_with_attributes (-1, "ID",   new Gtk.CellRendererText (), "text", 0);
     view.insert_column_with_attributes (-1, "Name", new Gtk.CellRendererText (), "text", 1);
+    view.insert_column_with_attributes (-1, "Analog/ Digital Wert", new Gtk.CellRendererText (), "text", 2);
 
     var grid_main_window = builder.get_object ("grid_main_window") as Grid;
     view.set_hexpand (true);
     grid_main_window.attach (view, 0, 0, 3, 3);
+
+
+    // Sensor settings window
+    var paned_sensor_settings = builder.get_object ("paned_sensor_settings") as Gtk.Paned;
+    var sensor_settings_view = new Gtk.TreeView.with_model (model) as Gtk.TreeView;
+    sensor_settings_view.set_headers_visible (false);
+    var frame = new Gtk.Frame ("Sensor Settings");
+    sensor_settings_view.insert_column_with_attributes (-1, "ID",   new Gtk.CellRendererText (), "text", 0);
+    sensor_settings_view.insert_column_with_attributes (-1, "Name", new Gtk.CellRendererText (), "text", 1);
+
+    paned_sensor_settings.add1 (sensor_settings_view);
+    paned_sensor_settings.add2 (frame);
   }
 
   public static int main (string[] args) {
