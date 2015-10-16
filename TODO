@@ -1,8 +1,18 @@
-#Fehlende Komponenten
-##Info Bar
+
+# DatabaseBackend.init_sqlite ()
+
+* Dieser Funktion sollte ein Verzeichnis als Parameter übergeben werden,
+so dass eine Datenbank für die Testläufe und eine Datenbank für die Produktion
+erstellt werden kann.
+
+* database.db wo wird diese installiert?_
+
+
+# Fehlende Komponenten
+## Info Bar
 Das Hauptfenster sollte noch ein Gtk.InfoBar erhalten. Hier werden dann alle Nachrichten
 dargestellt.
 
-##make data dir more gnome like
+## make data dir more gnome like
 https://git.gnome.org/browse/gnome-sudoku/tree/data
 * move images to data dir

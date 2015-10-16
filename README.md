@@ -1,7 +1,20 @@
 
-##Installation
+## Installation
 
-Dieses Programm kann mit dem bekannten Dreisatz erstellt und installiert werden.
+### Abhängikeiten
+
+Zunächst müssen die nötigen Tools, Programme und Bibliotheken installiert werden.
+
+    apt-get install -qq -y git autoconf build-essential valac libgtk-3-dev libgee-0.8-dev
+
+### aus den Quellen übersetzen
+
+Nun kann der Quellcode aus dem Git Repository ausgecheckt werden.
+
+    git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
+
+
+Anschließend kann das Programm mit dem bekannten Dreisatz erstellt und installiert werden.
 
     ./autogen.sh [--prefix=/home/your_username/.local]
     make
@@ -31,25 +44,17 @@ Der Befehl `make` linkt alle Bibliothken.
 installiert die xmz_mod_touch_gui_vala.desktop Datei nach
 `/home/your_username/.local/share/applications`
 
-##Deinstallation
+### Deinstallation
 
 Für die Deinstallation bitte diesen Befehl verwenden:
 
     make uninstall
 
-##Packing
+### Packing
 
 Es kann auch ein tarball erstellt weden, verwende dazu diesen Befehl:
 
     make distcheck
-
-## Database
-
-    sqlite3 src/testdb << EOF
-    CREATE TABLE sensors (id INT, name TEXT, value DOUBLE);
-    INSERT INTO tbl VALUES (1, "Sensor 1", 0);
-    INSERT INTO tbl VALUES (2, "Sensor 2", 0);
-    EOF
 
 
 
@@ -72,7 +77,7 @@ der Datei ./tests/testmain.vala eingetragen werden.
     gtester --verbose -p /TestExample tests/tests
 
 
-###Autotools
+### Autotools
 
     ./autogen.sh [evtl. Parameter für configure, z.B. --prefix=/usr]
 
@@ -83,6 +88,14 @@ der Datei ./tests/testmain.vala eingetragen werden.
 oder
 
     cap production deploy
+
+### Database
+
+    sqlite3 src/testdb << EOF
+    CREATE TABLE sensors (id INT, name TEXT, value DOUBLE);
+    INSERT INTO tbl VALUES (1, "Sensor 1", 0);
+    INSERT INTO tbl VALUES (2, "Sensor 2", 0);
+    EOF
 
 
 [8]: https://developer.gnome.org/glib/unstable/glib-Testing.html

@@ -1,12 +1,13 @@
 using Gtk;
 
 public class Application : Gtk.Window {
-  [CCode (instance_pos=-1)]
-  public void on_button_settings_clicked (Button source) {
-    // obsolete stdout.printf ("function: on_button_settings_clicked\n");
-  }
+
+  private DatabaseBackend backend;
 
   public Application () {
+    backend = new DatabaseBackend ();
+    backend.init_sqlite ();
+
     // Prepare Gtk.Window
     this.title = "xMZ-Mod-Touch";
     this.window_position = Gtk.WindowPosition.CENTER;
@@ -56,12 +57,9 @@ public class Application : Gtk.Window {
                                     });
 
     // Sensor Model
-    SensorModel model = new SensorModel ();
-    model.add (1, "Sensor 1 (CO)");
-    model.add (2, "Sensor 2 (CO)");
-    model.add (3, "Sensor 3 (CO/NO2)");
-    model.add (4, "Sensor 4 (CO/NO2)");
-    model.add (5, "Sensor 5 (CO/NO2)");
+    GenericArray<SensorNode> sensors = new GenericArray<SensorNode> ();
+    sensors = backend.get_sensors ();
+    SensorModel model = new SensorModel (sensors);
 
     // View
     Gtk.TreeView view = new Gtk.TreeView.with_model (model);

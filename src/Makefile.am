@@ -19,10 +19,13 @@ xmz_mod_touch_gui_CFLAGS = -w \
 xmz_mod_touch_gui_CPPFLAGS = \
 														 -DPKGDATADIR=\"$(datadir)/xmz-mod-touch-gui\" \
 														 -DLOCALEDIR=\"$(localedir)\" \
-														 $(XMZ_MOD_TOUCH_GUI_CFLAGS)
+														 $(SQLITE_CFLAGS) \
+														 $(XMZ_MOD_TOUCH_GUI_CFLAGS) \
+														 $(NULL)
 
 xmz_mod_touch_gui_LDADD = \
 													$(GTK_LIBS) \
+													$(SQLITE_LIBS) \
 													$(NULL)
 
 xmz_mod_touch_gui_VALAFLAGS = \
