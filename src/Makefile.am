@@ -36,16 +36,19 @@ xmz_mod_touch_gui_VALAFLAGS = \
 															--pkg gmodule-2.0 \
 															--pkg sqlite3 \
 															--target-glib=$(GLIB_REQUIRED) \
-															--gresources=$(abs_top_srcdir)/data/xmz-mod-touch-gui.gresource.xml
+															--gresources=$(abs_top_srcdir)/data/xmz-mod-touch-gui.gresource.xml \
+															$(NULL)
 
 xmz-mod-touch-gui-resources.c: $(top_srcdir)/data/xmz-mod-touch-gui.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/xmz-mod-touch-gui.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $<
 
 desktopdir = $(datadir)/applications
 desktop_DATA = \
-							 xmz-mod-touch-gui.desktop
+							 xmz-mod-touch-gui.desktop \
+							$(NULL)
 
 CLEANFILES = \
-						 xmz-mod-touch-gui-resources.c
+						 xmz-mod-touch-gui-resources.c \
+						$(NULL)
 
 -include $(top_srcdir)/git.mk

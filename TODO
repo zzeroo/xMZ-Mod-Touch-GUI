@@ -1,3 +1,5 @@
+# config.h
+config.h für Autotools nach dieser Anleitung einbinden: https://wiki.gnome.org/Projects/Vala/GameDevelopmentSeries/Setup
 
 # DatabaseBackend.init_sqlite ()
 
@@ -16,3 +18,9 @@ dargestellt.
 ## make data dir more gnome like
 https://git.gnome.org/browse/gnome-sudoku/tree/data
 * move images to data dir
+
+#Icons nach gitg
+Icons nach gitg einbinden
+* https://git.gnome.org/browse/gitg/tree/Makefile.am
+* https://git.gnome.org/browse/gitg/tree/icons.make
+
