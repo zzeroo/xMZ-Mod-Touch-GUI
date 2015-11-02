@@ -51,20 +51,45 @@ GTK_REQUIRED_VERSION=3.12.0
 INTROSPECTION_REQUIRED=0.10.1
 
 PKG_CHECK_MODULES(XMZ, [
-	gthread-2.0 >= $GLIB_REQUIRED_VERSION
-	glib-2.0 >= $GLIB_REQUIRED_VERSION
-	gobject-2.0 >= $GLIB_REQUIRED_VERSION
-	gmodule-2.0 >= $GLIB_REQUIRED_VERSION
-	gio-2.0 >= $GLIB_REQUIRED_VERSION
-	gio-unix-2.0 >= $GLIB_REQUIRED_VERSION
-	gobject-introspection-1.0 >= $INTROSPECTION_REQUIRED
-	gtk+-3.0 >= $GTK_REQUIRED_VERSION
-	gsettings-desktop-schemas
-	gee-0.8
-	sqlite3
-])
+                        gthread-2.0 >= $GLIB_REQUIRED_VERSION
+                        glib-2.0 >= $GLIB_REQUIRED_VERSION
+                        gobject-2.0 >= $GLIB_REQUIRED_VERSION
+                        gmodule-2.0 >= $GLIB_REQUIRED_VERSION
+                        gio-2.0 >= $GLIB_REQUIRED_VERSION
+                        gio-unix-2.0 >= $GLIB_REQUIRED_VERSION
+                        gobject-introspection-1.0 >= $INTROSPECTION_REQUIRED
+                        gtk+-3.0 >= $GTK_REQUIRED_VERSION
+                        gsettings-desktop-schemas
+                        gee-1.0
+                        sqlite3
+                        ])
 
 XMZ_VALAFLAGS="--target-glib 2.38"
+
+XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
+XMZ_LIBS="$LIBXMZ_LIBS $XMZ_LIBS -lm"
+
+AC_SUBST(XMZ_CFLAGS)
+AC_SUBST(XMZ_LIBS)
+
+GOBJECT_INTROSPECTION_REQUIRE($INTROSPECTION_REQUIRED)
+AC_SUBST(INTROSPECTION_REQUIRED)
+
+INTROSPECTION_GIRDIR=`$PKG_CONFIG \
+  --define-variable="prefix=${prefix}" \
+  --define-variable="datarootdir=${datarootdir}" \
+  --define-variable="datadir=${datadir}" \
+  --variable=girdir gobject-introspection-1.0`
+
+INTROSPECTION_TYPELIBDIR=`$PKG_CONFIG \
+  --define-variable="prefix=${prefix}" \
+  --define-variable="libdir=${libdir}" \
+  --variable=typelibdir gobject-introspection-1.0`
+
+GNOME_COMPILE_WARNINGS([maximum])
+
+GLIB_GSETTINGS
+
 
 AC_CONFIG_FILES([
                  Makefile

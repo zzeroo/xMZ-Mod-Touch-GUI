@@ -7,11 +7,6 @@ test -n "$srcdir" || srcdir=.
 olddir=`pwd`
 cd "$srcdir"
 
-#[ ! -f README ] && ln README.md README
-[ ! -f ChangeLog ] && touch ChangeLog
-[ ! -f NEWS ] && touch NEWS
-[ ! -f README ] && touch README
-[ ! -f AUTHORS ] && touch AUTHORS
 
 INTLTOOLIZE=`which intltoolize`
 if test -z $INTLTOOLIZE; then
@@ -31,7 +26,8 @@ if test -z `which autopoint`; then
 fi
 
 
-autoreconf --verbose --force --install -Wno-portability || exit 1
+autopoint --force
+AUTOPOINT='intltoolize --automake --copy' autoreconf --force --install --verbose
 
 
 cd "$olddir"
