@@ -96,8 +96,8 @@
 /po/Rules-quot
 /po/missing
 /so_locations
-/src/Makefile.in
 /src/xmz
+/src/xmz.c
 /src_xmz_vala.stamp
 /stamp-h1
 /tags
@@ -106,4 +106,3 @@
 /tests/sensor-view.c
 /tests_sensor_view_vala.stamp
 /xmldocs.make
-/xmz.c
