@@ -87,7 +87,7 @@ SCALABLE_ICONS    =
 gsettings_SCHEMAS =
 TESTS             =
 
-include src/Makefile.am
+include xmz/Makefile.am
 include tests/Makefile.am
 
 

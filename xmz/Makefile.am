@@ -1,18 +1,18 @@
-bin_PROGRAMS += src/xmz
+bin_PROGRAMS += xmz/xmz
 
-src_xmz_CPPFLAGS = \
+xmz_xmz_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(srcdir) \
 	$(NULL)
 
-src_xmz_CFLAGS = \
+xmz_xmz_CFLAGS = \
 	$(XMZ_CFLAGS) \
 	$(WARN_CFLAGS) \
 	-w \
 	$(NULL)
 
 
-src_xmz_VALAFLAGS = \
+xmz_xmz_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	$(XMZ_VALAFLAGS) \
 	--pkg config \
@@ -22,22 +22,22 @@ src_xmz_VALAFLAGS = \
 	--pkg gee-1.0 \
 	--girdir "$(top_builddir)" \
 	--vapidir "$(top_srcdir)/vapi" \
-	--gresources "$(top_srcdir)/src/resources/xmz-resources.xml" \
+	--gresources "$(top_srcdir)/xmz/resources/xmz-resources.xml" \
 	$(NULL)
 
 
-src_xmz_LDADD = \
+xmz_xmz_LDADD = \
 	$(XMZ_LIBS) \
 	$(NULL)
 
-src_xmz_LDFLAGS = \
+xmz_xmz_LDFLAGS = \
 	$(NULL)
 
 
-src_xmz_VALASOURCES = \
-	src/xmz.vala \
+xmz_xmz_VALASOURCES = \
+	xmz/xmz.vala \
 	$(NULL)
 
-src_xmz_SOURCES = \
-	$(src_xmz_VALASOURCES) \
+xmz_xmz_SOURCES = \
+	$(xmz_xmz_VALASOURCES) \
 	$(NULL)
