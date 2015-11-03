@@ -1,16 +1,18 @@
-bin_PROGRAMS = src/xmz
+bin_PROGRAMS = xmz
 
-src_xmz_CPPFLAGS = \
+xmz_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(srcdir) \
 	$(NULL)
 
-src_xmz_CFLAGS = \
+xmz_CFLAGS = \
 	$(XMZ_CFLAGS) \
+	$(WARN_CFLAGS) \
+	-w \
 	$(NULL)
 
 
-src_xmz_VALAFLAGS = \
+xmz_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	$(XMZ_VALAFLAGS) \
 	--pkg config \
@@ -24,22 +26,18 @@ src_xmz_VALAFLAGS = \
 	$(NULL)
 
 
-src_xmz_LDADD = \
+xmz_LDADD = \
 	$(XMZ_LIBS) \
 	$(NULL)
 
-src_xmz_LDFLAGS = \
+xmz_LDFLAGS = \
 	$(NULL)
 
 
-src_xmz_VALASOURCES = \
-	main.vala \
+xmz_VALASOURCES = \
+	xmz.vala \
 	$(NULL)
 
-src_xmz_SOURCES = \
-	$(src_xmz_VALASOURCES) \
+xmz_SOURCES = \
+	$(xmz_VALASOURCES) \
 	$(NULL)
-
-
-
--include $(top_srcdir)/git.mk

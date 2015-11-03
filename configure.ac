@@ -2,8 +2,8 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.64])
 
-m4_define(xmz_major_version, 3)
-m4_define(xmz_minor_version, 17)
+m4_define(xmz_major_version, 0)
+m4_define(xmz_minor_version, 5)
 m4_define(xmz_micro_version, 1)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
@@ -14,7 +14,7 @@ AC_INIT([xmz],
         [http://gaswarnanlagen.com/xmz])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_SRCDIR([src/main.vala])
+AC_CONFIG_SRCDIR([src/xmz.vala])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
