@@ -88,7 +88,6 @@
 /m4/wchar_t.m4
 /m4/wint_t.m4
 /m4/xsize.m4
-/main.c
 /omf.make
 /po/*.header
 /po/*.sed
@@ -103,4 +102,8 @@
 /stamp-h1
 /tags
 /test-suite.log
+/tests/sensor-view
+/tests/sensor-view.c
+/tests_sensor_view_vala.stamp
 /xmldocs.make
+/xmz.c

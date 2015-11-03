@@ -1,18 +1,18 @@
-bin_PROGRAMS = xmz
+bin_PROGRAMS += src/xmz
 
-xmz_CPPFLAGS = \
+src_xmz_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(srcdir) \
 	$(NULL)
 
-xmz_CFLAGS = \
+src_xmz_CFLAGS = \
 	$(XMZ_CFLAGS) \
 	$(WARN_CFLAGS) \
 	-w \
 	$(NULL)
 
 
-xmz_VALAFLAGS = \
+src_xmz_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	$(XMZ_VALAFLAGS) \
 	--pkg config \
@@ -26,18 +26,18 @@ xmz_VALAFLAGS = \
 	$(NULL)
 
 
-xmz_LDADD = \
+src_xmz_LDADD = \
 	$(XMZ_LIBS) \
 	$(NULL)
 
-xmz_LDFLAGS = \
+src_xmz_LDFLAGS = \
 	$(NULL)
 
 
-xmz_VALASOURCES = \
-	xmz.vala \
+src_xmz_VALASOURCES = \
+	src/xmz.vala \
 	$(NULL)
 
-xmz_SOURCES = \
-	$(xmz_VALASOURCES) \
+src_xmz_SOURCES = \
+	$(src_xmz_VALASOURCES) \
 	$(NULL)

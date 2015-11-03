@@ -8,7 +8,6 @@ olddir=`pwd`
 cd "$srcdir"
 
 [ ! -f NEWS ] && touch NEWS
-[ ! -f README ] && touch README
 [ ! -f AUTHORS ] && touch AUTHORS
 [ ! -f ChangeLog ] && touch ChangeLog
 

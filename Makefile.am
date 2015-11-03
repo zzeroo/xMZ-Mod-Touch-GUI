@@ -2,7 +2,8 @@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = src
+SUBDIRS = \
+	$(NULL)
 
 DISTCLEANFILES = \
 	intltool-extract \
@@ -77,6 +78,19 @@ GRESDEPS = $(srcdir)/$1 $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencie
 
 GRESGEN = $(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target="$@" --sourcedir="$(dir $<)" --generate-source "$<"
 
+noinst_HEADERS    =
+GITIGNOREFILES    =
+CLEANFILES        =
+bin_PROGRAMS      =
+noinst_PROGRAMS   =
+SCALABLE_ICONS    =
+gsettings_SCHEMAS =
+TESTS             =
+
+include src/Makefile.am
+include tests/Makefile.am
+
+
 EXTRA_DIST += \
 	vapi/config.vapi
 
@@ -84,3 +98,8 @@ EXTRA_DIST += \
 	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS) --includedir=$(top_srcdir) -o $@ $<
 
 .PHONY: generate-changelog
+
+
+-include $(top_srcdir)/git.mk
+
+# vi:ts=8:noet
