@@ -4,7 +4,7 @@ AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
 m4_define(xmz_minor_version, 5)
-m4_define(xmz_micro_version, 1)
+m4_define(xmz_micro_version, 2)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
 AC_INIT([xmz],
@@ -44,6 +44,13 @@ AC_PATH_PROGS(GTK_UPDATE_ICON_CACHE, gtk3-update-icon-cache gtk-update-icon-cach
 
 AC_PATH_PROG(VALADOC, valadoc)
 
+
+AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT([external])
+
+GETTEXT_PACKAGE=xmz
+AC_SUBST(GETTEXT_PACKAGE)
+
 AC_CHECK_LIB([m], [sinf])
 
 GLIB_REQUIRED_VERSION=2.38
@@ -64,7 +71,40 @@ PKG_CHECK_MODULES(XMZ, [
                         sqlite3
                         ])
 
+AC_ARG_ENABLE(docs,
+              [AS_HELP_STRING([--enable-docs],
+                              [enable generating documentation [default=no]])],
+              [enable_docs=$enableval])
+
+if test "$enable_docs" = "yes"; then
+	if test "$VALADOC" = ""; then
+		AC_MSG_ERROR([could not find valadoc])
+	fi
+fi
+
+if test "x$USE_MAINTAINER_MODE" = "xyes"; then
+LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -Wall -Werror -Wuninitialized -Wmissing-declarations"
+fi
+
+AC_ARG_ENABLE(debug,
+              [AS_HELP_STRING([--disable-debug],
+                              [disable debug information [default=yes]])],
+              [enable_debug=$enableval], [enable_debug=yes])
+
+
+AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
+
 XMZ_VALAFLAGS="--target-glib 2.38"
+
+
+if test "x$enable_debug" = "xyes"; then
+	LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -g -O0"
+	XMZ_VALAFLAGS="$XMZ_VALAFLAGS -g"
+
+	AC_DEFINE([ENABLE_DEBUG],[1],[Whether debugging support is enabled])
+fi
+
+
 
 XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
 XMZ_LIBS="$LIBXMZ_LIBS $XMZ_LIBS -lm"
@@ -96,3 +136,13 @@ AC_CONFIG_FILES([
                  ])
 
 AC_OUTPUT
+
+echo "
+
+Configuration:
+
+	Source code location:	${srcdir}
+	Compiler:		${CC}
+	Debug enabled:          ${enable_debug}
+"
+
