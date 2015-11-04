@@ -52,7 +52,15 @@ xmz_xmz_VALASOURCES = \
 
 xmz_xmz_SOURCES = \
 	$(xmz_xmz_VALASOURCES) \
+	xmz/xmz-resources.c \
 	$(NULL)
+
+xmz_resources_deps = $(call GRESDEPS,xmz/resources/xmz-resources.xml)
+xmz/xmz-resources.c: $(xmz_resources_deps)
+	$(GRESGEN)
+
+CLEANFILES += xmz/xmz-resources.c
+EXTRA_DIST += $(xmz_resources_deps)
 
 
 # vi:ts=8:noet
