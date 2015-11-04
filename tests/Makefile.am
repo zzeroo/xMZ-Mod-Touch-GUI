@@ -4,7 +4,7 @@ tests_common_cppflags = \
 		-I$(top_srcdir)/libxmz \
 		$(NULL)
 
-tests_common_clags = \
+tests_common_cflags = \
 		-g \
 		$(XMZ_DEBUG_FLAGS) \
 		$(XMZ_CFLAGS) \
@@ -27,9 +27,9 @@ TESTS_DEMO_PROGS = \
 
 tests_sensor_view_SOURCES = tests/sensor-view.vala $(XMZ_PLUGIN_VAPISOURCES)
 tests_sensor_view_VALAFLAGS = $(tests_common_valaflags)
-tests_sensor_view_CFLAGS = $(tests_common_clags)
+tests_sensor_view_CFLAGS = $(tests_common_cflags)
 tests_sensor_view_CPPFLAGS = $(tests_common_cppflags)
-tests_sensor_view_LDADD = $(tests_common_ldadd)
+tests_sensor_view_LDADD = libxmz/libxmz-1.0.la $(tests_common_ldadd)
 
 include tests/libxmz/Makefile.am
 include tests/xmz/Makefile.am

@@ -2,6 +2,7 @@ using Gtk;
 using XMZ;
 
 class TestSensorView {
+
   public static int main (string[] args) {
     Gtk.init (ref args);
 
@@ -12,18 +13,18 @@ class TestSensorView {
       return 1;
     }
 
-    var Window = new Window ();
+    var window = new Window ();
     window.set_default_size (1024, 600);
 
-    window.show_all ();
 
-    window.delete_event_connect ((w, ev) => {
+    window.delete_event.connect ((w, ev) => {
                                  Gtk.main_quit ();
                                  return true;
                                  });
 
-    Gtk.main ();
+    window.show ();
 
+    Gtk.main ();
     return 0;
   }
 }
