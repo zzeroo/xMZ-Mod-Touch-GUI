@@ -4,7 +4,7 @@ AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
 m4_define(xmz_minor_version, 5)
-m4_define(xmz_micro_version, 2)
+m4_define(xmz_micro_version, 3)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
 AC_INIT([xmz],
@@ -44,6 +44,12 @@ AC_PATH_PROGS(GTK_UPDATE_ICON_CACHE, gtk3-update-icon-cache gtk-update-icon-cach
 
 AC_PATH_PROG(VALADOC, valadoc)
 
+# Initialize libtool
+LT_PREREQ([2.2])
+LT_INIT(disable-static)
+
+# i18n stuff
+IT_PROG_INTLTOOL([0.40.0])
 
 AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
@@ -51,13 +57,38 @@ AM_GNU_GETTEXT([external])
 GETTEXT_PACKAGE=xmz
 AC_SUBST(GETTEXT_PACKAGE)
 
+dnl adl_RECURSIVE_EVAL(VALUE, RESULT)
+dnl =================================
+dnl Interpolate the VALUE in loop until it doesn't change,
+dnl and set the result to $RESULT.
+dnl WARNING: It's easy to get an infinite loop with some unsane input.
+AC_DEFUN([adl_RECURSIVE_EVAL],
+[_lcl_receval="$1"
+$2=`(test "x$prefix" = xNONE && prefix="$ac_default_prefix"
+     test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+     _lcl_receval_old=''
+     while test "[$]_lcl_receval_old" != "[$]_lcl_receval"; do
+       _lcl_receval_old="[$]_lcl_receval"
+       eval _lcl_receval="\"[$]_lcl_receval\""
+     done
+     echo "[$]_lcl_receval")`])
+
+adl_RECURSIVE_EVAL("$datadir/xmz", [XMZ_DATADIR])
+adl_RECURSIVE_EVAL("$datadir/locale", [XMZ_LOCALEDIR])
+adl_RECURSIVE_EVAL("$libdir/xmz", [XMZ_LIBDIR])
+
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED(XMZ_DATADIR,"$XMZ_DATADIR", [data dir])
+AC_DEFINE_UNQUOTED(XMZ_LOCALEDIR,"$XMZ_LOCALEDIR", [locale dir])
+AC_DEFINE_UNQUOTED(XMZ_LIBDIR,"$XMZ_LIBDIR", [lib dir])
+
 AC_CHECK_LIB([m], [sinf])
 
 GLIB_REQUIRED_VERSION=2.38
 GTK_REQUIRED_VERSION=3.12.0
 INTROSPECTION_REQUIRED=0.10.1
 
-PKG_CHECK_MODULES(XMZ, [
+PKG_CHECK_MODULES(LIBXMZ, [
                         gthread-2.0 >= $GLIB_REQUIRED_VERSION
                         glib-2.0 >= $GLIB_REQUIRED_VERSION
                         gobject-2.0 >= $GLIB_REQUIRED_VERSION
@@ -71,6 +102,16 @@ PKG_CHECK_MODULES(XMZ, [
                         sqlite3
                         ])
 
+cflags_save="${CFLAGS}"
+libs_save="${LIBS}"
+
+CFLAGS="${CFLAGS} ${LIBXMZ_CFLAGS}"
+LIBS="${LIBS} ${LIBXMZ_LIBS}"
+
+CFLAGS="${cflags_save}"
+LIBS="${libs_save}"
+
+
 AC_ARG_ENABLE(docs,
               [AS_HELP_STRING([--enable-docs],
                               [enable generating documentation [default=no]])],
@@ -82,6 +123,8 @@ if test "$enable_docs" = "yes"; then
 	fi
 fi
 
+AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
+
 if test "x$USE_MAINTAINER_MODE" = "xyes"; then
 LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -Wall -Werror -Wuninitialized -Wmissing-declarations"
 fi
@@ -91,11 +134,7 @@ AC_ARG_ENABLE(debug,
                               [disable debug information [default=yes]])],
               [enable_debug=$enableval], [enable_debug=yes])
 
-
-AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
-
 XMZ_VALAFLAGS="--target-glib 2.38"
-
 
 if test "x$enable_debug" = "xyes"; then
 	LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -g -O0"
@@ -104,6 +143,14 @@ if test "x$enable_debug" = "xyes"; then
 	AC_DEFINE([ENABLE_DEBUG],[1],[Whether debugging support is enabled])
 fi
 
+AC_SUBST(LIBXMZ_CFLAGS)
+AC_SUBST(LIBXMZ_LIBS)
+
+AC_SUBST(XMZ_VALAFLAGS)
+
+PKG_CHECK_MODULES(XMZ, [
+                        gsettings-desktop-schemas
+                        ])
 
 
 XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
@@ -130,9 +177,43 @@ GNOME_COMPILE_WARNINGS([maximum])
 
 GLIB_GSETTINGS
 
+GLADE_UI_REQUIRED=3.2
+
+AC_ARG_ENABLE([glade-catalog],
+              [AS_HELP_STRING([--enable-glade-catalog[=@<:@no/auto/yes@:>@]],
+                              [Install a glade catalog file [default=no]])],
+                              [glade_catalog=$enableval],
+                              [glade_catalog="no"])
+
+AM_CONDITIONAL([GLADE_CATALOG], [ test "$glade_catalog" = "yes" ])
+
+XMZ_PLUGIN_CFLAGS="$XMZ_CFLAGS"
+XMZ_PLUGIN_LIBS="$XMZ_LIBS"
+
+AC_SUBST(XMZ_PLUGIN_CFLAGS)
+AC_SUBST(XMZ_PLUGIN_LIBS)
+
+XMZ_PLUGIN_LIBTOOL_FLAGS="-module -avoid-version"
+AC_SUBST(XMZ_PLUGIN_LIBTOOL_FLAGS)
+
+XMZ_PLUGIN_VALAFLAGS="	\
+	--pkg gio-2.0				\
+	--pkg gtk+-3.0				\
+	--pkg gee-1.0	\
+	--pkg config				\
+	\$(XMZ_VALAFLAGS)			\
+	--vapidir \$(top_srcdir)/vapi		\
+	--vapidir \$(top_builddir)/libxmz"
+
+AC_SUBST(XMZ_PLUGIN_VALAFLAGS)
+
 
 AC_CONFIG_FILES([
                  Makefile
+                 libxmz/libxmz-1.0.pc
+                 data/xmz.desktop.in
+                 data/com.gaswarnanlagen.xmz.gschema.xml.in
+                 po/Makefile.in
                  ])
 
 AC_OUTPUT
@@ -143,6 +224,7 @@ Configuration:
 
 	Source code location:	${srcdir}
 	Compiler:		${CC}
+	Glade catalog:          ${glade_catalog}
 	Debug enabled:          ${enable_debug}
 "
 

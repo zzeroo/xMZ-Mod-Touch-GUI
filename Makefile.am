@@ -2,8 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = \
-	$(NULL)
+SUBDIRS = po
 
 DISTCLEANFILES = \
 	intltool-extract \
@@ -11,7 +10,8 @@ DISTCLEANFILES = \
 	intltool-update
 
 EXTRA_DIST = \
-	autogen.sh
+	autogen.sh \
+	PACKAGING
 
 MAINTAINERCLEANFILES = \
 	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL) \
@@ -87,9 +87,19 @@ SCALABLE_ICONS    =
 gsettings_SCHEMAS =
 TESTS             =
 
+XMZ_PLUGIN_VAPISOURCES = \
+	libxmz/libxmz-1.0.vapi
+
+include libxmz/Makefile.am
 include xmz/Makefile.am
+include data/Makefile.am
 include tests/Makefile.am
 
+@INTLTOOL_DESKTOP_RULE@
+@INTLTOOL_XML_NOMERGE_RULE@
+@GSETTINGS_RULES@
+
+GITIGNOREFILES += $(gsettings_SCHEMAS)
 
 EXTRA_DIST += \
 	vapi/config.vapi

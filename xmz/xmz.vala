@@ -1,7 +1,15 @@
+namespace XMZ {
 
+private const string version = Config.VERSION;
 
-public static int main () {
-  stdout.printf ("xMZ-Mod-Touch\n");
+public class Main {
+  public static int main (string[] args) {
 
-  return 0;
+    Environment.set_prgname ("xmz");
+    Environment.set_application_name (_("xmz"));
+
+    Application app = new Application ();
+    return app.run (args);
+  }
+}
 }

@@ -1,0 +1,15 @@
+[Desktop Entry]
+_Name=xmz
+_Comment=xMesszentrale mit Modbus Interface und Touchscreen
+Exec=xmz %U
+TryExec=xmz
+Terminal=false
+Type=Application
+Icon=xmz
+Categories=GNOME;GTK;Development;
+MimeType=x-scheme-handler/xmz;
+#X-GNOME-DocPath=xmz/xmz.xml
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=xmz
+X-GNOME-Bugzilla-Component=core
+X-GNOME-Bugzilla-Version=@VERSION@

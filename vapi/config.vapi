@@ -5,8 +5,8 @@ namespace XMZ.Config
 	public const string PACKAGE_NAME;
 	public const string PACKAGE_VERSION;
 	public const string PACKAGE_URL;
-	public const string GITG_DATADIR;
-	public const string GITG_LOCALEDIR;
-	public const string GITG_LIBDIR;
+	public const string XMZ_DATADIR;
+	public const string XMZ_LOCALEDIR;
+	public const string XMZ_LIBDIR;
 	public const string VERSION;
 }

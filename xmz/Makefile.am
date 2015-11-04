@@ -3,6 +3,9 @@ bin_PROGRAMS += xmz/xmz
 xmz_xmz_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(srcdir) \
+	-DDATADIR=\""$(datadir)"\" \
+	-DXMZ_DATADIR=\""$(datadir)/xmz"\" \
+	-DXMZ_LOCALEDIR=\""$(datadir)/locale"\" \
 	$(NULL)
 
 xmz_xmz_CFLAGS = \
@@ -22,22 +25,34 @@ xmz_xmz_VALAFLAGS = \
 	--pkg gee-1.0 \
 	--girdir "$(top_builddir)" \
 	--vapidir "$(top_srcdir)/vapi" \
+	--vapidir "$(top_builddir)/libxmz" \
 	--gresources "$(top_srcdir)/xmz/resources/xmz-resources.xml" \
 	$(NULL)
 
 
 xmz_xmz_LDADD = \
+	libxmz/libxmz-1.0.la \
 	$(XMZ_LIBS) \
+	$(PACKAGE_LIBS) \
 	$(NULL)
 
 xmz_xmz_LDFLAGS = \
+	-export-dynamic \
+	-no-undefined \
+	-export-symbols-regex "^[[^_]].*" \
 	$(NULL)
 
 
 xmz_xmz_VALASOURCES = \
 	xmz/xmz.vala \
+	xmz/xmz-application.vala \
+	xmz/xmz-window.vala \
+	libxmz/libxmz-1.0.vapi \
 	$(NULL)
 
 xmz_xmz_SOURCES = \
 	$(xmz_xmz_VALASOURCES) \
 	$(NULL)
+
+
+# vi:ts=8:noet
