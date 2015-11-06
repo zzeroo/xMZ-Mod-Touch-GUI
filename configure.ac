@@ -148,6 +148,13 @@ AC_SUBST(LIBXMZ_LIBS)
 
 AC_SUBST(XMZ_VALAFLAGS)
 
+LIBXMZ_EXT_CFLAGS="$LIBXMZ_CFLAGS"
+LIBXMZ_EXT_LIBS="$LIBXMZ_LIBS"
+
+AC_SUBST(LIBXMZ_EXT_CFLAGS)
+AC_SUBST(LIBXMZ_EXT_LIBS)
+
+
 PKG_CHECK_MODULES(XMZ, [
                         gsettings-desktop-schemas
                         ])
@@ -203,14 +210,15 @@ XMZ_PLUGIN_VALAFLAGS="	\
 	--pkg config				\
 	\$(XMZ_VALAFLAGS)			\
 	--vapidir \$(top_srcdir)/vapi		\
-	--vapidir \$(top_builddir)/libxmz"
+	--vapidir \$(top_builddir)/libxmz \
+	--vapidir \$(top_builddir)/libxmz-ext"
 
 AC_SUBST(XMZ_PLUGIN_VALAFLAGS)
-
 
 AC_CONFIG_FILES([
                  Makefile
                  libxmz/libxmz-1.0.pc
+                 libxmz-ext/libxmz-ext-1.0.pc
                  data/xmz.desktop.in
                  data/com.gaswarnanlagen.xmz.gschema.xml.in
                  po/Makefile.in

@@ -25,6 +25,8 @@
 /TAGS
 /XMZ-1.0.gir
 /XMZ-1.0.typelib
+/XMZExt-1.0.gir
+/XMZExt-1.0.typelib
 /aclocal.m4
 /autom4te.cache
 /autoscan.log
@@ -63,6 +65,11 @@
 /intltool-update
 /intltool-update.in
 /libtool
+/libxmz-ext/libxmz-ext-1.0.la
+/libxmz-ext/libxmz-ext-1.0.pc
+/libxmz-ext/libxmz-ext-1.0.vapi
+/libxmz-ext/libxmz-ext.h
+/libxmz-ext/xmz-ext-resources.c
 /libxmz/libxmz-1.0.la
 /libxmz/libxmz-1.0.pc
 /libxmz/libxmz-1.0.vapi
@@ -70,6 +77,7 @@
 /libxmz/xmz-init.c
 /libxmz/xmz-resource.c
 /libxmz/xmz-resources.c
+/libxmz_ext_libxmz_ext_1_0_la_vala.stamp
 /libxmz_libxmz_1_0_la_vala.stamp
 /m4/codeset.m4
 /m4/gettext.m4
