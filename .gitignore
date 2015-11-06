@@ -159,6 +159,7 @@
 /xmldocs.make
 /xmz/xmz
 /xmz/xmz-application.c
+/xmz/xmz-resources.c
 /xmz/xmz-window.c
 /xmz/xmz.c
 /xmz_xmz_vala.stamp

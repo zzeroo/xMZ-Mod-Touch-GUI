@@ -11,6 +11,7 @@ tests_libxmz_test_libxmz_CPPFLAGS = 		\
 
 tests_libxmz_test_libxmz_VALAFLAGS =		\
 	--pkg posix				\
+	--pkg xmz-assert 			\
 	--pkg gio-2.0				\
 	--pkg gtk+-3.0				\
 	--pkg gee-1.0				\

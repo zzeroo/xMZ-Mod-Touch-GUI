@@ -1,3 +1,5 @@
+
+
 class XMZ.Test.Test : Object {
 
   private GLib.TestSuite d_suite;
@@ -19,7 +21,7 @@ class XMZ.Test.Test : Object {
 
 namespace XMZ.Test.Assert {
 
-void assert_file_contents (string filename, string expected_contents) {
+public static void assert_file_contents (string filename, string expected_contents) {
   string contents;
   size_t len;
 
@@ -29,7 +31,7 @@ void assert_file_contents (string filename, string expected_contents) {
     assert_no_error (e);
   }
 
-  asert_streq (contents, expected_contents);
+  assert_streq (contents, expected_contents);
 }
 }
 

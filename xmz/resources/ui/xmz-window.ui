@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.3 -->
-  <!-- interface-requires gitg 0.0 -->
+  <!-- interface-requires xmz 0.0 -->
   <!-- interface-requires gd 1.0 -->
   <template class="XMZWindow" parent="GtkApplicationWindow">
   </template>

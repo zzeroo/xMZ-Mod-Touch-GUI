@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <id type="desktop">xmz.desktop</id>
+  <licence>CC0</licence>
+  <description>
+    <p>
+      xmz is a graphical user interface for RA-GAS gas detection unit called xMZ.
+    </p>
+    <p>Goals</p>
+    <ul>
+      <li>Start the grapical user inteface</li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default" width="1200" height="675">https://</screenshot>
+  </screenshots>
+  <url type="homepage">http://gaswarnanlagen.com/xmz</url>
+  <updatecontact>s.mueller@it.kls-glt.de</updatecontact>
+</application>
+
