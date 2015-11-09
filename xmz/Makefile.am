@@ -26,12 +26,14 @@ xmz_xmz_VALAFLAGS = \
 	--girdir "$(top_builddir)" \
 	--vapidir "$(top_srcdir)/vapi" \
 	--vapidir "$(top_builddir)/libxmz" \
+	--vapidir "$(top_builddir)/libxmz-ext" \
 	--gresources "$(top_srcdir)/xmz/resources/xmz-resources.xml" \
 	$(NULL)
 
 
 xmz_xmz_LDADD = \
 	libxmz/libxmz-1.0.la \
+	libxmz-ext/libxmz-ext-1.0.la \
 	$(XMZ_LIBS) \
 	$(PACKAGE_LIBS) \
 	$(NULL)
@@ -46,7 +48,9 @@ xmz_xmz_LDFLAGS = \
 xmz_xmz_VALASOURCES = \
 	xmz/xmz.vala \
 	xmz/xmz-application.vala \
+	xmz/xmz-ui-elements.vala \
 	xmz/xmz-window.vala \
+	libxmz-ext/libxmz-ext-1.0.vapi \
 	libxmz/libxmz-1.0.vapi \
 	$(NULL)
 

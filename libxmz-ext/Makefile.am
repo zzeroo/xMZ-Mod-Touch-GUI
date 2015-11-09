@@ -14,17 +14,6 @@ libxmz_ext_libxmz_ext_1_0_la_CFLAGS = \
 	-w \
 	$(NULL)
 
-libxmz_ext_libxmz_ext_1_0_la_LDFLAGS = \
-	-export-dynamic \
-	-no-undefined \
-	-export-symbols-regex "^[^_].*" \
-	$(NULL)
-
-libxmz_ext_libxmz_ext_1_0_la_LIBADD = \
-	libxmz/libxmz-1.0.la \
-	$(LIBXMZ_EXT_LIBS) \
-	$(NULL)
-
 libxmz_ext_libxmz_ext_1_0_la_VALAFLAGS = \
 	--pkg gtk+-3.0 \
 	--pkg gio-2.0 \
@@ -41,7 +30,21 @@ libxmz_ext_libxmz_ext_1_0_la_VALAFLAGS = \
 	--gresources "$(top_srcdir)/libxmz/resources/resources.xml" \
 	$(NULL)
 
+libxmz_ext_libxmz_ext_1_0_la_LDFLAGS = \
+	-export-dynamic \
+	-no-undefined \
+	-export-symbols-regex "^[^_].*" \
+	$(NULL)
+
+libxmz_ext_libxmz_ext_1_0_la_LIBADD = \
+	libxmz/libxmz-1.0.la \
+	$(LIBXMZ_EXT_LIBS) \
+	$(NULL)
+
 libxmz_ext_libxmz_ext_1_0_la_VALASOURCES = \
+	libxmz-ext/xmz-ext-activity.vala \
+	libxmz-ext/xmz-ext-application.vala \
+	libxmz-ext/xmz-ext-ui-element.vala \
 	libxmz-ext/xmz-ext-ui.vala \
 	libxmz/libxmz-1.0.vapi \
 	$(NULL)
@@ -51,17 +54,17 @@ libxmz_ext_libxmz_ext_1_0_la_SOURCES = \
 	libxmz-ext/xmz-ext-resources.c \
 	$(NULL)
 
-libxmz_ext_libxmz_ext_1_0_la_headerdir = $(prefix)/include/libxmz-ext-1.0/libxmz-ext
-libxmz_ext_libxmz_ext_1_0_la_header_HEADERS = libxmz-ext/libxmz-ext.h
-
-libxmz_ext_libxmz_ext_1_0_la_vapidir = $(prefix)/share/vala/vapi
-libxmz_ext_libxmz_ext_1_0_la_vapi_DATA = libxmz-ext/libxmz-ext-1.0.vapi
-
 libxmz_ext_libxmz_ext_1_0_la_girdir = $(datadir)/gir-1.0
 libxmz_ext_libxmz_ext_1_0_la_gir_DATA = XMZExt-1.0.gir
 
 libxmz_ext_libxmz_ext_1_0_la_typelibdir = $(libdir)/girepository-1.0
 libxmz_ext_libxmz_ext_1_0_la_typelib_DATA = XMZExt-1.0.typelib
+
+libxmz_ext_libxmz_ext_1_0_la_headerdir = $(prefix)/include/libxmz-ext-1.0/libxmz-ext
+libxmz_ext_libxmz_ext_1_0_la_header_HEADERS = libxmz-ext/libxmz-ext.h
+
+libxmz_ext_libxmz_ext_1_0_la_vapidir = $(prefix)/share/vala/vapi
+libxmz_ext_libxmz_ext_1_0_la_vapi_DATA = libxmz-ext/libxmz-ext-1.0.vapi
 
 libxmz_ext_libxmz_ext_1_0_la_pkgconfigdir = $(libdir)/pkgconfig
 libxmz_ext_libxmz_ext_1_0_la_pkgconfig_DATA = libxmz-ext/libxmz-ext-1.0.pc
@@ -71,12 +74,13 @@ libxmz-ext/xmz-ext-resources.c: $(libxmz_ext_resources_deps)
 	$(GRESGEN)
 
 GITIGNOREFILES +=					\
+	libxmz-ext/xmz-ext-resources.c \
 	$(libxmz_ext_libxmz_ext_1_0_la_gir_DATA)		\
 	libxmz-ext/libxmz-ext.h
 
 CLEANFILES +=						\
 	$(libxmz_ext_libxmz_ext_1_0_la_typelib_DATA)		\
-	libxmz-ext/xmz-ext-resources.c
+	$(NULL)
 
 EXTRA_DIST +=						\
 	$(libxmz_ext_libxmz_ext_1_0_la_pkgconfig_DATA)	\

@@ -1,8 +1,9 @@
 
 
-namespace XMZ {
+namespace XMZExt {
 
 public class UI {
+
   public static Gee.HashMap<string, Object>? from_builder (string path, ...) {
     var builder = new Gtk.Builder ();
 
@@ -31,3 +32,5 @@ public class UI {
   }
 }
 }
+
+// vi:ts=4

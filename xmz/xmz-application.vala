@@ -34,6 +34,7 @@ public class Application : Gtk.Application {
   }
 
   protected override void activate () {
+    present_window ();
     base.activate ();
   }
 
@@ -43,7 +44,7 @@ public class Application : Gtk.Application {
      present_window ();
   }
 
-  private void present_window () {
+  private void present_window (string? activity = null) {
     /* Present the last window in the windows registered on the
        application. If there is no windows, then create a new empty
        window.
@@ -55,8 +56,8 @@ public class Application : Gtk.Application {
       return;
     }
 
-    var w = (XMZ.Window)windows.first().data;
-    w.present ();
+    var w = (XMZ.Window)windows.first ().data;
+    w.present (activity);
   }
 }
 }
