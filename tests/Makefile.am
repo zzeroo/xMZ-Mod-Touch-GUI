@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.decl
+
 tests_common_cppflags = \
 		-I$(top_srcdir) \
 		-I$(top_srcdir)/xmz \

@@ -2,8 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-##SUBDIRS = po
-SUBDIRS =
+SUBDIRS = po
 
 DISTCLEANFILES = \
 	intltool-extract \
