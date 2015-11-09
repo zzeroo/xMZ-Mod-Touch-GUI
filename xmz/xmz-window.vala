@@ -9,7 +9,28 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
   private UIElements<XMZExt.Activity> d_activities;
 
+  // Widgets
+  [GtkChild]
+  private Gtk.Stack d_main_stack;
+  [GtkChild]
+  private Gtk.Stack d_stack_activities;
+  [GtkChild]
+  private Gtk.Stack d_settings_view;
+  [GtkChild]
+  private Gtk.Grid d_grid_main;
+  [GtkChild]
+  private Gtk.InfoBar d_infobar;
+  [GtkChild]
+  private Gtk.Label d_infobar_primary_label;
+  [GtkChild]
+  private Gtk.Label d_infobar_secondary_label;
+
+  [GtkChild]
+  private Gtk.Overlay d_overlay;
+
+
   enum Mode {
+    SETTINGS,
     ACTIVITY
   }
 
@@ -34,6 +55,26 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
     }
   }
 
+  [GtkCallback]
+  private void settings_button_clicked () {
+    if (d_mode == Mode.SETTINGS) {
+      d_mode = Mode.ACTIVITY;
+      var button = new Gtk.Button.with_label ("Activity");
+
+      d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
+      d_main_stack.set_visible_child (d_stack_activities);
+      d_stack_activities.add (button);
+      button.show ();
+    } else {
+      d_mode = Mode.SETTINGS;
+      var button = new Gtk.Button.with_label ("Settings");
+
+      d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_RIGHT;
+      d_main_stack.set_visible_child (d_settings_view);
+      d_settings_view.add (button);
+      button.show ();
+    }
+  }
 
   private bool init (Cancellable? cancellable) {
     // Settings
