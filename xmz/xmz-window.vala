@@ -17,8 +17,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
 
   construct {
-
-    d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
+    // d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
   }
 
   private void on_close_activated () {
@@ -39,6 +38,14 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   private bool init (Cancellable? cancellable) {
     // Settings
     var app = application as XMZ.Application;
+
+    if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
+      set_deletable (false);
+      set_hide_titlebar_when_maximized (true);
+      maximize ();
+    } else {
+      set_default_size (1024, 600);
+    }
 
     return true;
   }

@@ -69,7 +69,10 @@
 /libxmz-ext/libxmz-ext-1.0.pc
 /libxmz-ext/libxmz-ext-1.0.vapi
 /libxmz-ext/libxmz-ext.h
+/libxmz-ext/xmz-ext-activity.c
+/libxmz-ext/xmz-ext-application.c
 /libxmz-ext/xmz-ext-resources.c
+/libxmz-ext/xmz-ext-ui-element.c
 /libxmz-ext/xmz-ext-ui.c
 /libxmz/libxmz-1.0.la
 /libxmz/libxmz-1.0.pc
@@ -169,6 +172,7 @@
 /xmz/xmz
 /xmz/xmz-application.c
 /xmz/xmz-resources.c
+/xmz/xmz-ui-elements.c
 /xmz/xmz-window.c
 /xmz/xmz.c
 /xmz_xmz_vala.stamp

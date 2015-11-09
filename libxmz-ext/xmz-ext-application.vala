@@ -2,10 +2,10 @@
 namespace XMZExt {
 
 /**
- * Application is an interface to access the main xmz appliaction.
+ * Application is an interface to access the main xmz application.
  *
  * The application interface is provided to plugins to access the main xmz
- * application instance. It contains prperties to access the currently open
+ * application instance. It contains properties to access the currently open
  * repository as well as methods to open or create repositories.
  *
  */

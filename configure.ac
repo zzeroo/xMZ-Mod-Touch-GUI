@@ -3,8 +3,8 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
-m4_define(xmz_minor_version, 5)
-m4_define(xmz_micro_version, 3)
+m4_define(xmz_minor_version, 3)
+m4_define(xmz_micro_version, 1)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
 AC_INIT([xmz],
@@ -52,7 +52,7 @@ LT_INIT(disable-static)
 IT_PROG_INTLTOOL([0.40.0])
 
 AM_GNU_GETTEXT_VERSION([0.17])
-AM_GNU_GETTEXT([external])
+#AM_GNU_GETTEXT([external])
 
 GETTEXT_PACKAGE=xmz
 AC_SUBST(GETTEXT_PACKAGE)
