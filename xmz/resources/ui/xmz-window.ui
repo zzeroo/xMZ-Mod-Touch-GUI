@@ -95,8 +95,8 @@
                     <property name="layout_style">start</property>
                     <child>
                       <object class="GtkButton" id="d_settings_button">
-                        <property name="width_request">120</property>
-                        <property name="height_request">80</property>
+                        <property name="width_request">100</property>
+                        <property name="height_request">60</property>
                         <property name="visible">True</property>
                         <signal name="clicked" handler="settings_button_clicked" swapped="no" />
                         <style>
@@ -138,9 +138,9 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkStack" id="d_settings_view">
+                  <object class="XMZSettingsView" id="d_settings_view">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can_focus">True</property>
                   </object>
                 </child>
                 <child>

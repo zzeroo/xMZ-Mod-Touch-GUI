@@ -8,6 +8,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   private Settings d_interface_settings;
 
   private UIElements<XMZExt.Activity> d_activities;
+  private Notifications d_notifications;
 
   // Widgets
   [GtkChild]
@@ -15,7 +16,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   [GtkChild]
   private Gtk.Stack d_stack_activities;
   [GtkChild]
-  private Gtk.Stack d_settings_view;
+  private SettingsView d_settings_view;
   [GtkChild]
   private Gtk.Grid d_grid_main;
   [GtkChild]
@@ -39,6 +40,14 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
   construct {
     // d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
+    d_notifications = new Notifications (d_overlay);
+
+    d_settings_view.application = this;
+
+    d_infobar.response.connect((w, r) => {
+                                      d_infobar.hide();
+
+                               });
   }
 
   private void on_close_activated () {
@@ -50,11 +59,14 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
       if (d_mode == Mode.ACTIVITY) {
         return d_activities.current;
       } else {
-        return d_activities.current;
+        return d_settings_view;
       }
     }
   }
 
+  /**
+  * This action is fired when the big button top right was hit
+  */
   [GtkCallback]
   private void settings_button_clicked () {
     if (d_mode == Mode.SETTINGS) {
@@ -67,14 +79,13 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
       button.show ();
     } else {
       d_mode = Mode.SETTINGS;
-      var button = new Gtk.Button.with_label ("Settings");
 
       d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_RIGHT;
       d_main_stack.set_visible_child (d_settings_view);
-      d_settings_view.add (button);
-      button.show ();
     }
   }
+
+
 
   private bool init (Cancellable? cancellable) {
     // Settings

@@ -43,6 +43,7 @@ libxmz_libxmz_1_0_la_VALAFLAGS = \
 libxmz_libxmz_1_0_la_VALASOURCES = \
 	libxmz/xmz-init.vala \
 	libxmz/xmz-resource.vala \
+	libxmz/xmz-sensor-list-box.vala \
 	$(NULL)
 
 libxmz_libxmz_1_0_la_SOURCES = \
