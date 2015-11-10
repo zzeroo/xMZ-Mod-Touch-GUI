@@ -98,6 +98,8 @@ include xmz/Makefile.am
 include data/Makefile.am
 include tests/Makefile.am
 
+include icons.mk
+
 @INTLTOOL_DESKTOP_RULE@
 @INTLTOOL_XML_NOMERGE_RULE@
 @GSETTINGS_RULES@

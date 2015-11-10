@@ -27,7 +27,6 @@ libxmz_ext_libxmz_ext_1_0_la_VALAFLAGS = \
 	--vapi libxmz-ext/libxmz-ext-1.0.vapi	\
 	--library libxmz-ext/libxmz-ext-1.0	\
 	--header libxmz-ext/libxmz-ext.h	\
-	--gresources "$(top_srcdir)/libxmz/resources/resources.xml" \
 	$(NULL)
 
 libxmz_ext_libxmz_ext_1_0_la_LDFLAGS = \
