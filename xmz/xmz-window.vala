@@ -31,129 +31,151 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
 
   enum Mode {
-    SETTINGS,
-    ACTIVITY
+	SETTINGS,
+	ACTIVITY
   }
 
   private Mode d_mode;
 
 
   construct {
-    // d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
-    d_notifications = new Notifications (d_overlay);
+	// d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
+	d_notifications = new Notifications (d_overlay);
 
-    d_settings_view.application = this;
+	d_settings_view.application = this;
 
-    d_infobar.response.connect((w, r) => {
-                                      d_infobar.hide();
-
-                               });
+	d_infobar.response.connect ((w, r) => {
+								d_infobar.hide();
+								});
   }
 
   private void on_close_activated () {
-    // close ();
+	close ();
   }
 
   public XMZExt.Activity? current_activity {
-    owned get {
-      if (d_mode == Mode.ACTIVITY) {
-        return d_activities.current;
-      } else {
-        return d_settings_view;
-      }
-    }
+	owned get {
+	  if (d_mode == Mode.ACTIVITY) {
+		return d_activities.current;
+	  } else {
+		return d_settings_view;
+	  }
+	}
   }
 
   /**
-  * This action is fired when the big button top right was hit
-  */
+   * This action is fired when the big button top right was hit
+   */
   [GtkCallback]
   private void settings_button_clicked () {
-    if (d_mode == Mode.SETTINGS) {
-      d_mode = Mode.ACTIVITY;
-      var button = new Gtk.Button.with_label ("Activity");
+	if (d_mode == Mode.SETTINGS) {
+	  d_mode = Mode.ACTIVITY;
+	  var button = new Gtk.Button.with_label ("Activity");
 
-      d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
-      d_main_stack.set_visible_child (d_stack_activities);
-      d_stack_activities.add (button);
-      button.show ();
-    } else {
-      d_mode = Mode.SETTINGS;
+	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
+	  d_main_stack.set_visible_child (d_stack_activities);
+	  d_stack_activities.add (button);
+	  button.show ();
+	} else {
+	  d_mode = Mode.SETTINGS;
 
-      d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_RIGHT;
-      d_main_stack.set_visible_child (d_settings_view);
-    }
+	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_RIGHT;
+	  d_main_stack.set_visible_child (d_settings_view);
+	}
   }
 
 
 
   private bool init (Cancellable? cancellable) {
-    // Settings
-    var app = application as XMZ.Application;
+	// Settings
+	var app = application as XMZ.Application;
 
-    if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
-      set_deletable (false);
-      set_hide_titlebar_when_maximized (true);
-      maximize ();
-    } else {
-      set_default_size (1024, 600);
-    }
+	if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
+	  set_deletable (false);
+	  set_hide_titlebar_when_maximized (true);
+	  maximize ();
+	} else {
+	  set_default_size (1024, 600);
+	}
 
-    return true;
+	return true;
   }
 
   public static Window? create_new (Gtk.Application app) {
 
-    Window? ret = new Window ();
+	Window? ret = new Window ();
 
-    if (ret != null) {
-      ret.application = app;
-    }
+	if (ret != null) {
+	  ret.application = app;
+	}
 
-    try {
-      ((Initable)ret).init(null);
-    } catch {}
+	try {
+	  ((Initable)ret).init(null);
+	} catch {}
 
-    return ret;
+	return ret;
   }
 
   public new void present (string? hint) {
-    if (hint != null) {
-      activate_activity (hint);
-    }
+	if (hint != null) {
+	  activate_activity (hint);
+	}
 
-    base.present ();
+	base.present ();
   }
 
   private bool activate_activity (string? action) {
-    string default_activity;
+	string default_activity;
 
-    if (action == null || action == "") {
-      default_activity = d_interface_settings.get_string ("default-activity");
-    } else {
-      default_activity = action;
-    }
+	if (action == null || action == "") {
+	  default_activity = d_interface_settings.get_string ("default-activity");
+	} else {
+	  default_activity = action;
+	}
 
-    XMZExt.Activity? def = null;
+	XMZExt.Activity? def = null;
 
-    d_activities.foreach ((element) => {
-                          XMZExt.Activity activity = (XMZExt.Activity) element;
+	d_activities.foreach ((element) => {
+						  XMZExt.Activity activity = (XMZExt.Activity) element;
 
-                          if (activity.is_default_for (default_activity)) {
-                            def = activity;
-                          }
+						  if (activity.is_default_for (default_activity)) {
+						  def = activity;
+						  }
 
-                          return true;
-                          });
+						  return true;
+						  });
 
-    if (def != null) {
-      d_activities.current = def;
-      return true;
-    }
+	if (def != null) {
+	  d_activities.current = def;
+	  return true;
+	}
 
-    return false;
+	return false;
+  }
+
+  public void show_infobar (string title,
+							string message,
+							Gtk.MessageType type) {
+
+	Idle.add (() => {
+			  var primary = "<b>%s</b>".printf (Markup.escape_text (title));
+			  var secondary = "<small>%s</small>".printf (Markup.escape_text (message));
+
+			  d_infobar_primary_label.set_label (primary);
+			  d_infobar_secondary_label.set_label (secondary);
+			  d_infobar.message_type = type;
+
+			  d_infobar.show ();
+			  return false;
+			  });
+  }
+
+  public XMZExt.Notifications notifications {
+	owned get { return d_notifications; }
   }
 
 
 }
 }
+
+// ex:ts=4 noet
