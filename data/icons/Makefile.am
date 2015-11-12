@@ -16,6 +16,7 @@ data-icons-update-icon-cache:
 	@-if test -z "$(DESTDIR)"; then \
 		echo "Updating Gtk icon cache."; \
 		for theme in $(data_icons_public_icons_themes); do \
+			$(MKDIR_P) $(datadir)/xmz/icons/$$theme; \
 			$(data_icons_gtk_update_icon_cache) $(datadir)/icons/$$theme; \
 		done; \
 	else \
