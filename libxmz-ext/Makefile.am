@@ -1,5 +1,5 @@
 libxmz_extexecdir = $(libdir)
-#libxmz_extexec_LTLIBRARIES = libxmz-ext/libxmz-ext-1.0.la
+libxmz_extexec_LTLIBRARIES = libxmz-ext/libxmz-ext-1.0.la
 
 libxmz_ext_libxmz_ext_1_0_la_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -19,14 +19,14 @@ libxmz_ext_libxmz_ext_1_0_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	$(XMZ_VALAFLAGS) \
-	--vapidir $(top_srcdir)/vapi	\
-	--includedir libxmz-ext		\
 	--basedir $(top_srcdir)		\
+	--vapidir $(top_srcdir)/vapi	\
 	--gir XMZExt-1.0.gir		\
-	--girdir $(top_builddir)/libxmz \
 	--vapi libxmz-ext/libxmz-ext-1.0.vapi	\
-	--library libxmz-ext/libxmz-ext-1.0	\
+	--girdir $(top_builddir)/libxmz \
+	--includedir libxmz-ext		\
 	--header libxmz-ext/libxmz-ext.h	\
+	--library libxmz-ext/libxmz-ext-1.0	\
 	$(NULL)
 
 libxmz_ext_libxmz_ext_1_0_la_LDFLAGS = \
@@ -55,14 +55,14 @@ libxmz_ext_libxmz_ext_1_0_la_SOURCES = \
 	libxmz-ext/xmz-ext-resources.c \
 	$(NULL)
 
+libxmz_ext_libxmz_ext_1_0_la_headerdir = $(prefix)/include/libxmz-ext-1.0/libxmz-ext
+libxmz_ext_libxmz_ext_1_0_la_header_DATA = libxmz-ext/libxmz-ext.h
+
 libxmz_ext_libxmz_ext_1_0_la_girdir = $(datadir)/gir-1.0
 libxmz_ext_libxmz_ext_1_0_la_gir_DATA = XMZExt-1.0.gir
 
 libxmz_ext_libxmz_ext_1_0_la_typelibdir = $(libdir)/girepository-1.0
 libxmz_ext_libxmz_ext_1_0_la_typelib_DATA = XMZExt-1.0.typelib
-
-libxmz_ext_libxmz_ext_1_0_la_headerdir = $(prefix)/include/libxmz-ext-1.0/libxmz-ext
-libxmz_ext_libxmz_ext_1_0_la_header_HEADERS = libxmz-ext/libxmz-ext.h
 
 libxmz_ext_libxmz_ext_1_0_la_vapidir = $(prefix)/share/vala/vapi
 libxmz_ext_libxmz_ext_1_0_la_vapi_DATA = libxmz-ext/libxmz-ext-1.0.vapi
