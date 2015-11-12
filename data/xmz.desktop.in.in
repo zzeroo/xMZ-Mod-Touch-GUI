@@ -1,6 +1,6 @@
 [Desktop Entry]
-_Name=xmz
-_Comment=xMesszentrale mit Modbus Interface und Touchscreen
+_Name=xMZ
+_Comment=xGas detection unit, with modbus interface and touch screen
 Exec=xmz %U
 TryExec=xmz
 Terminal=false

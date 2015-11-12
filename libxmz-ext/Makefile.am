@@ -1,5 +1,5 @@
 libxmz_extexecdir = $(libdir)
-libxmz_extexec_LTLIBRARIES = libxmz-ext/libxmz-ext-1.0.la
+#libxmz_extexec_LTLIBRARIES = libxmz-ext/libxmz-ext-1.0.la
 
 libxmz_ext_libxmz_ext_1_0_la_CPPFLAGS = \
 	-I$(top_srcdir) \

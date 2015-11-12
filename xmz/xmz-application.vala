@@ -42,7 +42,7 @@ public class Application : Gtk.Application {
     string[] artists = {"Stefan Müller <s.mueller@it.kls-glt.de>"};
     string[] authors = {"Stefan Müller <s.mueller@it.kls-glt.de>"};
     string copyright = "Copyright \xc2\xa9 2015 RA-Gas GmbH";
-    string comments = _("xmz Graphical User Interface for xMesszentrale mit Modbus Interface und Touchscreen");
+    string comments = _("xmz Graphical User Interface for xGas detection unit, with modbus interface and touch screen");
 
     unowned List<Gtk.Window> wnds = get_windows ();
 
