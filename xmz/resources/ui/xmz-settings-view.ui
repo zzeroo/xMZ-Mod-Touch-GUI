@@ -61,7 +61,7 @@
             <property name="wrap">True</property>
             <property name="max-width-chars">40</property>
             <property name="xalign">0</property>
-            <signal name="activate-link" handler="add_sensor_activated" swapped="no"/>
+            <signal name="activate-link" handler="test_message_activated" swapped="no"/>
           </object>
           <packing>
             <property name="left_attach">1</property>

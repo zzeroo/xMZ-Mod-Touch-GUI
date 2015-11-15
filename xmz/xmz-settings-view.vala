@@ -5,6 +5,7 @@ namespace XMZ {
 class SettingsView : Gtk.Grid, XMZExt.UIElement, XMZExt.Activity {
 
   private const string version = Config.VERSION;
+  public XMZExt.Application? application { owned get; construct set; }
 
   [GtkChild (name = "introduction")]
   private Gtk.Grid d_introduction;
@@ -34,8 +35,6 @@ class SettingsView : Gtk.Grid, XMZExt.UIElement, XMZExt.Activity {
 	owned get { return "/com/gaswarnanlagen/xmz/settings"; }
   }
 
-  public XMZExt.Application? application { owned get; construct set; }
-
   construct {
 
 	bind_property ("has_sensors",
@@ -53,13 +52,38 @@ class SettingsView : Gtk.Grid, XMZExt.UIElement, XMZExt.Activity {
 	d_label_add.label = _("Please %sadd a Sensor%s.").printf ("<a href=\"add-sensor\">", "</a>");
   }
 
+  private void do_add_sensor (string name, bool report_errors) {
+	//Sensor sensor;
+
+	//try {
+	  //sensor = new Sensor (name);
+	//} catch (Error e) {
+	   //application.show_infobar (_("Failed to add repository"), err.message, Gtk.MessageType.ERROR);
+	//}
+  }
+
   [GtkCallback]
-  private bool add_sensor_activated () {
+  private bool test_message_activated () {
+	application.show_infobar (_("Failed to add sensor"), "ACH DU SCHEIssE! AlleS KapPuD.", Gtk.MessageType.INFO);
+
 	return true;
   }
 
   [GtkCallback]
   private void add_sensor_clicked () {
+	var dlg = new Gtk.MessageDialog (application as Gtk.Window,
+									 Gtk.DialogFlags.MODAL,
+									 Gtk.MessageType.WARNING,
+									 Gtk.ButtonsType.OK_CANCEL,
+									 _("Add Sensor"),
+									 "foobar");
+
+	var cancellable = new Cancellable ();
+
+	dlg.response.connect (() => {
+						   dlg.destroy ();
+						  });
+	dlg.show ();
   }
 
 

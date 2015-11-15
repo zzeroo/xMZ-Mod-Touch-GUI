@@ -11,18 +11,20 @@ namespace XMZExt {
  */
 public interface Application : Object {
 
-//  public signal void repository_changed_externally (ExternalChangeHint hint);
-
-  /**
-   * An application wide message bus over which plugins can communicate
-   */
-//  public abstract XMZExt.MessageBus message_bus { owned get; }
-
   /**
    * The currrent application main activity.
    */
   public abstract XMZExt.Activity? current_activity { owned get; }
 
+  /**
+   * Fet the notifications manager for the application.
+   */
+  public abstract Notifications notifications { owned get; }
 
+  public abstract void show_infobar (string primary_msg,
+                                    string secondary_msg,
+                                    Gtk.MessageType type);
 }
 }
+
+// ex:set ts=4 noet:

@@ -46,6 +46,7 @@ xmz_xmz_LDFLAGS = \
 
 
 xmz_xmz_VALASOURCES = \
+	xmz/sensor/xmz-sensor.vala \
 	xmz/xmz.vala \
 	xmz/xmz-application.vala \
 	xmz/xmz-ui-elements.vala \
