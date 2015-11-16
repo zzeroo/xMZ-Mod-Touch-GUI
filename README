@@ -12,7 +12,7 @@ source code files which are translateable. To create/ update this POTFILES.in
 change to the ./po dir and execute ./update-pofiles
 
     cd ./po
-    ./update-pofiles
+    ./update-pofiles > POTFILES.in
 
 The next command will create a .pot template file called messages.pot
 from the POTFILES.in

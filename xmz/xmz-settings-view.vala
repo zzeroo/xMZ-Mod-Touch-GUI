@@ -64,7 +64,7 @@ class SettingsView : Gtk.Grid, XMZExt.UIElement, XMZExt.Activity {
 
   [GtkCallback]
   private bool test_message_activated () {
-	application.show_infobar (_("Failed to add sensor"), "ACH DU SCHEIssE! AlleS KapPuD.", Gtk.MessageType.INFO);
+	application.show_infobar (_("Failed to add sensor"), _("Sensor could not be added."), Gtk.MessageType.INFO);
 
 	return true;
   }
