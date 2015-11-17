@@ -23,14 +23,18 @@ public class DatabaseBackend : Object {
   public int init_sqlite () {
     string query = """
         CREATE TABLE Sensors (
-            id          INT   PRIMARY KEY   NOT NULL,
-            name        TEXT                NOT NULL,
-            adc_value   INT,
-            adc_at_nullgas  INT,
-            adc_at_messgas  INT
+            ID              INT   PRIMARY KEY   NOT NULL,
+            NAME            TEXT                NOT NULL,
+            ADC_VALUE       INT,
+            ADC_AT_NULLGAS  INT,
+            ADC_AT_MESSGAS  INT
                              );
 
-        INSERT INTO Sensors (id, name, adc_value, adc_at_nullgas, adc_at_messgas) VALUES (1, 'Sensor 1', 0, 0, 0);
+        INSERT INTO Sensors (ID, NAME, ADC_VALUE, ADC_AT_NULLGAS, ADC_AT_MESSGAS) VALUES (1, 'Sensor 1', 0, 0, 0);
+        INSERT INTO Sensors (ID, NAME, ADC_VALUE, ADC_AT_NULLGAS, ADC_AT_MESSGAS) VALUES (2, 'Sensor 2', 0, 0, 0);
+        INSERT INTO Sensors (ID, NAME, ADC_VALUE, ADC_AT_NULLGAS, ADC_AT_MESSGAS) VALUES (3, 'Sensor 3', 0, 0, 0);
+        INSERT INTO Sensors (ID, NAME, ADC_VALUE, ADC_AT_NULLGAS, ADC_AT_MESSGAS) VALUES (4, 'Sensor 4', 0, 0, 0);
+        INSERT INTO Sensors (ID, NAME, ADC_VALUE, ADC_AT_NULLGAS, ADC_AT_MESSGAS) VALUES (5, 'Sensor 5', 0, 0, 0);
         """;
 
     error_code = database.exec (query, null, out error_msg);
@@ -44,9 +48,9 @@ public class DatabaseBackend : Object {
   }
 
   public GenericArray<XMZ.Sensor> get_sensors () {
-    var sensor = new XMZ.Sensor ("CO/NO KLS");
     var sensors = new GenericArray<XMZ.Sensor> ();
 
+    var sensor = new XMZ.Sensor (1, "CO/NO Kombisensor RA-Gas GmbH", 0, 0, 0);
     sensors.add (sensor);
 
     return sensors;

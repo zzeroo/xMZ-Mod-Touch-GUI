@@ -1,6 +1,7 @@
 namespace XMZ {
 
 public enum SensorModelColumns {
+  ID,
   NAME,
   DESCRIPTION,
   ADC_VALUE,
@@ -13,6 +14,7 @@ public enum SensorModelColumns {
       case NAME:
       case DESCRIPTION:
         return typeof (string);
+      case ID:
       case ADC_VALUE:
       case ADC_AT_NULLGAS:
       case ADC_AT_MESSGAS:
@@ -32,11 +34,11 @@ public class SensorModel : Object, Gtk.TreeModel {
   private GenericArray<XMZ.Sensor> d_data;
 
 
-  public SensorModel (owned GenericArray<XMZ.Sensor> ? data = null) {
-    if (data == null) {
+  public SensorModel (owned GenericArray<XMZ.Sensor>? d_data = null) {
+    if (d_data == null) {
       this.d_data = new GenericArray<XMZ.Sensor> ();
     } else {
-      this.d_data = (owned) data;
+      this.d_data = (owned) d_data;
     }
   }
 
@@ -141,6 +143,7 @@ public class SensorModel : Object, Gtk.TreeModel {
      return false;
   }
 
+
   public int iter_n_children (Gtk.TreeIter? iter) {
     if (iter == null) {
       return (int)d_size;
@@ -149,6 +152,7 @@ public class SensorModel : Object, Gtk.TreeModel {
       return 0;
     }
   }
+
 
   public bool iter_next (ref Gtk.TreeIter iter) {
     return_val_if_fail (iter.stamp == d_stamp, false);
@@ -163,6 +167,7 @@ public class SensorModel : Object, Gtk.TreeModel {
       return true;
     }
   }
+
 
   public bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n) {
     iter = {};

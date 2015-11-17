@@ -68,6 +68,7 @@ dist-hook: generate-changelog
 
 generate-changelog:
 	if test -d $(top_srcdir)/.git; then \
+	  [ ! -d $(distdir) ] && mkdir $(distdir); \
 	  sep=`nawk 'BEGIN{$$79=OFS="-";print}'`; \
 	  git --git-dir=$(top_srcdir)/.git log --date=short --stat --decorate \
 	  | sed -e "s/^\(commit [abcdef0-9]\{40\}\) (.*refs\/tags\/\(v\([0-9.]\+\)\).*)/$$sep\nVersion \3\n$$sep\n\n\1/g" -e 's/^\(commit [abcdef0-9]\{40\}\).*/\1/g' | ruby -e 'puts STDIN.read.gsub(/commit\s*(.*)\nAuthor:\s*(.*)\nDate:\s*(.*)\n/, "\\3 \\2\ncommit \\1\n")' > $(distdir)/c-l; \
