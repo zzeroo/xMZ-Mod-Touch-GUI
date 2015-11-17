@@ -140,7 +140,13 @@
                 <child>
                   <object class="XMZSettingsView" id="d_settings_view">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="XMZSensorView" id="d_sensor_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </object>
                 </child>
                 <child>

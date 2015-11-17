@@ -52,6 +52,7 @@ xmz_xmz_VALASOURCES = \
 	xmz/xmz-ui-elements.vala \
 	xmz/xmz-notifications.vala \
 	xmz/xmz-settings-view.vala \
+	xmz/xmz-sensor-view.vala \
 	xmz/xmz-simple-notification.vala \
 	xmz/xmz-window.vala \
 	libxmz-ext/libxmz-ext-1.0.vapi \

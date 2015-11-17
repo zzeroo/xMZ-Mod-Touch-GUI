@@ -18,6 +18,8 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   [GtkChild]
   private SettingsView d_settings_view;
   [GtkChild]
+  private SensorView d_sensor_view;
+  [GtkChild]
   private Gtk.Grid d_grid_main;
   [GtkChild]
   private Gtk.InfoBar d_infobar;
@@ -39,7 +41,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
 
   construct {
-	// d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
+	d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
 	d_notifications = new Notifications (d_overlay);
 
 	d_settings_view.application = this;
@@ -56,7 +58,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   public XMZExt.Activity? current_activity {
 	owned get {
 	  if (d_mode == Mode.ACTIVITY) {
-		return d_activities.current;
+		return d_sensor_view;
 	  } else {
 		return d_settings_view;
 	  }
@@ -72,7 +74,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 	  d_mode = Mode.ACTIVITY;
 
 	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
-	  d_main_stack.set_visible_child (d_stack_activities);
+	  d_main_stack.set_visible_child (d_sensor_view);
 	} else {
 	  d_mode = Mode.SETTINGS;
 
@@ -95,6 +97,11 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 	  set_default_size (1024, 600);
 	}
 
+	d_mode = Mode.ACTIVITY;
+
+	d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
+	d_main_stack.set_visible_child (d_sensor_view);
+
 	return true;
   }
 
@@ -107,7 +114,7 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 	}
 
 	try {
-	  ((Initable)ret).init(null);
+	  ((Initable) ret).init (null);
 	} catch {}
 
 	return ret;

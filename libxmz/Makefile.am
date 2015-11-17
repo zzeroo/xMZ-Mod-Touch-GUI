@@ -29,6 +29,7 @@ libxmz_libxmz_1_0_la_VALAFLAGS = \
 	--pkg gtk+-3.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
+	--pkg sqlite3 \
 	$(XMZ_VALAFLAGS) \
 	--vapidir $(top_srcdir)/vapi	\
 	--includedir libxmz		\
@@ -41,7 +42,9 @@ libxmz_libxmz_1_0_la_VALAFLAGS = \
 	$(NULL)
 
 libxmz_libxmz_1_0_la_VALASOURCES = \
+	libxmz/xmz-app-dirs.vala \
 	libxmz/xmz-init.vala \
+	libxmz/xmz-database-backend.vala \
 	libxmz/xmz-resource.vala \
 	libxmz/xmz-sensor-list-box.vala \
 	libxmz/xmz-sensor.vala \

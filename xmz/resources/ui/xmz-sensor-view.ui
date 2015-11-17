@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <template class="XMZSensorView" parent="GtkStack">
+    <child>
+      <object class="GtkTreeView" id="treeview_sensors_list">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+      </object>
+      <packing>
+        <property name="name">page_sensor_list</property>
+        <property name="title" translatable="yes">Sensors list</property>
+      </packing>
+    </child>
+  </template>
+</interface>

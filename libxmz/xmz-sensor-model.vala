@@ -29,6 +29,16 @@ public class SensorModel : Object, Gtk.TreeModel {
 
   private uint d_size;
   private int d_stamp;
+  private GenericArray<XMZ.Sensor> d_data;
+
+
+  public SensorModel (owned GenericArray<XMZ.Sensor> ? data = null) {
+    if (data == null) {
+      this.d_data = new GenericArray<XMZ.Sensor> ();
+    } else {
+      this.d_data = (owned) data;
+    }
+  }
 
   construct {
   }
