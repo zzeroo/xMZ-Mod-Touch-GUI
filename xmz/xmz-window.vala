@@ -70,12 +70,9 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   private void settings_button_clicked () {
 	if (d_mode == Mode.SETTINGS) {
 	  d_mode = Mode.ACTIVITY;
-	  var button = new Gtk.Button.with_label ("Activity");
 
 	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
 	  d_main_stack.set_visible_child (d_stack_activities);
-	  d_stack_activities.add (button);
-	  button.show ();
 	} else {
 	  d_mode = Mode.SETTINGS;
 

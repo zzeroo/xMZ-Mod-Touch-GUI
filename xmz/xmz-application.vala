@@ -67,7 +67,6 @@ public class Application : Gtk.Application {
     }
   }
 
-
   private void init_error (string msg) {
     var dlg = new Gtk.MessageDialog (null,
                                      0,
