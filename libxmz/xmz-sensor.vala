@@ -4,8 +4,8 @@ namespace XMZ {
 public class Sensor : Object {
 
   // Data
-  public int id { get; construct; }
-  public string name { get; construct; }
+  public int id { get; set; }
+  public string name { get; set; }
   public string description { get; set; }
   public int adc_value { get; set; }
   public int adc_at_nullgas { get; set; }

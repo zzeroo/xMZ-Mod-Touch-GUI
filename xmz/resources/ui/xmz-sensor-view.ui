@@ -6,6 +6,9 @@
       <object class="GtkTreeView" id="treeview_sensors_list">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <child internal-child="selection">
+          <object class="GtkTreeSelection" id="sensor_list_view"/>
+        </child>
       </object>
       <packing>
         <property name="name">page_sensor_list</property>

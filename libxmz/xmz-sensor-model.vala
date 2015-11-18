@@ -28,66 +28,38 @@ public enum SensorModelColumns {
 }
 
 public class SensorModel : Object, Gtk.TreeModel {
-
-  private uint d_size;
-  private int d_stamp;
-  private GenericArray<XMZ.Sensor> d_data;
+  private GenericArray<Sensor> data;
+  private int stamp = 0;
 
 
   public SensorModel (owned GenericArray<Sensor>? data = null) {
     if (data == null) {
-      this.d_data = new GenericArray<Sensor> ();
+      this.data = new GenericArray<Sensor> ();
     } else {
-      this.d_data = (owned) data;
+      this.data = (owned) data;
     }
   }
 
-  construct {
+  public void add (int id, string name , int adc_value, int adc_at_nullgas, int adc_at_messgas) {
+    data.add (new Sensor (id, name, adc_value, adc_at_nullgas, adc_at_messgas));
+    stamp++;
   }
 
   public Type get_column_type (int index) {
     return ((SensorModelColumns)index).type ();
   }
 
-  public void add (int id, string name , int adc_value, int adc_at_nullgas, int adc_at_messgas) {
-    d_data.add (new XMZ.Sensor (id, name, adc_value, adc_at_nullgas, adc_at_messgas));
-  }
-
   public Gtk.TreeModelFlags get_flags () {
-    return Gtk.TreeModelFlags.LIST_ONLY |
-        Gtk.TreeModelFlags.ITERS_PERSIST;
+    /* return Gtk.TreeModelFlags.LIST_ONLY | */
+    /*     Gtk.TreeModelFlags.ITERS_PERSIST; */
+    return 0;
   }
-
-  public bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path) {
-    if (path.get_depth () != 1 || d_data.length == 0) {
-      return invalid_iter (out iter);
-    }
-
-    iter = Gtk.TreeIter ();
-    iter.user_data = path.get_indices ()[0].to_pointer ();
-    iter.stamp = this.d_stamp;
-    return true;
-  }
-
-  public int get_n_columns () {
-    return SensorModelColumns.NUM;
-  }
-
-  public Gtk.TreePath? get_path (Gtk.TreeIter iter) {
-    uint id = (uint) (ulong) iter.user_data;
-
-    return_val_if_fail (iter.stamp == d_stamp, null);
-
-    return new Gtk.TreePath.from_indices ((int) id);
-  }
-
 
   public void get_value (Gtk.TreeIter iter, int column, out Value val) {
-    val = {};
-    return_if_fail (iter.stamp == d_stamp);
-    Sensor sensor = d_data.get ((uint) (ulong) iter.user_data);
-    val.init(get_column_type (column));
+    assert (iter.stamp == stamp);
 
+    val.init(get_column_type (column));
+    Sensor sensor = data.get ((int) iter.user_data);
     switch (column) {
       case SensorModelColumns.ID:
         val.set_int (sensor.id);
@@ -104,72 +76,95 @@ public class SensorModel : Object, Gtk.TreeModel {
       case SensorModelColumns.ADC_AT_MESSGAS:
         val.set_int (sensor.adc_at_messgas);
         break;
+      default:
+        break;
     }
   }
 
-  public bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent) {
-    iter = {};
-
-    if (parent == null) {
-      iter.user_data = (void *) (ulong)0;
-      iter.stamp = d_stamp;
-
-      return true;
-    } else {
-      return_val_if_fail (parent.stamp == d_stamp, false);
-      return false;
-    }
-  }
-
-  public bool iter_has_child (Gtk.TreeIter iter) {
-     return false;
-  }
-
-
-  public int iter_n_children (Gtk.TreeIter? iter) {
-    if (iter == null) {
-      return (int)d_size;
-    } else {
-      return_val_if_fail (iter.stamp == d_stamp, 0);
-      return 0;
-    }
-  }
-
-
-  public bool iter_next (ref Gtk.TreeIter iter) {
-    return_val_if_fail (iter.stamp == d_stamp, false);
-
-    uint index = (uint) (ulong) iter.user_data;
-    ++index;
-
-    if (index >= d_size) {
-      return false;
-    } else {
-      iter.user_data = (void *) (ulong) index;
-      return true;
-    }
-  }
-
-
-  public bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n) {
-    iter = {};
-
-    if (parent != null || (uint)n >= d_size) {
-      return false;
+  public bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path) {
+    if (path.get_depth () != 1 || data.length == 0) {
+      return invalid_iter (out iter);
     }
 
-    iter.user_data = (void *) (ulong) n;
-    iter.stamp = d_stamp;
-
+    iter = Gtk.TreeIter ();
+    iter.user_data = path.get_indices ()[0].to_pointer ();
+    iter.stamp = this.stamp;
     return true;
   }
 
-  public bool iter_parent (out Gtk.TreeIter parent, Gtk.TreeIter iter) {
-    parent = {};
+  public int get_n_columns () {
+    return SensorModelColumns.NUM;
+  }
 
-    return_val_if_fail (iter.stamp == d_stamp, false);
+  public Gtk.TreePath? get_path (Gtk.TreeIter iter) {
+    assert (iter.stamp == stamp);
 
+    Gtk.TreePath path = new Gtk.TreePath ();
+    path.append_index ((int) iter.user_data);
+    return path;
+  }
+
+  public int iter_n_children (Gtk.TreeIter? iter) {
+    assert (iter == null || iter.stamp == stamp);
+    return (iter == null) ? data.length : 0;
+  }
+
+  public bool iter_next (ref Gtk.TreeIter iter) {
+    assert (iter.stamp == stamp);
+
+    int pos = ( (int) iter.user_data ) + 1;
+    if (pos >= data.length) {
+      return false;
+    }
+    iter.user_data = pos.to_pointer ();
+    return true;
+  }
+
+
+
+
+
+  public bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent) {
+    assert (parent == null || parent.stamp == stamp);
+    // Only used for trees
+    return invalid_iter (out iter);
+  }
+
+  public bool iter_has_child (Gtk.TreeIter iter) {
+    assert (iter.stamp == stamp);
+    // Only used for trees
     return false;
+  }
+
+  // FIXME: Refactor in iter_next () style
+  public bool iter_previous (ref Gtk.TreeIter iter) {
+    assert (iter.stamp == stamp);
+
+    int pos = (int) iter.user_data;
+    if (pos >= 0) {
+      return false;
+    }
+    iter.user_data = (--pos).to_pointer ();
+    return true;
+  }
+
+  public bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n) {
+    assert (parent == null || parent.stamp == stamp);
+
+    if (parent == null && n < data.length) {
+      iter = Gtk.TreeIter ();
+      iter.stamp = stamp;
+      iter.user_data = n.to_pointer ();
+      return true;
+    }
+    // Only used for trees
+    return invalid_iter (out iter);
+  }
+
+  public bool iter_parent (out Gtk.TreeIter parent, Gtk.TreeIter child) {
+    assert (child.stamp == stamp);
+    // Only used for trees
+    return invalid_iter (out parent);
   }
 
   private bool invalid_iter (out Gtk.TreeIter iter) {
