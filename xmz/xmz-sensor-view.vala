@@ -10,7 +10,7 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
 
   private XMZ.DatabaseBackend d_backend;
 
-  private GenericArray<XMZ.Sensor> d_sensors;
+  private GenericArray<Sensor> d_sensors;
   private XMZ.SensorModel d_sensor_model;
 
   [GtkChild (name = "treeview_sensors_list")]
@@ -35,7 +35,8 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
     d_backend.init_sqlite ();
 
     d_sensors = d_backend.get_sensors ();
-    d_sensor_model = new XMZ.SensorModel (d_sensors);
+
+    d_sensor_model = new SensorModel (d_sensors);
 
     d_sensors_list.set_model (d_sensor_model);
     d_sensors_list.insert_column_with_attributes (-1, "ID", new Gtk.CellRendererText (), "text", 0);

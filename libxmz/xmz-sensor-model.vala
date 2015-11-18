@@ -34,24 +34,23 @@ public class SensorModel : Object, Gtk.TreeModel {
   private GenericArray<XMZ.Sensor> d_data;
 
 
-  public SensorModel (owned GenericArray<XMZ.Sensor>? d_data = null) {
-    if (d_data == null) {
-      this.d_data = new GenericArray<XMZ.Sensor> ();
+  public SensorModel (owned GenericArray<Sensor>? data = null) {
+    if (data == null) {
+      this.d_data = new GenericArray<Sensor> ();
     } else {
-      this.d_data = (owned) d_data;
+      this.d_data = (owned) data;
     }
   }
 
   construct {
   }
 
-
-  public new Sensor? @get (uint idx) {
-    return null;
-  }
-
   public Type get_column_type (int index) {
     return ((SensorModelColumns)index).type ();
+  }
+
+  public void add (int id, string name , int adc_value, int adc_at_nullgas, int adc_at_messgas) {
+    d_data.add (new XMZ.Sensor (id, name, adc_value, adc_at_nullgas, adc_at_messgas));
   }
 
   public Gtk.TreeModelFlags get_flags () {
@@ -60,23 +59,13 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path) {
-    iter = {};
-
-    int [] indices = path.get_indices ();
-
-    if (indices.length != 1) {
-      return false;
+    if (path.get_depth () != 1 || d_data.length == 0) {
+      return invalid_iter (out iter);
     }
 
-    uint index = (uint) indices[0];
-
-    if (index >= d_size) {
-      return false;
-    }
-
-    iter.user_data = (void *) (ulong) index;
-    iter.stamp = d_stamp;
-
+    iter = Gtk.TreeIter ();
+    iter.user_data = path.get_indices ()[0].to_pointer ();
+    iter.stamp = this.d_stamp;
     return true;
   }
 
@@ -92,35 +81,28 @@ public class SensorModel : Object, Gtk.TreeModel {
     return new Gtk.TreePath.from_indices ((int) id);
   }
 
+
   public void get_value (Gtk.TreeIter iter, int column, out Value val) {
     val = {};
-
     return_if_fail (iter.stamp == d_stamp);
-
-    uint idx = (uint) (ulong) iter.user_data;
-    Sensor? sensor = this[idx];
-
-    val.init (get_column_type (column));
-
-    if (sensor == null) {
-       return;
-    }
+    Sensor sensor = d_data.get ((uint) (ulong) iter.user_data);
+    val.init(get_column_type (column));
 
     switch (column) {
+      case SensorModelColumns.ID:
+        val.set_int (sensor.id);
+        break;
       case SensorModelColumns.NAME:
         val.set_string (sensor.name);
         break;
-      case SensorModelColumns.DESCRIPTION:
-        val.set_string (sensor.description);
-        break;
       case SensorModelColumns.ADC_VALUE:
-        val.set_string (sensor.adc_value.to_string ());
+        val.set_int (sensor.adc_value);
         break;
       case SensorModelColumns.ADC_AT_NULLGAS:
-        val.set_string (sensor.adc_at_nullgas.to_string ());
+        val.set_int (sensor.adc_at_nullgas);
         break;
       case SensorModelColumns.ADC_AT_MESSGAS:
-        val.set_string (sensor.adc_at_messgas.to_string ());
+        val.set_int (sensor.adc_at_messgas);
         break;
     }
   }
@@ -187,6 +169,12 @@ public class SensorModel : Object, Gtk.TreeModel {
 
     return_val_if_fail (iter.stamp == d_stamp, false);
 
+    return false;
+  }
+
+  private bool invalid_iter (out Gtk.TreeIter iter) {
+    iter = Gtk.TreeIter ();
+    iter.stamp = -1;
     return false;
   }
 
