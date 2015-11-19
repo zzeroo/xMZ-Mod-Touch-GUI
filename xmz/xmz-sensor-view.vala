@@ -45,5 +45,11 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
     sensors_list.set_hexpand (true);
   }
 
+  private void on_selection (Gtk.TreeSelection selection) {
+    Gtk.TreeModel model;
+    Gtk.TreeIter iter;
+
+  }
+
 }
 }

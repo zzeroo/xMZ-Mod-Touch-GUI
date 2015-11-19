@@ -98,7 +98,7 @@ PKG_CHECK_MODULES(LIBXMZ, [
                         gobject-introspection-1.0 >= $INTROSPECTION_REQUIRED
                         gtk+-3.0 >= $GTK_REQUIRED_VERSION
                         gsettings-desktop-schemas
-                        gee-1.0
+                        gee-0.8
                         sqlite3
                         ])
 
@@ -206,7 +206,7 @@ AC_SUBST(XMZ_PLUGIN_LIBTOOL_FLAGS)
 XMZ_PLUGIN_VALAFLAGS="	\
 	--pkg gio-2.0				\
 	--pkg gtk+-3.0				\
-	--pkg gee-1.0	\
+	--pkg gee-0.8	\
 	--pkg config				\
 	\$(XMZ_VALAFLAGS)			\
 	--vapidir \$(top_srcdir)/vapi		\

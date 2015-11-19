@@ -22,7 +22,7 @@ xmz_xmz_VALAFLAGS = \
 	--pkg gtk+-3.0 \
 	--pkg gio-2.0 \
 	--pkg gobject-introspection-1.0 \
-	--pkg gee-1.0 \
+	--pkg gee-0.8 \
 	--girdir "$(top_builddir)" \
 	--vapidir "$(top_srcdir)/vapi" \
 	--vapidir "$(top_builddir)/libxmz" \

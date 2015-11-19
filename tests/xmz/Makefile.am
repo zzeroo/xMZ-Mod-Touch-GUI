@@ -14,7 +14,7 @@ tests_xmz_test_xmz_VALAFLAGS =		\
 	--pkg xmz-assert 			\
 	--pkg gio-2.0				\
 	--pkg gtk+-3.0				\
-	--pkg gee-1.0				\
+	--pkg gee-0.8				\
 	--pkg config				\
 	$(XMZ_VALAFLAGS)			\
 	--vapidir $(top_srcdir)/tests/support	\
