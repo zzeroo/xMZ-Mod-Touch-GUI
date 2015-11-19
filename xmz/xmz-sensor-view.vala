@@ -42,14 +42,19 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
     sensors_list.insert_column_with_attributes (-1, "Name", new Gtk.CellRendererText (), "text", 1);
     sensors_list.insert_column_with_attributes (-1, _("ADC Value"), new Gtk.CellRendererText (), "text", 2);
 
-    sensors_list.set_hexpand (true);
-  }
+    sensors_list.row_activated.connect (on_row_activated);
 
-  private void on_selection (Gtk.TreeSelection selection) {
-    Gtk.TreeModel model;
-    Gtk.TreeIter iter;
+    var selection = sensors_list.get_selection ();
+    selection.changed.connect (this.on_changed);
 
   }
 
+  private void on_changed (Gtk.TreeSelection selection) {
+    stdout.printf ("on_changed (Update title)\n");
+  }
+
+  private void on_row_activated () {
+    stdout.printf ("on_row_activated (Change window, Sensor Detail View)\n");
+  }
 }
 }
