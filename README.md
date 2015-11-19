@@ -1,11 +1,17 @@
 # xMZ-Mod-Touch
 ## xMesszentrale mit Modbus Interface und Touch Screen
 
-# i18n and l10n
+# Installation
+## Dependencies
+
+    apt-get install libgirepository1.0-dev
+    apt-get install gnome-common
+
+## i18n and l10n
 
 The localization and internationalisation are made with [gettext][1].
 
-## Translation Howto
+### Translation Howto
 
 To start a translation we need a POTFILES.in. This file contains all
 source code files which are translateable. To create/ update this POTFILES.in
@@ -19,7 +25,7 @@ from the POTFILES.in
 
     intltool-update --pot --gettext-package=messages --verbose
 
-### Update
+#### Update
 
 To update a alredy translated .po file run
 
@@ -28,6 +34,9 @@ To update a alredy translated .po file run
 The .mo files are created by autotools. You don't have to do that by hand.
 
 On [stackoverflow.com][3] is a very nice answer about this topic.
+
+
+
 
 # Links
 ## l10n

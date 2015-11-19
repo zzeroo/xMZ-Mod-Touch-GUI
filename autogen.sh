@@ -10,6 +10,7 @@ cd "$srcdir"
 [ ! -f NEWS ] && touch NEWS
 [ ! -f AUTHORS ] && touch AUTHORS
 [ ! -f ChangeLog ] && touch ChangeLog
+[ ! -f README  ] && ln README.md README
 
 INTLTOOLIZE=`which intltoolize`
 if test -z $INTLTOOLIZE; then
