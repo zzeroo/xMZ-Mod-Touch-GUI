@@ -27,6 +27,8 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   private Gtk.Label d_infobar_primary_label;
   [GtkChild]
   private Gtk.Label d_infobar_secondary_label;
+  [GtkChild]
+  public Gtk.Label d_settings_label;
 
   [GtkChild]
   private Gtk.Overlay d_overlay;
@@ -39,6 +41,18 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 
   private Mode d_mode;
 
+  private void update_title () {
+	 d_settings_label.set_label ("Hello from testfunc\n");
+  }
+  public void show_title () {
+	d_settings_label.set_label ("zzeroo systems\n");
+  }
+
+  private void on_reload_activated () {
+	try {
+	  update_title ();
+	} catch {}
+  }
 
   construct {
 	d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
@@ -106,7 +120,6 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   }
 
   public static Window? create_new (Gtk.Application app) {
-
 	Window? ret = new Window ();
 
 	if (ret != null) {
@@ -174,10 +187,10 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
 			  });
   }
 
+
   public XMZExt.Notifications notifications {
 	owned get { return d_notifications; }
   }
-
 
 }
 }
