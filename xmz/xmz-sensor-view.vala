@@ -56,14 +56,11 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
 
 
   private void on_changed (Gtk.TreeSelection selection) {
-    stdout.printf ("on_changed (Update title)\n");
-    var d_settings_label = new Gtk.Label ("Foobar");
+    this.set_visible_child (sensor_view_grid);
   }
 
   private void on_row_activated () {
-    stdout.printf ("on_row_activated (Change window, Sensor Detail View)\n");
     this.set_visible_child (sensor_view_grid);
-
   }
 
   [GtkCallback]
