@@ -15,6 +15,11 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
 
   [GtkChild (name = "treeview_sensors_list")]
   private Gtk.TreeView sensors_list;
+  [GtkChild (name = "sensor_view_grid")]
+  private Gtk.Grid sensor_view_grid;
+  private Gtk.Stack d_main;
+
+  private Gtk.Label d_settings_label;
 
   public string display_name {
 	owned get { return "Sensors"; }
@@ -49,12 +54,22 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
 
   }
 
+
   private void on_changed (Gtk.TreeSelection selection) {
     stdout.printf ("on_changed (Update title)\n");
+    var d_settings_label = new Gtk.Label ("Foobar");
   }
 
   private void on_row_activated () {
     stdout.printf ("on_row_activated (Change window, Sensor Detail View)\n");
+    this.set_visible_child (sensor_view_grid);
+
   }
+
+  [GtkCallback]
+  public void back_button_clicked () {
+    this.set_visible_child (sensors_list);
+  }
+
 }
 }

@@ -44,6 +44,9 @@ public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
   private void update_title () {
 	 d_settings_label.set_label ("Hello from testfunc\n");
   }
+  public void show_title () {
+	d_settings_label.set_label ("zzeroo systems\n");
+  }
 
   private void on_reload_activated () {
 	try {
