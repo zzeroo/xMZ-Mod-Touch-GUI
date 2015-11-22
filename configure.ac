@@ -4,7 +4,7 @@ AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
 m4_define(xmz_minor_version, 3)
-m4_define(xmz_micro_version, 1)
+m4_define(xmz_micro_version, 2)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
 AC_INIT([xmz],

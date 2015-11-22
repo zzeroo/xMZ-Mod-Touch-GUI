@@ -73,7 +73,10 @@
 /libxmz-ext/xmz-ext-application.c
 /libxmz-ext/xmz-ext-notification.c
 /libxmz-ext/xmz-ext-notifications.c
+<<<<<<< HEAD
 /libxmz-ext/xmz-ext-preferences.c
+=======
+>>>>>>> development
 /libxmz-ext/xmz-ext-resources.c
 /libxmz-ext/xmz-ext-ui-element.c
 /libxmz-ext/xmz-ext-ui.c
@@ -81,15 +84,21 @@
 /libxmz/libxmz-1.0.pc
 /libxmz/libxmz-1.0.vapi
 /libxmz/libxmz.h
+<<<<<<< HEAD
 /libxmz/xmz-app-dirs.c
 /libxmz/xmz-database-backend.c
+=======
+>>>>>>> development
 /libxmz/xmz-init.c
 /libxmz/xmz-resource.c
 /libxmz/xmz-resources.c
 /libxmz/xmz-sensor-list-box.c
+<<<<<<< HEAD
 /libxmz/xmz-sensor-list-view.c
 /libxmz/xmz-sensor-model.c
 /libxmz/xmz-sensor.c
+=======
+>>>>>>> development
 /libxmz_ext_libxmz_ext_1_0_la_vala.stamp
 /libxmz_libxmz_1_0_la_vala.stamp
 /m4/codeset.m4
@@ -181,13 +190,19 @@
 /tests_sensor_view_vala.stamp
 /tests_xmz_test_xmz_vala.stamp
 /xmldocs.make
+<<<<<<< HEAD
 /xmz/preferences/xmz-preferences-interface.c
 /xmz/sensor/xmz-sensor.c
+=======
+>>>>>>> development
 /xmz/xmz
 /xmz/xmz-application.c
 /xmz/xmz-notifications.c
 /xmz/xmz-resources.c
+<<<<<<< HEAD
 /xmz/xmz-sensor-view.c
+=======
+>>>>>>> development
 /xmz/xmz-settings-view.c
 /xmz/xmz-simple-notification.c
 /xmz/xmz-ui-elements.c
