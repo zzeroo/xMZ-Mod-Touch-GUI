@@ -5,14 +5,6 @@ data_desktop_DATA = $(data_desktop_in_files:.desktop.in=.desktop)
 data_appdatadir = $(datadir)/appdata
 data_appdata_DATA = data/xmz.appdata.xml
 
-dist_man_MANS = data/xmz.1
-
-gsettings_SCHEMAS += data/com.gaswarnanlagen.xmz.gschema.xml
-
-if GLADE_CATALOG
-data_catalogdir = $(GLADE_CATALOG_DIR)
-dist_data_catalog_DATA = data/xmz-glade.xml
-endif
 
 EXTRA_DIST +=					\
 	$(data_desktop_in_files)		\
