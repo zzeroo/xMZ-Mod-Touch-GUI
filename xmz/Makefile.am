@@ -25,15 +25,11 @@ xmz_xmz_VALAFLAGS = \
 	--pkg gee-0.8 \
 	--girdir "$(top_builddir)" \
 	--vapidir "$(top_srcdir)/vapi" \
-	--vapidir "$(top_builddir)/libxmz" \
-	--vapidir "$(top_builddir)/libxmz-ext" \
 	--gresources "$(top_srcdir)/xmz/resources/xmz-resources.xml" \
 	$(NULL)
 
 
 xmz_xmz_LDADD = \
-	libxmz/libxmz-1.0.la \
-	libxmz-ext/libxmz-ext-1.0.la \
 	$(XMZ_LIBS) \
 	$(PACKAGE_LIBS) \
 	$(NULL)
@@ -56,8 +52,6 @@ xmz_xmz_VALASOURCES = \
 	xmz/xmz-simple-notification.vala \
 	xmz/xmz-window.vala \
 	xmz/preferences/xmz-preferences-interface.vala \
-	libxmz-ext/libxmz-ext-1.0.vapi \
-	libxmz/libxmz-1.0.vapi \
 	$(NULL)
 
 xmz_xmz_SOURCES = \

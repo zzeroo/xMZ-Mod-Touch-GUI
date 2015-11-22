@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
-m4_define(xmz_minor_version, 3)
+m4_define(xmz_minor_version, 4)
 m4_define(xmz_micro_version, 1)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
@@ -88,7 +88,7 @@ GLIB_REQUIRED_VERSION=2.38
 GTK_REQUIRED_VERSION=3.12.0
 INTROSPECTION_REQUIRED=0.10.1
 
-PKG_CHECK_MODULES(LIBXMZ, [
+PKG_CHECK_MODULES(XMZ, [
                         gthread-2.0 >= $GLIB_REQUIRED_VERSION
                         glib-2.0 >= $GLIB_REQUIRED_VERSION
                         gobject-2.0 >= $GLIB_REQUIRED_VERSION
@@ -102,32 +102,7 @@ PKG_CHECK_MODULES(LIBXMZ, [
                         sqlite3
                         ])
 
-cflags_save="${CFLAGS}"
-libs_save="${LIBS}"
 
-CFLAGS="${CFLAGS} ${LIBXMZ_CFLAGS}"
-LIBS="${LIBS} ${LIBXMZ_LIBS}"
-
-CFLAGS="${cflags_save}"
-LIBS="${libs_save}"
-
-
-AC_ARG_ENABLE(docs,
-              [AS_HELP_STRING([--enable-docs],
-                              [enable generating documentation [default=no]])],
-              [enable_docs=$enableval])
-
-if test "$enable_docs" = "yes"; then
-	if test "$VALADOC" = ""; then
-		AC_MSG_ERROR([could not find valadoc])
-	fi
-fi
-
-AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
-
-if test "x$USE_MAINTAINER_MODE" = "xyes"; then
-LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -Wall -Werror -Wuninitialized -Wmissing-declarations"
-fi
 
 AC_ARG_ENABLE(debug,
               [AS_HELP_STRING([--disable-debug],
@@ -137,31 +112,14 @@ AC_ARG_ENABLE(debug,
 XMZ_VALAFLAGS="--target-glib 2.38"
 
 if test "x$enable_debug" = "xyes"; then
-	LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -g -O0"
 	XMZ_VALAFLAGS="$XMZ_VALAFLAGS -g"
 
 	AC_DEFINE([ENABLE_DEBUG],[1],[Whether debugging support is enabled])
 fi
 
-AC_SUBST(LIBXMZ_CFLAGS)
-AC_SUBST(LIBXMZ_LIBS)
 
 AC_SUBST(XMZ_VALAFLAGS)
 
-LIBXMZ_EXT_CFLAGS="$LIBXMZ_CFLAGS"
-LIBXMZ_EXT_LIBS="$LIBXMZ_LIBS"
-
-AC_SUBST(LIBXMZ_EXT_CFLAGS)
-AC_SUBST(LIBXMZ_EXT_LIBS)
-
-
-PKG_CHECK_MODULES(XMZ, [
-                        gsettings-desktop-schemas
-                        ])
-
-
-XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
-XMZ_LIBS="$LIBXMZ_LIBS $XMZ_LIBS -lm"
 
 AC_SUBST(XMZ_CFLAGS)
 AC_SUBST(XMZ_LIBS)
@@ -209,16 +167,12 @@ XMZ_PLUGIN_VALAFLAGS="	\
 	--pkg gee-0.8	\
 	--pkg config				\
 	\$(XMZ_VALAFLAGS)			\
-	--vapidir \$(top_srcdir)/vapi		\
-	--vapidir \$(top_builddir)/libxmz \
-	--vapidir \$(top_builddir)/libxmz-ext"
+	--vapidir \$(top_srcdir)/vapi"
 
 AC_SUBST(XMZ_PLUGIN_VALAFLAGS)
 
 AC_CONFIG_FILES([
                  Makefile
-                 libxmz/libxmz-1.0.pc
-                 libxmz-ext/libxmz-ext-1.0.pc
                  data/xmz.desktop.in
                  data/com.gaswarnanlagen.xmz.gschema.xml.in
                  po/Makefile.in
