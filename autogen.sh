@@ -1,6 +1,5 @@
 #!/bin/sh
-
-set -e
+# Run this to generate all the initial makefiles, etc.
 
 test -n "$srcdir" || srcdir=`dirname "$0"`
 test -n "$srcdir" || srcdir=.
@@ -8,25 +7,32 @@ test -n "$srcdir" || srcdir=.
 olddir=`pwd`
 cd "$srcdir"
 
-[ ! -f README ] && ln README.md README
-[ ! -d benchmark ] && mkdir benchmark
+[ ! -f NEWS ] && touch NEWS
+[ ! -f AUTHORS ] && touch AUTHORS
+[ ! -f ChangeLog ] && touch ChangeLog
+[ ! -f README  ] && ln README.md README
 
-PKG_NAME=`autoconf --trace 'AC_INIT:$1' "$srcdir/configure.ac"`
-
-if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
-	echo "**Warning**: I am going to run \`configure' with no arguments." >&2
-	echo "If you wish to pass any to it, please specify them on the" >&2
-	echo \`$0\'" command line." >&2
-	echo "" >&2
+INTLTOOLIZE=`which intltoolize`
+if test -z $INTLTOOLIZE; then
+        echo "*** No intltoolize found, please install the intltool package ***"
+        exit 1
 fi
 
-set -x
-#aclocal --install || exit 1
-autoreconf --verbose --force --install -Wno-portability || exit 1
-set +x
+AUTORECONF=`which autoreconf`
+if test -z $AUTORECONF; then
+        echo "*** No autoreconf found, please install it ***"
+        exit 1
+fi
+
+if test -z `which autopoint`; then
+        echo "*** No autopoint found, please install it ***"
+        exit 1
+fi
+
+
+autopoint --force
+AUTOPOINT='intltoolize --automake --copy' autoreconf --force --install --verbose
+
 
 cd "$olddir"
-
-if test -z "$NOCONFIGURE"; then
-  "$srcdir"/configure "$@"
-fi
+test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"

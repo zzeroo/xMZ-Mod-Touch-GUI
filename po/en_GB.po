@@ -1,0 +1,58 @@
+# English translation for xmz.
+# Copyright (C) 2015 xmz's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xmz package.
+#
+# Stefan Müller <s.mueller@it.kls-glt.de>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xmz master\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: ../data/xmz.desktop.in.h:1 ../xmz/xmz.vala:18
+#: ../xmz/resources/ui/xmz-window.ui.h:1
+msgid "xmz"
+msgstr ""
+
+#: ../data/xmz.desktop.in.h:2
+msgid "xMesszentrale mit Modbus Interface und Touchscreen"
+msgstr ""
+
+#: ../xmz/xmz-application.vala:45
+msgid ""
+"xmz Graphical User Interface for xMesszentrale mit Modbus Interface und "
+"Touchscreen"
+msgstr ""
+
+#: ../xmz/xmz-application.vala:54
+msgid "translator-credits"
+msgstr ""
+
+#: ../xmz/xmz-application.vala:57
+msgid "xmz homepage"
+msgstr ""
+
+#. Translators: the two %s will be replaced to create a link to perform the add-sensor action.
+#: ../xmz/xmz-settings-view.vala:53
+#, c-format
+msgid "Please %sadd a Sensor%s."
+msgstr ""
+
+#: ../xmz/xmz-simple-notification.vala:74 ../xmz/resources/ui/xmz-window.ui.h:2
+msgid "Close"
+msgstr ""
+
+#: ../xmz/resources/ui/xmz-settings-view.ui.h:1
+msgid "No sensors have been added yet. To get started, hit add sensor."
+msgstr ""
+
+#: ../xmz/resources/ui/xmz-settings-view.ui.h:2
+msgid "_Add sensor"
+msgstr ""
+
+#: ../xmz/resources/ui/xmz-simple-notification.ui.h:1
+msgid "Cancel"
+msgstr ""
