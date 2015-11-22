@@ -16,13 +16,15 @@ class TestSensorView {
     var window = new Window ();
     window.set_default_size (1024, 600);
 
-
     window.delete_event.connect ((w, ev) => {
                                  Gtk.main_quit ();
                                  return true;
                                  });
 
-    window.show ();
+    var label = new Label ("Test Sensor view");
+    window.add (label);
+
+    window.show_all ();
 
     Gtk.main ();
     return 0;

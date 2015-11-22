@@ -51,7 +51,6 @@ class SensorView : Gtk.Stack, XMZExt.UIElement, XMZExt.Activity {
 
     var selection = sensors_list.get_selection ();
     selection.changed.connect (this.on_changed);
-
   }
 
 

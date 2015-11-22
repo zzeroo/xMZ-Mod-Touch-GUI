@@ -46,6 +46,7 @@ libxmz_ext_libxmz_ext_1_0_la_VALASOURCES = \
 	libxmz-ext/xmz-ext-notification.vala \
 	libxmz-ext/xmz-ext-notifications.vala \
 	libxmz-ext/xmz-ext-ui-element.vala \
+	libxmz-ext/xmz-ext-preferences.vala \
 	libxmz-ext/xmz-ext-ui.vala \
 	libxmz/libxmz-1.0.vapi \
 	$(NULL)

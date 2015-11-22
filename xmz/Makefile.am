@@ -55,6 +55,7 @@ xmz_xmz_VALASOURCES = \
 	xmz/xmz-sensor-view.vala \
 	xmz/xmz-simple-notification.vala \
 	xmz/xmz-window.vala \
+	xmz/preferences/xmz-preferences-interface.vala \
 	libxmz-ext/libxmz-ext-1.0.vapi \
 	libxmz/libxmz-1.0.vapi \
 	$(NULL)
