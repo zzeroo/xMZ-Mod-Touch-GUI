@@ -1,105 +1,238 @@
-# This file is processed by autoconf to create a configure script
-AC_INIT([xMZ-Mod-Touch-GUI], 0.1.1, [s.mueller@it.kls-glt.de])
-AC_CONFIG_SRCDIR([Makefile.am])
-AM_INIT_AUTOMAKE([1.10 no-define foreign dist-xz no-dist-gzip])
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+dnl Process this file with autoconf to produce a configure script.
 
-# Checks for programs.
+AC_PREREQ([2.64])
+
+m4_define(xmz_major_version, 0)
+m4_define(xmz_minor_version, 3)
+m4_define(xmz_micro_version, 1)
+m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
+
+AC_INIT([xmz],
+        [xmz_version],
+        [info@gaswarnanlagen.com],
+        [xmz],
+        [http://gaswarnanlagen.com/xmz])
+
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_SRCDIR([xmz/xmz.vala])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([build-aux])
+
+AC_DEFINE(XMZ_MAJOR_VERSION, xmz_major_version, [xMZ major version])
+AC_SUBST(XMZ_MAJOR_VERSION, xmz_major_version)
+AC_DEFINE(XMZ_MINOR_VERSION, xmz_minor_version, [xMZ minor version])
+AC_SUBST(XMZ_MINOR_VERSION, xmz_minor_version)
+AC_DEFINE(XMZ_MICRO_VERSION, xmz_micro_version, [xMZ micro version])
+AC_SUBST(XMZ_MICRO_VERSION, xmz_micro_version)
+
+AM_INIT_AUTOMAKE([1.11 tar-ustar dist-xz no-dist-gzip -Wno-portability subdir-objects])
+AM_MAINTAINER_MODE([enable])
+
+AM_SILENT_RULES([yes])
+
+# Check for programs
 AC_PROG_CC
-AM_PROG_CC_C_O
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AC_PATH_PROG(GZIP, gzip)
+AC_PROG_MKDIR_P
+AM_PROG_VALAC([0.30.0])
 
-LIBGEE_LT_VERSION="7:1:5"
-AC_SUBST(LIBGEE_LT_VERSION)
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
+AC_PATH_PROGS(GTK_UPDATE_ICON_CACHE, gtk3-update-icon-cache gtk-update-icon-cache gtk-update-icon-cache-3.0)
 
-# FIXME: Find how libgee handle AM_PROG_VALAC
-AM_PROG_VALAC([0.16])
+AC_PATH_PROG(VALADOC, valadoc)
 
-PKG_CHECK_MODULES(GTK, gtk+-3.0)
-PKG_CHECK_MODULES(SQLITE, sqlite3)
+# Initialize libtool
+LT_PREREQ([2.2])
+LT_INIT(disable-static)
+
+# i18n stuff
+IT_PROG_INTLTOOL([0.40.0])
+
+AM_GNU_GETTEXT_VERSION([0.19.6])
+AM_GNU_GETTEXT([external])
+
+GETTEXT_PACKAGE=xmz
+AC_SUBST(GETTEXT_PACKAGE)
+
+dnl adl_RECURSIVE_EVAL(VALUE, RESULT)
+dnl =================================
+dnl Interpolate the VALUE in loop until it doesn't change,
+dnl and set the result to $RESULT.
+dnl WARNING: It's easy to get an infinite loop with some unsane input.
+AC_DEFUN([adl_RECURSIVE_EVAL],
+[_lcl_receval="$1"
+$2=`(test "x$prefix" = xNONE && prefix="$ac_default_prefix"
+     test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+     _lcl_receval_old=''
+     while test "[$]_lcl_receval_old" != "[$]_lcl_receval"; do
+       _lcl_receval_old="[$]_lcl_receval"
+       eval _lcl_receval="\"[$]_lcl_receval\""
+     done
+     echo "[$]_lcl_receval")`])
+
+adl_RECURSIVE_EVAL("$datadir/xmz", [XMZ_DATADIR])
+adl_RECURSIVE_EVAL("$datadir/locale", [XMZ_LOCALEDIR])
+adl_RECURSIVE_EVAL("$libdir/xmz", [XMZ_LIBDIR])
+
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED(XMZ_DATADIR,"$XMZ_DATADIR", [data dir])
+AC_DEFINE_UNQUOTED(XMZ_LOCALEDIR,"$XMZ_LOCALEDIR", [locale dir])
+AC_DEFINE_UNQUOTED(XMZ_LIBDIR,"$XMZ_LIBDIR", [lib dir])
+
+AC_CHECK_LIB([m], [sinf])
+
+GLIB_REQUIRED_VERSION=2.38
+GTK_REQUIRED_VERSION=3.12.0
+INTROSPECTION_REQUIRED=0.10.1
+
+PKG_CHECK_MODULES(LIBXMZ, [
+                        gthread-2.0 >= $GLIB_REQUIRED_VERSION
+                        glib-2.0 >= $GLIB_REQUIRED_VERSION
+                        gobject-2.0 >= $GLIB_REQUIRED_VERSION
+                        gmodule-2.0 >= $GLIB_REQUIRED_VERSION
+                        gio-2.0 >= $GLIB_REQUIRED_VERSION
+                        gio-unix-2.0 >= $GLIB_REQUIRED_VERSION
+                        gobject-introspection-1.0 >= $INTROSPECTION_REQUIRED
+                        gtk+-3.0 >= $GTK_REQUIRED_VERSION
+                        gsettings-desktop-schemas
+                        gee-0.8
+                        sqlite3
+                        ])
+
+cflags_save="${CFLAGS}"
+libs_save="${LIBS}"
+
+CFLAGS="${CFLAGS} ${LIBXMZ_CFLAGS}"
+LIBS="${LIBS} ${LIBXMZ_LIBS}"
+
+CFLAGS="${cflags_save}"
+LIBS="${libs_save}"
+
+
+AC_ARG_ENABLE(docs,
+              [AS_HELP_STRING([--enable-docs],
+                              [enable generating documentation [default=no]])],
+              [enable_docs=$enableval])
+
+if test "$enable_docs" = "yes"; then
+	if test "$VALADOC" = ""; then
+		AC_MSG_ERROR([could not find valadoc])
+	fi
+fi
+
+AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
+
+if test "x$USE_MAINTAINER_MODE" = "xyes"; then
+LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -Wall -Werror -Wuninitialized -Wmissing-declarations"
+fi
+
+AC_ARG_ENABLE(debug,
+              [AS_HELP_STRING([--disable-debug],
+                              [disable debug information [default=yes]])],
+              [enable_debug=$enableval], [enable_debug=yes])
+
+XMZ_VALAFLAGS="--target-glib 2.38"
+
+if test "x$enable_debug" = "xyes"; then
+	LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -g -O0"
+	XMZ_VALAFLAGS="$XMZ_VALAFLAGS -g"
+
+	AC_DEFINE([ENABLE_DEBUG],[1],[Whether debugging support is enabled])
+fi
+
+AC_SUBST(LIBXMZ_CFLAGS)
+AC_SUBST(LIBXMZ_LIBS)
+
+AC_SUBST(XMZ_VALAFLAGS)
+
+LIBXMZ_EXT_CFLAGS="$LIBXMZ_CFLAGS"
+LIBXMZ_EXT_LIBS="$LIBXMZ_LIBS"
+
+AC_SUBST(LIBXMZ_EXT_CFLAGS)
+AC_SUBST(LIBXMZ_EXT_LIBS)
+
+
+PKG_CHECK_MODULES(XMZ, [
+                        gsettings-desktop-schemas
+                        ])
+
+
+XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
+XMZ_LIBS="$LIBXMZ_LIBS $XMZ_LIBS -lm"
+
+AC_SUBST(XMZ_CFLAGS)
+AC_SUBST(XMZ_LIBS)
+
+GOBJECT_INTROSPECTION_REQUIRE($INTROSPECTION_REQUIRED)
+AC_SUBST(INTROSPECTION_REQUIRED)
+
+INTROSPECTION_GIRDIR=`$PKG_CONFIG \
+  --define-variable="prefix=${prefix}" \
+  --define-variable="datarootdir=${datarootdir}" \
+  --define-variable="datadir=${datadir}" \
+  --variable=girdir gobject-introspection-1.0`
+
+INTROSPECTION_TYPELIBDIR=`$PKG_CONFIG \
+  --define-variable="prefix=${prefix}" \
+  --define-variable="libdir=${libdir}" \
+  --variable=typelibdir gobject-introspection-1.0`
+
+GNOME_COMPILE_WARNINGS([maximum])
 
 GLIB_GSETTINGS
 
-dnl ###########################################################################
-dnl Dependencies
-dnl ###########################################################################
+GLADE_UI_REQUIRED=3.2
 
-GLIB_REQUIRED=2.40.0
-GLIB_REQUIRED=2.40.0
-GTK_REQUIRED=3.15.0
+AC_ARG_ENABLE([glade-catalog],
+              [AS_HELP_STRING([--enable-glade-catalog[=@<:@no/auto/yes@:>@]],
+                              [Install a glade catalog file [default=no]])],
+                              [glade_catalog=$enableval],
+                              [glade_catalog="no"])
 
-VALA_ADD_CHECKFILE([tests/tests_vala.stamp])
-VALA_ADD_VALAFLAGS(--target-glib=$GLIB_REQUIRED)
-VALA_ADD_VALAFLAGS(--hide-internal)
+AM_CONDITIONAL([GLADE_CATALOG], [ test "$glade_catalog" = "yes" ])
 
-AC_ARG_ENABLE(doc, AS_HELP_STRING([--enable-doc], [Enable documentation generation]), enable_doc=$enableval, enable_doc=no)
-AM_CONDITIONAL(ENABLE_DOC, test x$enable_doc = xyes)
+XMZ_PLUGIN_CFLAGS="$XMZ_CFLAGS"
+XMZ_PLUGIN_LIBS="$XMZ_LIBS"
 
-AS_IF([test "x$enable_doc" != xno],
-      [AC_PATH_PROG(VALADOC, valadoc, :)
-       AC_SUBST(VALADOC)
-       AS_IF([test "$VALADOC" = :],
-             [AC_MSG_ERROR([valadoc not found])])])
+AC_SUBST(XMZ_PLUGIN_CFLAGS)
+AC_SUBST(XMZ_PLUGIN_LIBS)
 
-AC_ARG_ENABLE(coverage,
-	AS_HELP_STRING([--enable-coverage],
-	[compile with coverage profiling and debug (gcc only)]),
-	enable_coverage=$enableval,enable_coverage=no)
-AM_CONDITIONAL(ENABLE_COVERAGE, test x$enable_coverage != xno)
-AS_IF([test "x$enable_coverage" != xno],
-	[COVERAGE_CFLAGS="-fprofile-arcs -ftest-coverage"
-	 COVERAGE_VALAFLAGS="-g"
-	 COVERAGE_LIBS="-lgcov"
-	 AC_SUBST(COVERAGE_CFLAGS)
-	 AC_SUBST(COVERAGE_VALAFLAGS)
-	 AC_SUBST(COVERAGE_LIBS)
-	 AC_PATH_PROG(LCOV, lcov, :)
-	 AC_SUBST(LCOV)
-	 AS_IF([test "$LCOV" = :],
-		[AC_MSG_ERROR([lcov is necessary for testing code coverage (http://ltp.sourceforge.net/coverage/lcov.php)])])])
+XMZ_PLUGIN_LIBTOOL_FLAGS="-module -avoid-version"
+AC_SUBST(XMZ_PLUGIN_LIBTOOL_FLAGS)
 
-AC_ARG_ENABLE(benchmark, AS_HELP_STRING([--enable-benchmark], [Enable benchmark]), enable_benchmark=$enableval, enable_benchmark=no)
-AM_CONDITIONAL(ENABLE_BENCHMARK, test x$enable_benchmark = xyes)
-AS_IF([test x$enable_benchmark = xyes],
-      [VALA_ADD_CHECKFILE([benchmark/benchmarks_vala.stamp])])
+XMZ_PLUGIN_VALAFLAGS="	\
+	--pkg gio-2.0				\
+	--pkg gtk+-3.0				\
+	--pkg gee-0.8	\
+	--pkg config				\
+	\$(XMZ_VALAFLAGS)			\
+	--vapidir \$(top_srcdir)/vapi		\
+	--vapidir \$(top_builddir)/libxmz \
+	--vapidir \$(top_builddir)/libxmz-ext"
 
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
-AC_SUBST(GLIB_CFLAGS)
-AC_SUBST(GLIB_LIBS)
+AC_SUBST(XMZ_PLUGIN_VALAFLAGS)
 
-PKG_CHECK_MODULES(XMZ_MOD_TOUCH_GUI, [
-                                      glib-2.0 >= $GLIB_REQUIRED
-                                      gio-2.0 >= $GLIB_REQUIRED
-                                      gtk+-3.0 >= $GTK_REQUIRED
-                                      gee-0.8
-                                      ])
+AC_CONFIG_FILES([
+                 Makefile
+                 libxmz/libxmz-1.0.pc
+                 libxmz-ext/libxmz-ext-1.0.pc
+                 data/xmz.desktop.in
+                 data/com.gaswarnanlagen.xmz.gschema.xml.in
+                 po/Makefile.in
+                 ])
 
-PKG_CHECK_MODULES(LIBXMZ, [
-                           glib-2.0 >= $GLIB_REQUIRED
-                           gio-2.0 >= $GLIB_REQUIRED
-                           gee-0.8
-                           ])
+AC_OUTPUT
 
-AC_SUBST([GLIB_REQUIRED])
+echo "
 
-AC_PATH_PROG([DESKTOP_FILE_VALIDATE], [desktop-file-validate], [/bin/true])
+Configuration:
 
-AC_CHECK_LIB([m],[floor])
-
-dnl ###########################################################################
-dnl GResources
-dnl ###########################################################################
-
-AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
-AC_SUBST(GLIB_COMPILE_RESOURCES)
-
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
-AC_SUBST(GLIB_CFLAGS)
-AC_SUBST(GLIB_LIBS)
-
-VALA_CHECK([0.25.1])
-
-AC_OUTPUT([Makefile
-           src/Makefile
-           data/Makefile
-           tests/Makefile])
+	Source code location:	${srcdir}
+	Compiler:		${CC}
+	Glade catalog:          ${glade_catalog}
+	Debug enabled:          ${enable_debug}
+"
 

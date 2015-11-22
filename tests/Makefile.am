@@ -1,105 +1,52 @@
 include $(top_srcdir)/Makefile.decl
 
-noinst_PROGRAMS = $(TEST_PROGS)
+tests_common_cppflags = \
+		-I$(top_srcdir) \
+		-I$(top_srcdir)/xmz \
+		-I$(top_srcdir)/libxmz \
+		$(NULL)
 
-TEST_PROGS += tests
+tests_common_cflags = \
+		-g \
+		$(XMZ_DEBUG_FLAGS) \
+		$(XMZ_CFLAGS) \
+		-w \
+		$(NULL)
 
-xmz_mod_touch_gui_SOURCES = \
-														../src/SensorNode.vala \
-														../src/SensorModel.vala \
-														../src/DatabaseBackend.vala \
-														$(NULL)
+tests_common_ldadd = \
+		$(XMZ_PLUGIN_LIBS) \
+		$(NULL)
 
-tests_VALASOURCES = \
-										$(xmz_mod_touch_gui_SOURCES) \
-										test-example.vala \
-										test-database-backend.vala \
-										test-sensor-model.vala \
-										testmain.vala \
-										testcase.vala \
-										--target-glib=$(GLIB_REQUIRED) \
-										$(NULL)
+tests_common_valaflags = \
+		$(XMZ_PLUGIN_VALAFLAGS) \
+		$(NULL)
 
-tests_SOURCES = \
-								$(tests_VALASOURCES:.vala=.c) \
-								$(NULL)
+noinst_PROGRAMS += $(TESTS_DEMO_PROGS)
 
-tests_DEPENDENCIES = \
-										 tests_vala.stamp \
-										 $(NULL)
+TESTS_DEMO_PROGS = \
+		tests/sensor-view \
+		tests/sensor-list-box \
+		$(NULL)
 
-tests_CFLAGS = \
-							 -w \
-							 -rdynamic \
-							 $(NULL)
+tests_sensor_view_SOURCES = tests/sensor-view.vala $(XMZ_PLUGIN_VAPISOURCES)
+tests_sensor_view_VALAFLAGS = $(tests_common_valaflags)
+tests_sensor_view_CFLAGS = $(tests_common_cflags)
+tests_sensor_view_CPPFLAGS = $(tests_common_cppflags)
+tests_sensor_view_LDADD = libxmz/libxmz-1.0.la $(tests_common_ldadd)
 
-tests_CPPFLAGS = \
-								 -I$(top_srcdir)/src \
-								 $(GLIB_CFLAGS) \
-								 $(SQLITE_CFLAGS) \
-								 $(XMZ_MOD_TOUCH_GUI_CFLAGS) \
-								 $(NULL)
+tests_sensor_list_box_SOURCES = tests/sensor-list-box.vala $(XMZ_PLUGIN_VAPISOURCES)
+tests_sensor_list_box_VALAFLAGS = $(tests_common_valaflags)
+tests_sensor_list_box_CFLAGS = $(tests_common_cflags)
+tests_sensor_list_box_CPPFLAGS = $(tests_common_cppflags)
+tests_sensor_list_box_LDADD = libxmz/libxmz-1.0.la $(tests_common_ldadd)
 
-tests_LDADD = \
-							$(GTK_LIBS) \
-							$(GLIB_LIBS) \
-							$(SQLITE_LIBS) \
-							$(NULL)
-
-tests_VALAFLAGS = \
-									--basedir $(top_srcdir) \
-									--vapidir $(top_srcdir)/vapi \
-									--pkg posix \
-									--pkg gio-2.0 \
-									--pkg gtk+-3.0 \
-									--pkg gee-0.8 \
-									--pkg gmodule-2.0 \
-									--pkg sqlite3 \
-									$(VALAFLAGS) \
-									$(NULL)
-
-tests_vala.stamp: $(tests_VALASOURCES)
-	$(AM_V_VALAC)$(VALAC) $(VALAFLAGS) $(tests_VALAFLAGS) -C $(tests_VALASOURCES)
-	@touch tests_vala.stamp
-
-$(tests_VALASOURCES:.vala=.c): tests_vala.stamp
-
-MOSTLYCLEANFILES = \
-									 $(tests_VALASOURCES:.vala=.c) \
-									 tests_vala.stamp \
-									 $(NULL)
+include tests/libxmz/Makefile.am
+include tests/xmz/Makefile.am
 
 EXTRA_DIST += \
-							$(tests_VALASOURCES) \
-							tests_vala.stamp \
-							$(NULL)
+	tests/support/xmz-assert.h \
+	tests/support/xmz-assert.vapi \
+	$(NULL)
 
-coverage-reset:
-	lcov --base-directory=@top_srcdir@ --directory @top_srcdir@/gee --zerocounters
 
-coverage-report:
-	lcov --directory @top_srcdir@/gee \
-		--capture \
-		--output-file @top_builddir@/lcov.info
-
-	lcov --directory @top_srcdir@/gee \
-		--output-file @top_builddir@/lcov.info \
-		--remove @top_builddir@/lcov.info \
-		"/usr/include/*" "*.c" "*.h" "*.vapi"
-
-	$(mkdir_p) @top_builddir@/tests/coverage
-	git_commit=`GIT_DIR=@top_srcdir@/.git git log -1 --pretty=format:%h 2>/dev/null`;\
-	genhtml --title "@PACKAGE_STRING@ $$git_commit" \
-		--output-directory @top_builddir@/tests/coverage @top_builddir@/lcov.info
-	@echo
-	@echo 'lcov report can be found in:'
-	@echo 'file://@abs_top_builddir@/tests/coverage/index.html'
-	@echo
-
-clean-local:
-	-rm -rf coverage
-
-.PHONY: coverage-report
-
--include $(top_srcdir)/git.mk
-
+# vi:ts=8:noet

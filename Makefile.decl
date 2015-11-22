@@ -3,10 +3,6 @@
 GTESTER = gtester
 GTESTER_REPORT = gtester-report
 
-# initialize variables for unconditional += appending
-EXTRA_DIST =
-TEST_PROGS =
-
 # useful constants
 NULL =
 
@@ -58,4 +54,5 @@ test-report perf-report full-report:	${TEST_PROGS}
 .PHONY: test test-report perf-report full-report
 # run make test as part of make check
 check-local: test
+
 

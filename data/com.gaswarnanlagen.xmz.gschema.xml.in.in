@@ -1,0 +1,11 @@
+<schemalist>
+  <schema gettext-domain="@GETTEXT_PACKAGE@" id="com.gaswarnanlagen.xmz.preferences.interface" path="/com/gaswarnanlagen/xmz/preferences/interface/">
+    <key name="default-activity" type="s">
+      <default>"sensor_list"</default>
+      <_summary>Default Activity</_summary>
+      <_description>
+        The activity which xmz activates by default when first launched.
+      </_description>
+    </key>
+  </schema>
+</schemalist>
