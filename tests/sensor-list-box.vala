@@ -9,7 +9,7 @@ class TestSensorListBox
 
 		try
 		{
-			XMZ.init();
+			//XMZ.init();
 		}
 		catch (Error e)
 		{
