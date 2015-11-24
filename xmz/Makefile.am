@@ -42,16 +42,10 @@ xmz_xmz_LDFLAGS = \
 
 
 xmz_xmz_VALASOURCES = \
-	xmz/sensor/xmz-sensor.vala \
-	xmz/xmz.vala \
 	xmz/xmz-application.vala \
-	xmz/xmz-ui-elements.vala \
-	xmz/xmz-notifications.vala \
-	xmz/xmz-settings-view.vala \
-	xmz/xmz-sensor-view.vala \
-	xmz/xmz-simple-notification.vala \
+	xmz/xmz-resource.vala \
 	xmz/xmz-window.vala \
-	xmz/preferences/xmz-preferences-interface.vala \
+	xmz/xmz.vala \
 	$(NULL)
 
 xmz_xmz_SOURCES = \

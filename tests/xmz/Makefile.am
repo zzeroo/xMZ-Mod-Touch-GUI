@@ -27,6 +27,7 @@ tests_xmz_test_xmz_CFLAGS =			\
 	-w
 
 tests_xmz_test_xmz_LDADD =			\
+	$(XMZ_LIBS) \
 	$(NULL)
 
 tests/xmz/support-%.vala: tests/support/%.vala

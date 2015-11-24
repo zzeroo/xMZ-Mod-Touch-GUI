@@ -13,11 +13,11 @@ tests_common_cflags = \
 		$(NULL)
 
 tests_common_ldadd = \
-		$(XMZ_PLUGIN_LIBS) \
+		$(XMZ_LIBS) \
 		$(NULL)
 
 tests_common_valaflags = \
-		$(XMZ_PLUGIN_VALAFLAGS) \
+		$(XMZ_VALAFLAGS) \
 		$(NULL)
 
 noinst_PROGRAMS += $(TESTS_DEMO_PROGS)

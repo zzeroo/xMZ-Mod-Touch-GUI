@@ -4,7 +4,7 @@ AC_PREREQ([2.64])
 
 m4_define(xmz_major_version, 0)
 m4_define(xmz_minor_version, 4)
-m4_define(xmz_micro_version, 1)
+m4_define(xmz_micro_version, 2)
 m4_define(xmz_version, xmz_major_version.xmz_minor_version.xmz_micro_version)
 
 AC_INIT([xmz],
@@ -119,10 +119,7 @@ fi
 
 
 AC_SUBST(XMZ_VALAFLAGS)
-
-
 AC_SUBST(XMZ_CFLAGS)
-AC_SUBST(XMZ_LIBS)
 
 GOBJECT_INTROSPECTION_REQUIRE($INTROSPECTION_REQUIRED)
 AC_SUBST(INTROSPECTION_REQUIRED)
@@ -152,24 +149,6 @@ AC_ARG_ENABLE([glade-catalog],
 
 AM_CONDITIONAL([GLADE_CATALOG], [ test "$glade_catalog" = "yes" ])
 
-XMZ_PLUGIN_CFLAGS="$XMZ_CFLAGS"
-XMZ_PLUGIN_LIBS="$XMZ_LIBS"
-
-AC_SUBST(XMZ_PLUGIN_CFLAGS)
-AC_SUBST(XMZ_PLUGIN_LIBS)
-
-XMZ_PLUGIN_LIBTOOL_FLAGS="-module -avoid-version"
-AC_SUBST(XMZ_PLUGIN_LIBTOOL_FLAGS)
-
-XMZ_PLUGIN_VALAFLAGS="	\
-	--pkg gio-2.0				\
-	--pkg gtk+-3.0				\
-	--pkg gee-0.8	\
-	--pkg config				\
-	\$(XMZ_VALAFLAGS)			\
-	--vapidir \$(top_srcdir)/vapi"
-
-AC_SUBST(XMZ_PLUGIN_VALAFLAGS)
 
 AC_CONFIG_FILES([
                  Makefile
