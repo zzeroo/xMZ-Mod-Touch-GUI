@@ -6,7 +6,7 @@ class XMZ.Test.Main {
   private TestCase[] d_cases;
 
   public Main (string [] args) {
-    XMZ.init ();
+    //XMZ.init ();
     GLib.Test.init (ref args);
   }
 
