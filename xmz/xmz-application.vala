@@ -31,7 +31,7 @@ public class Application : Gtk.Application {
                                                 provider,
                                                 600);
       var theme = Gtk.IconTheme.get_default ();
-      // theme.prepend_search_path (Path.build_filename (Config.XMZ_DATADIR, "icons"));
+      theme.prepend_search_path (Path.build_filename (Config.XMZ_DATADIR, "icons"));
     }
   }
 
@@ -63,8 +63,6 @@ public class Application : Gtk.Application {
 
     var w = (XMZ.Window) windows.first ().data;
     w.present ();
-
-
   }
 
 }
