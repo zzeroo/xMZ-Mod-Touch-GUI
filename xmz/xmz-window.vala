@@ -3,6 +3,9 @@ namespace XMZ {
 [GtkTemplate (ui = "/com/gaswarnanlagen/xmz/ui/xmz-window.ui")]
 public class Window : Gtk.ApplicationWindow {
 
+  // Do this to pull in config.h before glib.h (for gettext)
+  private const string version = XMZ.Config.VERSION;
+
   [GtkChild]
   private Gtk.Overlay overlay;
   [GtkChild]
@@ -126,11 +129,11 @@ public class Window : Gtk.ApplicationWindow {
   private void setup_sensors_treeview () {
     var sensor_list_model = new Gtk.ListStore (2, typeof (string), typeof (int));
     sensors_treeview.set_model (sensor_list_model);
-    sensors_treeview.insert_column_with_attributes (-1, "Name",
+    sensors_treeview.insert_column_with_attributes (-1, _( "Name" ),
                                         new Gtk.CellRendererText (), "text",
                                         0);
 
-    sensors_treeview.insert_column_with_attributes (-1, "ADC_Value",
+    sensors_treeview.insert_column_with_attributes (-1, _( "ADC_Value" ),
                                         new Gtk.CellRendererText (), "text",
                                         1);
 
