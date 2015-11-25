@@ -18,7 +18,7 @@ done
 # vala source files
 for i in $allfiles;
 do
-	if [ ${i##*.} == "vala" ] && grep -E '_\(["'"'"']' "$top/$i" &>/dev/null; then
+	if [ ${i##*.} == "vala" ] && grep -E '_\(.?["'"'"']' "$top/$i" &>/dev/null; then
 		echo $i;
 	fi
 done
