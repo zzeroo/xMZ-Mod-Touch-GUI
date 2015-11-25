@@ -19,35 +19,64 @@ public class Window : Gtk.ApplicationWindow {
   // SensorsModel   sensor  = SensorsController.sensor (1)
   private SensorModel[] sensors = {
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
+    new SensorModel ("Sensor NO²"),
     new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor CO")
+    new SensorModel ("Sensor NO²"),
   };
+
+  private Gdk.Geometry hints;
 
 
   construct {
@@ -60,6 +89,12 @@ public class Window : Gtk.ApplicationWindow {
       maximize ();
     } else {
       set_default_size (1024, 600);
+      set_resizable (false);
+      hints.min_width = -1;
+      hints.max_width = 1024;
+      hints.min_height = -1;
+      hints.max_height = 600;
+      set_geometry_hints(this, hints, Gdk.WindowHints.MIN_SIZE | Gdk.WindowHints.MAX_SIZE);
     }
 
     setup_sensors_treeview ();

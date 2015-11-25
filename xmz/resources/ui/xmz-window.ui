@@ -25,13 +25,23 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkTreeView" id="sensors_treeview">
+
+                      <object class="GtkScrolledWindow" id="sensors_scrolled_window">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="sensors_tree_selection"/>
+                        <child>
+
+                          <object class="GtkTreeView" id="sensors_treeview">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection" id="sensors_tree_selection"/>
+                            </child>
+                          </object>
+
                         </child>
                       </object>
+
                     </child>
                   </object>
                 </child>
