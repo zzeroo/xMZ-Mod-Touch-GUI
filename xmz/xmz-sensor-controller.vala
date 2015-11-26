@@ -9,64 +9,12 @@ public class SensorController {
   }
 
   public static SensorModel[] get_sensors () {
-    SensorModel[] sensors = {
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    new SensorModel ("Sensor CO"),
-    new SensorModel ("Sensor NO²"),
-    };
+    SensorModel[] sensors = {};
+
+    for (int i = 0; i < 1000; i++) {
+      sensors += new SensorModel ("Sensor"+ i.to_string () + " CO");
+      sensors += new SensorModel ("Sensor"+ i.to_string () + " NO²");
+    }
 
     return sensors;
   }
