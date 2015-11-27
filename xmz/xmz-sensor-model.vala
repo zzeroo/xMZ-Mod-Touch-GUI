@@ -18,17 +18,4 @@ public enum SensorModelColumns {
     return Type.INVALID;
   }
 }
-
-public class SensorModel : Object {
-
-  public string name { get; construct; }
-  public int adc_value { get; set;}
-
-  public SensorModel (string name) {
-    Object (name: name);
-  }
-
-  construct {
-  }
-}
 }

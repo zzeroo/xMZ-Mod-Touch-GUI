@@ -45,6 +45,7 @@ xmz_xmz_VALASOURCES = \
 	xmz/xmz-application.vala \
 	xmz/xmz-sensor-controller.vala \
 	xmz/xmz-sensor-model.vala \
+	xmz/xmz-sensor.vala \
 	xmz/xmz-resource.vala \
 	xmz/xmz-window.vala \
 	xmz/xmz.vala \

@@ -2,18 +2,18 @@ namespace XMZ {
 
 public class SensorController {
 
-  public static SensorModel get_sensor () {
-    var sensor = new SensorModel ("Sensor1 CO");
+  public static Sensor get_sensor () {
+    var sensor = new Sensor ("Sensor1 CO");
 
     return sensor;
   }
 
-  public static SensorModel[] get_sensors () {
-    SensorModel[] sensors = {};
+  public static Sensor[] get_sensors () {
+    Sensor[] sensors = {};
 
     for (int i = 0; i < 1000; i++) {
-      sensors += new SensorModel ("Sensor "+ i.to_string () + " CO");
-      sensors += new SensorModel ("Sensor "+ i.to_string () + " NO²");
+      sensors += new Sensor ("Sensor "+ i.to_string () + " CO");
+      sensors += new Sensor ("Sensor "+ i.to_string () + " NO²");
     }
 
     return sensors;

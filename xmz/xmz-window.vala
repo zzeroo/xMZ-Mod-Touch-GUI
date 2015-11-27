@@ -17,7 +17,7 @@ public class Window : Gtk.ApplicationWindow {
   [GtkChild]
   private Gtk.TreeView sensors_treeview;
 
-  private SensorModel[] sensors = SensorController.get_sensors ();
+  private Sensor[] sensors = SensorController.get_sensors ();
 
   private Gdk.Geometry hints;
 
