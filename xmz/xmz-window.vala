@@ -17,7 +17,6 @@ public class Window : Gtk.ApplicationWindow {
   [GtkChild]
   private Gtk.TreeView sensors_treeview;
 
-
   private SensorModel[] sensors = SensorController.get_sensors ();
 
   private Gdk.Geometry hints;
@@ -64,6 +63,7 @@ public class Window : Gtk.ApplicationWindow {
   }
 
   public new void present () {
+    // TODO: This is the right place to update window title labels and so on
     base.present ();
   }
 

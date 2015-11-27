@@ -12,8 +12,8 @@ public class SensorController {
     SensorModel[] sensors = {};
 
     for (int i = 0; i < 1000; i++) {
-      sensors += new SensorModel ("Sensor"+ i.to_string () + " CO");
-      sensors += new SensorModel ("Sensor"+ i.to_string () + " NO²");
+      sensors += new SensorModel ("Sensor "+ i.to_string () + " CO");
+      sensors += new SensorModel ("Sensor "+ i.to_string () + " NO²");
     }
 
     return sensors;
