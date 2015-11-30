@@ -88,9 +88,8 @@ SCALABLE_ICONS    =
 gsettings_SCHEMAS =
 TESTS             =
 
-XMZ_PLUGIN_VAPISOURCES = \
-	$(NULL)
 
+include libxmz/Makefile.am
 include xmz/Makefile.am
 include data/Makefile.am
 include tests/Makefile.am

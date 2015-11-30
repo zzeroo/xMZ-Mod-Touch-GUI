@@ -88,7 +88,7 @@ GLIB_REQUIRED_VERSION=2.38
 GTK_REQUIRED_VERSION=3.12.0
 INTROSPECTION_REQUIRED=0.10.1
 
-PKG_CHECK_MODULES(XMZ, [
+PKG_CHECK_MODULES(LIBXMZ, [
                         gthread-2.0 >= $GLIB_REQUIRED_VERSION
                         glib-2.0 >= $GLIB_REQUIRED_VERSION
                         gobject-2.0 >= $GLIB_REQUIRED_VERSION
@@ -102,24 +102,51 @@ PKG_CHECK_MODULES(XMZ, [
                         sqlite3
                         ])
 
+cflags_save="${CFLAGS}"
+libs_save="${LIBS}"
 
+CFLAGS="${CFLAGS} ${LIBXMZ_CFLAGS}"
+LIBS="${LIBS} ${LIBXMZ_LIBS}"
+
+CFLAGS="${cflags_save}"
+LIBS="${libs_save}"
+
+
+if test "x$USE_MAINTAINER_MODE" = "xyes"; then
+  LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -Wall -Werror -Wuninitialized -Wmissing-declarations"
+fi
 
 AC_ARG_ENABLE(debug,
               [AS_HELP_STRING([--disable-debug],
                               [disable debug information [default=yes]])],
               [enable_debug=$enableval], [enable_debug=yes])
 
-XMZ_VALAFLAGS="--target-glib 2.38"
+XMZ_VALAFLAGS=" \
+              --target-glib 2.38 \
+              --vapidir \$(top_srcdir)/vapi \
+              --vapidir \$(top_builddir)/libxmz"
 
 if test "x$enable_debug" = "xyes"; then
+	LIBXMZ_CFLAGS="$LIBXMZ_CFLAGS -g -O0"
 	XMZ_VALAFLAGS="$XMZ_VALAFLAGS -g"
 
 	AC_DEFINE([ENABLE_DEBUG],[1],[Whether debugging support is enabled])
 fi
 
-
 AC_SUBST(XMZ_VALAFLAGS)
+
+AC_SUBST(LIBXMZ_CFLAGS)
+AC_SUBST(LIBXMZ_LIBS)
+
+PKG_CHECK_MODULES(XMZ, [
+                        gsettings-desktop-schemas
+                        ])
+
+XMZ_CFLAGS="$LIBXMZ_CFLAGS $XMZ_CFLAGS"
+XMZ_LIBS="$LIBXMZ_LIBS $XMZ_LIBS -lm"
+
 AC_SUBST(XMZ_CFLAGS)
+AC_SUBST(XMZ_LIBS)
 
 GOBJECT_INTROSPECTION_REQUIRE($INTROSPECTION_REQUIRED)
 AC_SUBST(INTROSPECTION_REQUIRED)
@@ -152,6 +179,7 @@ AM_CONDITIONAL([GLADE_CATALOG], [ test "$glade_catalog" = "yes" ])
 
 AC_CONFIG_FILES([
                  Makefile
+                 libxmz/libxmz-1.0.pc
                  data/xmz.desktop.in
                  data/com.gaswarnanlagen.xmz.gschema.xml.in
                  po/Makefile.in
