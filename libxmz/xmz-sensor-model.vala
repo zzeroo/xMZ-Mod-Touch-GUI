@@ -20,25 +20,27 @@ public enum SensorModelColumns {
 
 public class SensorModel : Object, Gtk.TreeModel {
   private Thread<void*>? thread;
-  private GenericArray<Sensor> sensors;
+  private GenericArray<Sensor> data;
 
   private uint size;
   private int stamp;
 
+  public signal void update (uint added);
 
-  public SensorModel (owned GenericArray<Sensor>? sensor = null) {
-    if (sensors == null) {
-      this.sensors = new GenericArray<Sensor> ();
+  public SensorModel (owned GenericArray<Sensor>? data = null) {
+    if (data == null) {
+      this.data = new GenericArray<Sensor> ();
     } else {
-      this.sensors = (owned) sensors;
+      this.data = (owned) data;
     }
   }
 
   construct {
+    Timeout.add (100, update_sensors);
   }
 
   public void add (string name, int adc_value) {
-    sensors.add (new Sensor (name, adc_value));
+    data.add (new Sensor (name, adc_value));
     stamp++;
   }
 
@@ -51,23 +53,15 @@ public class SensorModel : Object, Gtk.TreeModel {
     return 0;
   }
 
+
+
   public bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path) {
-    iter = {};
-
-    int[] indices = path.get_indices ();
-
-    if (indices.length != 1) {
-      return false;
+    if (path.get_depth () != 1 || data.length == 0) {
+      return invalid_iter (out iter);
     }
-
-    uint index = (uint) indices[0];
-
-    if (index >= size) {
-      return false;
-    }
-
-    iter.user_data = (void *) (ulong) index;
-    iter.stamp = stamp;
+    iter = Gtk.TreeIter ();
+    iter.user_data = path.get_indices ()[0].to_pointer ();
+    iter.stamp = this.stamp;
 
     return true;
   }
@@ -77,27 +71,21 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public Gtk.TreePath? get_path (Gtk.TreeIter iter) {
-    uint id = (uint) (ulong) iter.user_data;
+    assert (iter.stamp == stamp);
 
-    return_val_if_fail (iter.stamp == stamp, null);
+    Gtk.TreePath path = new Gtk.TreePath ();
+    path.append_index ((int) iter.user_data);
 
-    return new Gtk.TreePath.from_indices ((int) id);
+    return path;
   }
 
   public void get_value (Gtk.TreeIter iter, int column, out Value val) {
-    val = {};
-
-    return_if_fail (iter.stamp == stamp);
+    assert (iter.stamp == stamp);
 
     uint idx = (uint) (ulong) iter.user_data;
-
-    Sensor? sensor = sensors.get (idx);
+    Sensor? sensor = data.get (idx);
 
     val.init (get_column_type (column));
-
-    if (sensor == null) {
-      return;
-    }
 
     switch (column) {
       case SensorModelColumns.NAME:
@@ -113,7 +101,7 @@ public class SensorModel : Object, Gtk.TreeModel {
     assert (iter.stamp == stamp);
 
     uint idx = (uint) (ulong) iter.user_data;
-    Sensor? sensor = sensors.get (idx);
+    Sensor? sensor = data.get (idx);
 
     return sensor;
   }
@@ -137,26 +125,20 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public int iter_n_children (Gtk.TreeIter? iter) {
-    if (iter == null) {
-      return (int) size;
-    } else {
-      return_val_if_fail (iter.stamp == stamp, 0);
-      return 0;
-    }
+    assert (iter == null || iter.stamp == stamp);
+    return (iter == null) ? data.length : 0;
   }
 
   public bool iter_next (ref Gtk.TreeIter iter) {
     assert (iter.stamp == stamp);
 
-    uint index = (uint) (ulong) iter.user_data;
-    ++index;
-
-    if (index >= size) {
+    int pos = ((int) iter.user_data) + 1;
+    if (pos >= data.length) {
       return false;
-    } else {
-      iter.user_data = (void *) (ulong) index;
-      return true;
     }
+    iter.user_data = pos.to_pointer ();
+
+    return true;
   }
 
   public bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n) {
@@ -180,5 +162,21 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
+
+  private bool invalid_iter (out Gtk.TreeIter iter) {
+    iter = Gtk.TreeIter ();
+    iter.stamp =-1;
+    return false;
+  }
+
+  private bool update_sensors () {
+    data.foreach ((sensor) => {
+                  stdout.printf ("Sensor: %s (%d)\n", sensor.name, sensor.adc_value);
+                  sensor.adc_value += 1;
+                  });
+
+    return true;
+  }
 }
 }
+// ex:set ts=4 noet

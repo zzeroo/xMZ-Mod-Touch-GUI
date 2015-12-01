@@ -19,7 +19,9 @@ tests_common_ldadd = \
 
 tests_common_valaflags = \
 		$(LIBXMZ_VALAFLAGS) \
+		--pkg config \
 		--pkg gtk+-3.0 \
+		--vapidir $(top_srcdir)/vapi \
 		$(NULL)
 
 noinst_PROGRAMS += $(TESTS_DEMO_PROGS)
