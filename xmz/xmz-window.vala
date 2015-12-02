@@ -1,198 +1,93 @@
-
 namespace XMZ {
 
 [GtkTemplate (ui = "/com/gaswarnanlagen/xmz/ui/xmz-window.ui")]
-public class Window : Gtk.ApplicationWindow, XMZExt.Application, Initable {
+public class Window : Gtk.ApplicationWindow {
 
-  private Settings d_state_settings;
-  private Settings d_interface_settings;
-
-  private UIElements<XMZExt.Activity> d_activities;
-  private Notifications d_notifications;
-
-  // Widgets
-  [GtkChild]
-  private Gtk.Stack d_main_stack;
-  [GtkChild]
-  private Gtk.Stack d_stack_activities;
-  [GtkChild]
-  private SettingsView d_settings_view;
-  [GtkChild]
-  private SensorView d_sensor_view;
-  [GtkChild]
-  private Gtk.Grid d_grid_main;
-  [GtkChild]
-  private Gtk.InfoBar d_infobar;
-  [GtkChild]
-  private Gtk.Label d_infobar_primary_label;
-  [GtkChild]
-  private Gtk.Label d_infobar_secondary_label;
-  [GtkChild]
-  public Gtk.Label d_settings_label;
+  // Do this to pull in config.h before glib.h (for gettext)
+  private const string version = XMZ.Config.VERSION;
 
   [GtkChild]
-  private Gtk.Overlay d_overlay;
+  private Gtk.Overlay overlay;
+  [GtkChild]
+  private Gtk.Grid main_grid;
+  [GtkChild]
+  private Gtk.Stack main_stack;
+  [GtkChild]
+  private Gtk.Grid sensors_list_grid;
+  [GtkChild]
+  private Gtk.TreeView sensors_treeview;
 
-
-  enum Mode {
-	SETTINGS,
-	ACTIVITY
-  }
-
-  private Mode d_mode;
-
-  private void update_title () {
-	 d_settings_label.set_label ("Hello from testfunc\n");
-  }
-  public void show_title () {
-	d_settings_label.set_label ("zzeroo systems\n");
-  }
-
-  private void on_reload_activated () {
-	try {
-	  update_title ();
-	} catch {}
-  }
+  private Gdk.Geometry hints;
 
   construct {
-	d_interface_settings = new Settings ("com.gaswarnanlagen.xmz.preferences.interface");
-	d_notifications = new Notifications (d_overlay);
-
-	d_settings_view.application = this;
-
-	d_infobar.response.connect ((w, r) => {
-								d_infobar.hide();
-								});
-  }
-
-  private void on_close_activated () {
-	close ();
-  }
-
-  public XMZExt.Activity? current_activity {
-	owned get {
-	  if (d_mode == Mode.ACTIVITY) {
-		return d_sensor_view;
-	  } else {
-		return d_settings_view;
-	  }
-	}
-  }
-
-  /**
-   * This action is fired when the big button top right was hit
-   */
-  [GtkCallback]
-  private void settings_button_clicked () {
-	if (d_mode == Mode.SETTINGS) {
-	  d_mode = Mode.ACTIVITY;
-
-	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
-	  d_main_stack.set_visible_child (d_sensor_view);
-	} else {
-	  d_mode = Mode.SETTINGS;
-
-	  d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_RIGHT;
-	  d_main_stack.set_visible_child (d_settings_view);
-	}
   }
 
 
+  private bool init () {
+    if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
+      set_deletable (false);
+      set_hide_titlebar_when_maximized (true);
+      maximize ();
+    } else {
+      set_default_size (1024, 600);
+      set_resizable (false);
+      hints.min_width = -1;
+      hints.max_width = 1024;
+      hints.min_height = -1;
+      hints.max_height = 600;
+      set_geometry_hints(this, hints, Gdk.WindowHints.MIN_SIZE | Gdk.WindowHints.MAX_SIZE);
+    }
 
-  private bool init (Cancellable? cancellable) {
-	// Settings
-	var app = application as XMZ.Application;
+    setup_sensors_treeview ();
 
-	if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
-	  set_deletable (false);
-	  set_hide_titlebar_when_maximized (true);
-	  maximize ();
-	} else {
-	  set_default_size (1024, 600);
-	}
+    main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
+    main_stack.set_visible_child (sensors_list_grid);
 
-	d_mode = Mode.ACTIVITY;
-
-	d_main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
-	d_main_stack.set_visible_child (d_sensor_view);
-
-	return true;
+    return true;
   }
 
   public static Window? create_new (Gtk.Application app) {
-	Window? ret = new Window ();
+    Window? ret = new XMZ.Window ();
 
-	if (ret != null) {
-	  ret.application = app;
-	}
+    if (ret != null) {
+      ret.application = app;
+    }
 
-	try {
-	  ((Initable) ret).init (null);
-	} catch {}
+    try {
+      ret.init ();
+    } catch {}
 
-	return ret;
+    return ret;
   }
 
-  public new void present (string? hint) {
-	if (hint != null) {
-	  activate_activity (hint);
-	}
-
-	base.present ();
+  public new void present () {
+    // TODO: This is the right place to update window title labels and so on
+    base.present ();
   }
 
-  private bool activate_activity (string? action) {
-	string default_activity;
+  private void setup_sensors_treeview () {
+    // Model
+    GenericArray<Sensor> data = new GenericArray<Sensor> ();
+    data.add (new Sensor ("Sensor 1 CO", -1));
+    data.add (new Sensor ("Sensor 1 NO²", -1));
+    data.add (new Sensor ("Sensor 2 CO", -1));
+    data.add (new Sensor ("Sensor 2 NO²", -1));
+    data.add (new Sensor ("Sensor 3 CO", -1));
+    data.add (new Sensor ("Sensor 3 NO²", -1));
+    data.add (new Sensor ("Sensor 4 CO", -1));
+    data.add (new Sensor ("Sensor 4 NO²", -1));
+    data.add (new Sensor ("Sensor 5 CO", -1));
+    data.add (new Sensor ("Sensor 5 NO²", -1));
+    data.add (new Sensor ("Sensor 6 CO", -1));
+    data.add (new Sensor ("Sensor 6 NO²", -1));
 
-	if (action == null || action == "") {
-	  default_activity = d_interface_settings.get_string ("default-activity");
-	} else {
-	  default_activity = action;
-	}
+    SensorModel model = new SensorModel (data);
+    // View
+    sensors_treeview.set_model (model);
+    sensors_treeview.insert_column_with_attributes (-1, _("Name"), new Gtk.CellRendererText (), "text", 0);
+    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), new Gtk.CellRendererText (), "text", 1);
 
-	XMZExt.Activity? def = null;
-
-	d_activities.foreach ((element) => {
-						  XMZExt.Activity activity = (XMZExt.Activity) element;
-
-						  if (activity.is_default_for (default_activity)) {
-						  def = activity;
-						  }
-
-						  return true;
-						  });
-
-	if (def != null) {
-	  d_activities.current = def;
-	  return true;
-	}
-
-	return false;
+    sensors_treeview.expand = true;
   }
-
-  public void show_infobar (string title,
-							string message,
-							Gtk.MessageType type) {
-
-	Idle.add (() => {
-			  var primary = "<b>%s</b>".printf (Markup.escape_text (title));
-			  var secondary = "<small>%s</small>".printf (Markup.escape_text (message));
-
-			  d_infobar_primary_label.set_label (primary);
-			  d_infobar_secondary_label.set_label (secondary);
-			  d_infobar.message_type = type;
-
-			  d_infobar.show ();
-			  return false;
-			  });
-  }
-
-
-  public XMZExt.Notifications notifications {
-	owned get { return d_notifications; }
-  }
-
 }
 }
-
-// ex:ts=4 noet

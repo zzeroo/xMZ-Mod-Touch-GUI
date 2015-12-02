@@ -6,7 +6,6 @@ noinst_PROGRAMS += $(TESTS_XMZ_PROGS)
 tests_xmz_test_xmz_CPPFLAGS = \
 	-I$(top_srcdir) 			\
 	-I$(top_srcdir)/xmz 			\
-	-I$(top_srcdir)/libxmz			\
 	-I$(top_srcdir)/tests/support
 
 tests_xmz_test_xmz_VALAFLAGS =		\
@@ -24,13 +23,12 @@ tests_xmz_test_xmz_VALAFLAGS =		\
 tests_xmz_test_xmz_CFLAGS =			\
 	$(XMZ_DEBUG_FLAGS)			\
 	$(XMZ_CFLAGS)				\
-	$(LIBXMZ_CFLAGS)			\
 	-g					\
 	-w
 
 tests_xmz_test_xmz_LDADD =			\
-	libxmz/libxmz-1.0.la			\
-	$(LIBXMZ_LIBS)
+	$(XMZ_LIBS) \
+	$(NULL)
 
 tests/xmz/support-%.vala: tests/support/%.vala
 	cp "$<" "$@"

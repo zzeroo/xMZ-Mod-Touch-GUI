@@ -25,8 +25,6 @@
 /TAGS
 /XMZ-1.0.gir
 /XMZ-1.0.typelib
-/XMZExt-1.0.gir
-/XMZExt-1.0.typelib
 /aclocal.m4
 /autom4te.cache
 /autoscan.log
@@ -53,7 +51,6 @@
 /configure
 /configure.lineno
 /configure.scan
-/data/com.gaswarnanlagen.xmz.gschema.valid
 /data/com.gaswarnanlagen.xmz.gschema.xml
 /data/com.gaswarnanlagen.xmz.gschema.xml.in
 /data/xmz.desktop
@@ -65,41 +62,14 @@
 /intltool-update
 /intltool-update.in
 /libtool
-/libxmz-ext/libxmz-ext-1.0.la
-/libxmz-ext/libxmz-ext-1.0.pc
-/libxmz-ext/libxmz-ext-1.0.vapi
-/libxmz-ext/libxmz-ext.h
-/libxmz-ext/xmz-ext-activity.c
-/libxmz-ext/xmz-ext-application.c
-/libxmz-ext/xmz-ext-notification.c
-/libxmz-ext/xmz-ext-notifications.c
-<<<<<<< HEAD
-/libxmz-ext/xmz-ext-preferences.c
-=======
->>>>>>> development
-/libxmz-ext/xmz-ext-resources.c
-/libxmz-ext/xmz-ext-ui-element.c
-/libxmz-ext/xmz-ext-ui.c
 /libxmz/libxmz-1.0.la
 /libxmz/libxmz-1.0.pc
 /libxmz/libxmz-1.0.vapi
 /libxmz/libxmz.h
-<<<<<<< HEAD
-/libxmz/xmz-app-dirs.c
-/libxmz/xmz-database-backend.c
-=======
->>>>>>> development
-/libxmz/xmz-init.c
-/libxmz/xmz-resource.c
 /libxmz/xmz-resources.c
-/libxmz/xmz-sensor-list-box.c
-<<<<<<< HEAD
 /libxmz/xmz-sensor-list-view.c
 /libxmz/xmz-sensor-model.c
 /libxmz/xmz-sensor.c
-=======
->>>>>>> development
-/libxmz_ext_libxmz_ext_1_0_la_vala.stamp
 /libxmz_libxmz_1_0_la_vala.stamp
 /m4/codeset.m4
 /m4/gettext.m4
@@ -163,19 +133,8 @@
 /stamp-h1
 /tags
 /test-suite.log
-/tests/libxmz/main.c
-/tests/libxmz/support-main.c
-/tests/libxmz/support-main.vala
-/tests/libxmz/support-test.c
-/tests/libxmz/support-test.vala
-/tests/libxmz/test-libxmz
-/tests/libxmz/test-libxmz.log
-/tests/libxmz/test-libxmz.test
-/tests/libxmz/test-libxmz.trs
-/tests/sensor-list-box
-/tests/sensor-list-box.c
-/tests/sensor-view
-/tests/sensor-view.c
+/tests/sensor-list
+/tests/sensor-list.c
 /tests/xmz/main.c
 /tests/xmz/support-main.c
 /tests/xmz/support-main.vala
@@ -185,27 +144,14 @@
 /tests/xmz/test-xmz.log
 /tests/xmz/test-xmz.test
 /tests/xmz/test-xmz.trs
-/tests_libxmz_test_libxmz_vala.stamp
-/tests_sensor_list_box_vala.stamp
-/tests_sensor_view_vala.stamp
+/tests_sensor_list_vala.stamp
 /tests_xmz_test_xmz_vala.stamp
 /xmldocs.make
-<<<<<<< HEAD
-/xmz/preferences/xmz-preferences-interface.c
-/xmz/sensor/xmz-sensor.c
-=======
->>>>>>> development
 /xmz/xmz
 /xmz/xmz-application.c
-/xmz/xmz-notifications.c
+/xmz/xmz-resource.c
 /xmz/xmz-resources.c
-<<<<<<< HEAD
-/xmz/xmz-sensor-view.c
-=======
->>>>>>> development
-/xmz/xmz-settings-view.c
-/xmz/xmz-simple-notification.c
-/xmz/xmz-ui-elements.c
+/xmz/xmz-sensor-controller.c
 /xmz/xmz-window.c
 /xmz/xmz.c
 /xmz_xmz_vala.stamp
