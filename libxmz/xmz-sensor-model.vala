@@ -25,7 +25,6 @@ public class SensorModel : Object, Gtk.TreeModel {
   private uint size;
   private int stamp;
 
-  public signal void update (uint added);
 
   public SensorModel (owned GenericArray<Sensor>? data = null) {
     if (data == null) {
@@ -38,6 +37,7 @@ public class SensorModel : Object, Gtk.TreeModel {
   construct {
     Timeout.add (100, update_sensors);
   }
+
 
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));
@@ -52,8 +52,6 @@ public class SensorModel : Object, Gtk.TreeModel {
   public Gtk.TreeModelFlags get_flags () {
     return 0;
   }
-
-
 
   public bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path) {
     if (path.get_depth () != 1 || data.length == 0) {
@@ -107,17 +105,9 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent) {
-    iter = {};
-
-    if (parent == null) {
-      iter.user_data = (void *) (ulong) 0;
-      iter.stamp = stamp;
-
-      return true;
-    } else {
-      return_val_if_fail (parent.stamp == stamp, false);
-      return false;
-    }
+    assert (parent == null || parent.stamp == stamp);
+    // Only used for trees
+    return invalid_iter (out iter);
   }
 
   public bool iter_has_child (Gtk.TreeIter iter) {
@@ -163,6 +153,7 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
 
+
   private bool invalid_iter (out Gtk.TreeIter iter) {
     iter = Gtk.TreeIter ();
     iter.stamp =-1;
@@ -170,10 +161,13 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   private bool update_sensors () {
-    data.foreach ((sensor) => {
-                  stdout.printf ("Sensor: %s (%d)\n", sensor.name, sensor.adc_value);
-                  sensor.adc_value += 1;
-                  });
+    var iter = Gtk.TreeIter ();
+    for (int i = 0; i < data.length; i++) {
+      var sensor = data.get (i);
+      var path = new Gtk.TreePath.from_indices (i);
+      sensor.adc_value += 1;
+      row_changed (path, iter);
+    }
 
     return true;
   }

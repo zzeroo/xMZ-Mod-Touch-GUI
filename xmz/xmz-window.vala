@@ -17,13 +17,11 @@ public class Window : Gtk.ApplicationWindow {
   [GtkChild]
   private Gtk.TreeView sensors_treeview;
 
-  private Sensor[] sensors = SensorController.get_sensors ();
-
   private Gdk.Geometry hints;
-
 
   construct {
   }
+
 
   private bool init () {
     if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
@@ -68,23 +66,26 @@ public class Window : Gtk.ApplicationWindow {
   }
 
   private void setup_sensors_treeview () {
-    var sensor_list_model = new Gtk.ListStore (2, typeof (string), typeof (int));
-    sensors_treeview.set_model (sensor_list_model);
-    sensors_treeview.insert_column_with_attributes (-1, _( "Name" ),
-                                        new Gtk.CellRendererText (), "text",
-                                        0);
+    // Model
+    GenericArray<Sensor> data = new GenericArray<Sensor> ();
+    data.add (new Sensor ("Sensor 1 CO", -1));
+    data.add (new Sensor ("Sensor 1 NO²", -1));
+    data.add (new Sensor ("Sensor 2 CO", -1));
+    data.add (new Sensor ("Sensor 2 NO²", -1));
+    data.add (new Sensor ("Sensor 3 CO", -1));
+    data.add (new Sensor ("Sensor 3 NO²", -1));
+    data.add (new Sensor ("Sensor 4 CO", -1));
+    data.add (new Sensor ("Sensor 4 NO²", -1));
+    data.add (new Sensor ("Sensor 5 CO", -1));
+    data.add (new Sensor ("Sensor 5 NO²", -1));
+    data.add (new Sensor ("Sensor 6 CO", -1));
+    data.add (new Sensor ("Sensor 6 NO²", -1));
 
-    sensors_treeview.insert_column_with_attributes (-1, _( "ADC_Value" ),
-                                        new Gtk.CellRendererText (), "text",
-                                        1);
-
-    Gtk.TreeIter iter;
-    for (int i = 0; i < sensors.length; i++) {
-      sensor_list_model.append (out iter);
-      sensor_list_model.set (iter,
-                             0, sensors[i].name,
-                             1, sensors[i].adc_value);
-    }
+    SensorModel model = new SensorModel (data);
+    // View
+    sensors_treeview.set_model (model);
+    sensors_treeview.insert_column_with_attributes (-1, _("Name"), new Gtk.CellRendererText (), "text", 0);
+    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), new Gtk.CellRendererText (), "text", 1);
 
     sensors_treeview.expand = true;
   }
