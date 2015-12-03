@@ -163,9 +163,10 @@ public class SensorModel : Object, Gtk.TreeModel {
   private bool update_sensors () {
     var iter = Gtk.TreeIter ();
     for (int i = 0; i < data.length; i++) {
+      var rand = new GLib.Rand ().int_range (0, 10);
       var sensor = data.get (i);
       var path = new Gtk.TreePath.from_indices (i);
-      sensor.adc_value += 1;
+      sensor.adc_value += rand;
       row_changed (path, iter);
     }
 

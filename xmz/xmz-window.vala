@@ -83,9 +83,15 @@ public class Window : Gtk.ApplicationWindow {
 
     SensorModel model = new SensorModel (data);
     // View
+    sensors_treeview.set_rules_hint (true);
     sensors_treeview.set_model (model);
-    sensors_treeview.insert_column_with_attributes (-1, _("Name"), new Gtk.CellRendererText (), "text", 0);
-    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), new Gtk.CellRendererText (), "text", 1);
+
+    var cell_name = new Gtk.CellRendererText ();
+    cell_name.width = 300;
+    var cell = new Gtk.CellRendererText ();
+
+    sensors_treeview.insert_column_with_attributes (-1, _("Name"),      cell_name, "text", 0);
+    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), cell, "text", 1);
 
     sensors_treeview.expand = true;
   }
