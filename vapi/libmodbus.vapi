@@ -148,11 +148,11 @@ namespace Modbus {
     public Mapping (int nb_bits, int nb_input_bits, int nb_registers, int nb_input_registers);
   }
 
-  [CCode (cprefix = "MODBUS_ERROR_RECOVERY_", cheader_filename = "modbus.h", has_type_id = false)]
-  public enum ErrorRecovery {
-    NONE,
-    LINK,
-    PROTOCOL
+  [CCode (cname = "modbus_error_recovery_mode", cprefix = "MODBUS_ERROR_", has_type_id = false)]
+  public enum ModbusError {
+    RECOVERY_NONE          = 0,
+    RECOVERY_LINK          = (1<<1),
+    RECOVERY_PROTOCOL      = (1<<2)
   }
 
   [CCode (cname = "modbus_t", cprefix = "modbus_", cheader_filename = "modbus.h", unref_function = "", free_function = "modbus_free")]
@@ -173,7 +173,7 @@ namespace Modbus {
     public int flush ();
 
     public int set_slave (int slave);
-    public int set_error_recovery (ErrorRecovery error_recovery);
+    public int set_error_recovery (int error_recovery);
     public int set_socket (int socket);
     public int get_socket ();
     public int get_response_timeout (uint32 *to_sec, uint32 *to_usec);
@@ -181,7 +181,7 @@ namespace Modbus {
     public int get_byte_timeout (uint32 *to_sec, uint32 *to_usec);
     public int set_byte_timeout (uint32 to_sec, uint32 to_usec);
     public int get_header_length ();
-    public int set_debug (int flag);
+    public int set_debug (bool flag);
     public int read_bits (int addr, int length, [CCode (array_length = false)] uint8 *dest);
     public int read_input_bits (int addr, int num_bits, [CCode (array_length = false)] uint8 *dest);
     public int read_registers (int addr, int num_bits, [CCode (array_length_pos = 1.5)] uint16 *dest);

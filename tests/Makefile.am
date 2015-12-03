@@ -22,6 +22,7 @@ tests_common_valaflags = \
 		$(LIBXMZ_VALAFLAGS) \
 		--pkg config \
 		--pkg gtk+-3.0 \
+		--pkg libmodbus \
 		--vapidir $(top_srcdir)/vapi \
 		$(NULL)
 
