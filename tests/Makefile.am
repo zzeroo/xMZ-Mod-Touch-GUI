@@ -15,6 +15,7 @@ tests_common_cflags = \
 
 tests_common_ldadd = \
 		$(LIBXMZ_LIBS) \
+		libxmz/libxmz-1.0.la \
 		$(NULL)
 
 tests_common_valaflags = \
@@ -28,13 +29,20 @@ noinst_PROGRAMS += $(TESTS_DEMO_PROGS)
 
 TESTS_DEMO_PROGS = \
 		tests/sensor-list \
+		tests/modbus-client \
 		$(NULL)
 
 tests_sensor_list_SOURCES = tests/sensor-list.vala libxmz/libxmz-1.0.vapi
 tests_sensor_list_VALAFLAGS = $(tests_common_valaflags)
 tests_sensor_list_CFLAGS = $(tests_common_cflags)
 tests_sensor_list_CPPFLAGS = $(tests_common_cppflags)
-tests_sensor_list_LDADD = libxmz/libxmz-1.0.la $(tests_common_ldadd)
+tests_sensor_list_LDADD = $(tests_common_ldadd)
+
+tests_modbus_client_SOURCES = tests/modbus-client.vala libxmz/libxmz-1.0.vapi
+tests_modbus_client_VALAFLAGS = $(tests_common_valaflags)
+tests_modbus_client_CFLAGS = $(tests_common_cflags)
+tests_modbus_client_CPPFLAGS = $(tests_common_cppflags)
+tests_modbus_client_LDADD = $(tests_common_ldadd)
 
 include tests/xmz/Makefile.am
 
