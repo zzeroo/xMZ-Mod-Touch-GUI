@@ -184,7 +184,7 @@ namespace Modbus {
     public int set_debug (bool flag);
     public int read_bits (int addr, int length, [CCode (array_length = false)] uint8 *dest);
     public int read_input_bits (int addr, int num_bits, [CCode (array_length = false)] uint8 *dest);
-    public int read_registers (int addr, int num_bits, [CCode (array_length_pos = 1.5)] uint16 *dest);
+    public int read_registers (int addr, int num_bits, [CCode (array_length = false)] uint16 *dest);
     public int read_input_registers (int addr, int num_bits, [CCode (array_length = false)] uint16 *dest);
     public int write_bit (int coil_addr, int status);
     public int write_register (int reg_addr, int value);
