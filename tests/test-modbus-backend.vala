@@ -4,13 +4,15 @@ namespace XMZ {
 
 class TestModbusBackend : Gee.TestCase {
 
+  private ModbusBackend modbus_backend;
+
   public TestModbusBackend () {
     base ("TestModbusBackend");
-    add_test ("uint16[] read_registers (uint modbus_address, uint start_add_register, uint size)", read_registers);
+    add_test ("int read_registers (int modbus_address, uint16 start_add_register, uint size, out uint16[] response_register)", read_registers);
   }
 
   public override void set_up () {
-    var modbus_backend = new ModbusBackend ();
+    modbus_backend = new ModbusBackend ();
   }
 
   public override void tear_down () {
@@ -18,8 +20,10 @@ class TestModbusBackend : Gee.TestCase {
 
 
   public void read_registers () {
+    uint16[] response_register;
+    modbus_backend.read_registers (16, 1, 1, out response_register);
 
-    assert (true);
+    assert (response_register.length == 1);
   }
 }
 }

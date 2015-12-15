@@ -27,7 +27,7 @@ public enum SensorModelColumns {
 public class SensorModel : Object, Gtk.TreeModel {
   private Thread<void*>? thread;
   private GenericArray<Sensor> data;
-
+  private ModbusBackend modbus_backend;
   private uint size;
   private int stamp;
 
@@ -41,7 +41,8 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   construct {
-    Timeout.add (100, update_sensors);
+    modbus_backend = new ModbusBackend ();
+    Timeout.add (1000, update_sensors);
   }
 
 
@@ -168,11 +169,13 @@ public class SensorModel : Object, Gtk.TreeModel {
 
   private bool update_sensors () {
     var iter = Gtk.TreeIter ();
+    uint16[] response_register;
+
     for (int i = 0; i < data.length; i++) {
-      var rand = new GLib.Rand ().int_range (0, 10);
+      modbus_backend.read_registers ((uint16)16, 1, 1, out response_register);
       var sensor = data.get (i);
       var path = new Gtk.TreePath.from_indices (i);
-      sensor.adc_value += rand;
+      sensor.adc_value = response_register[0];
       row_changed (path, iter);
     }
 

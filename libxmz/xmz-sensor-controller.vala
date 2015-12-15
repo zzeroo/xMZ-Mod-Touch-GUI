@@ -18,7 +18,7 @@ public class SensorController {
   public GenericArray<Sensor> get_sensors () {
     GenericArray<Sensor> sensors = new GenericArray<Sensor> ();
 
-    for (int i = 1; i < 11; i++) {
+    for (int i = 1; i < 7; i++) {
       sensors.add ( new Sensor ("Sensor "+ i.to_string () + " CO") );
       sensors.add ( new Sensor ("Sensor "+ i.to_string () + " NO²") );
     }
