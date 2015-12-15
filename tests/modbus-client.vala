@@ -5,12 +5,18 @@ namespace XMZ {
 public class TestModbusClient : Object {
 
   private Context context;
-
   private uint16[] response_register = new uint16[20];
   private int return_code;
 
   public TestModbusClient (int server_id) {
-    context = new Context.rtu ("/dev/ttyUSB0", 9600, 'N', 8, 1);
+    if (GLib.Environment.get_variable ("XMZ_HARDWARE") == "0.1.0") {
+      context = new Context.rtu ("/dev/ttyS1", 9600, 'N', 8, 1);
+      context.rtu_set_serial_mode (ModbusRTU.RS485);
+      context.rtu_set_rts (ModbusRTU.RTS_DOWN);
+    } else {
+      context = new Context.rtu ("/dev/ttyUSB0", 9600, 'N', 8, 1);
+    }
+
     context.set_debug (true);
     context.set_error_recovery (ModbusError.RECOVERY_LINK |
                             ModbusError.RECOVERY_PROTOCOL);

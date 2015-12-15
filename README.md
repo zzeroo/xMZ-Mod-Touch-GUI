@@ -4,6 +4,7 @@
 # Installation
 ## Dependencies
 
+    apt-get install libmodbus-dev
     apt-get install libgirepository1.0-dev
     apt-get install gnome-common
 
