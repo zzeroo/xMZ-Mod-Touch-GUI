@@ -7,7 +7,7 @@ TEST_PROGS = tests/tests
 tests_tests_VALASOURCES = \
 		tests/testcase.vala \
 		tests/test-main.vala \
-		tests/test-modbus-functions.vala \
+		tests/test-modbus-backend.vala \
 		tests/test-sensor-controller.vala \
 		$(NULL)
 
