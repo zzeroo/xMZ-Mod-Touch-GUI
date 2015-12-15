@@ -3,13 +3,19 @@ namespace XMZ {
 public enum SensorModelColumns {
   NAME,
   ADC_VALUE,
+  VOLT,
+  VALUE,
+  SI_UNIT,
   NUM;
 
   public Type type () {
     switch (this) {
       case NAME:
+      case SI_UNIT:
         return typeof (string);
       case ADC_VALUE:
+      case VOLT:
+      case VALUE:
         return typeof (int);
       default:
         break;

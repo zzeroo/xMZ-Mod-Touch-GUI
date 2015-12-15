@@ -67,21 +67,10 @@ public class Window : Gtk.ApplicationWindow {
 
   private void setup_sensors_treeview () {
     // Model
-    GenericArray<Sensor> data = new GenericArray<Sensor> ();
-    data.add (new Sensor ("Sensor 1 CO", -1));
-    data.add (new Sensor ("Sensor 1 NO²", -1));
-    data.add (new Sensor ("Sensor 2 CO", -1));
-    data.add (new Sensor ("Sensor 2 NO²", -1));
-    data.add (new Sensor ("Sensor 3 CO", -1));
-    data.add (new Sensor ("Sensor 3 NO²", -1));
-    data.add (new Sensor ("Sensor 4 CO", -1));
-    data.add (new Sensor ("Sensor 4 NO²", -1));
-    data.add (new Sensor ("Sensor 5 CO", -1));
-    data.add (new Sensor ("Sensor 5 NO²", -1));
-    data.add (new Sensor ("Sensor 6 CO", -1));
-    data.add (new Sensor ("Sensor 6 NO²", -1));
+    var sensor_controller = new SensorController ();
+    var sensors = sensor_controller.get_sensors ();
+    SensorModel model = new SensorModel (sensors);
 
-    SensorModel model = new SensorModel (data);
     // View
     sensors_treeview.set_rules_hint (true);
     sensors_treeview.set_model (model);
@@ -92,6 +81,9 @@ public class Window : Gtk.ApplicationWindow {
 
     sensors_treeview.insert_column_with_attributes (-1, _("Name"),      cell_name, "text", 0);
     sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), cell, "text", 1);
+    sensors_treeview.insert_column_with_attributes (-1, _("Volt"), cell, "text", 2);
+    sensors_treeview.insert_column_with_attributes (-1, _("Value"), cell, "text", 3);
+    sensors_treeview.insert_column_with_attributes (-1, _("SI"), cell, "text", 4);
 
     sensors_treeview.expand = true;
   }

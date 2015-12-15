@@ -4,28 +4,37 @@ namespace XMZ {
 
 class TestSensorController : Gee.TestCase {
 
-  private SensorModel sensor;
+  private SensorController sensor_controller;
 
   public TestSensorController () {
     base ("TestSensorController");
-    add_test ("get_sensors", get_sensors);
-    add_test ("get_sensor", get_sensor);
-    add_test ("create_sensor", create_sensor);
+    add_test ("sensor_instanciation", sensor_instanciation);
+    add_test ("get_sensors ()", get_sensors);
+    add_test ("get_sensor (uint id)", get_sensor);
+    add_test ("create_sensor (Sensor)", create_sensor);
   }
 
   public override void set_up () {
-    //sensor = new XMZ.SensorModel ("CO/NO", 1);
+    sensor_controller = new SensorController ();
   }
 
   public override void tear_down () {
   }
 
+  public void sensor_instanciation () {
+  }
+
   public void get_sensors () {
-    assert (true);
+    var return_val = sensor_controller.get_sensors ();
+
+    assert (return_val != null);
   }
 
   public void get_sensor () {
-    assert (true);
+    var like_a_array = new GenericArray<Sensor> ();
+    var return_val = sensor_controller.get_sensor (1);
+    assert (return_val != null);
+    assert (return_val.name == "CO/NO² Sensor");
   }
 
   public void create_sensor () {
