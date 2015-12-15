@@ -100,6 +100,7 @@ PKG_CHECK_MODULES(LIBXMZ, [
                         gsettings-desktop-schemas
                         gee-0.8
                         sqlite3
+                        libmodbus
                         ])
 
 cflags_save="${CFLAGS}"
