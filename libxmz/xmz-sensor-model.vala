@@ -6,6 +6,7 @@ public enum SensorModelColumns {
   VOLT,
   VALUE,
   SI_UNIT,
+  MODBUS_ADDRESS,
   NUM;
 
   public Type type () {
@@ -16,6 +17,7 @@ public enum SensorModelColumns {
       case ADC_VALUE:
       case VOLT:
       case VALUE:
+      case MODBUS_ADDRESS:
         return typeof (int);
       default:
         break;
@@ -159,13 +161,12 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
-
-
   private bool invalid_iter (out Gtk.TreeIter iter) {
     iter = Gtk.TreeIter ();
     iter.stamp =-1;
     return false;
   }
+
 
   private bool update_sensors () {
     var iter = Gtk.TreeIter ();
