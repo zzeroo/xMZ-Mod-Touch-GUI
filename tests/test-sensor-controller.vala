@@ -31,7 +31,6 @@ class TestSensorController : Gee.TestCase {
   }
 
   public void get_sensor () {
-    var like_a_array = new GenericArray<Sensor> ();
     var return_val = sensor_controller.get_sensor (1);
     assert (return_val != null);
     assert (return_val.name == "CO/NO² Sensor");

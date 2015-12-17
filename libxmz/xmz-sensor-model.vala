@@ -27,7 +27,6 @@ public enum SensorModelColumns {
 }
 
 public class SensorModel : Object, Gtk.TreeModel {
-  private Thread<void*>? thread;
   private GenericArray<Sensor> data;
   private ModbusBackend modbus_backend;
   private uint size;
@@ -87,6 +86,9 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public void get_value (Gtk.TreeIter iter, int column, out Value val) {
+    // Fix the error: "warning: use of possibly unassigned parameter `val'`"
+    val = {};
+
     assert (iter.stamp == stamp);
 
     uint idx = (uint) (ulong) iter.user_data;
@@ -173,7 +175,7 @@ public class SensorModel : Object, Gtk.TreeModel {
     uint16[] response_register;
 
     for (int i = 0; i < data.length; i++) {
-      modbus_backend.read_registers ((uint16)16, 1, 1, out response_register);
+      modbus_backend.read_registers (40+i, 1, 1, out response_register);
       var sensor = data.get (i);
       var path = new Gtk.TreePath.from_indices (i);
       sensor.adc_value = response_register[0];

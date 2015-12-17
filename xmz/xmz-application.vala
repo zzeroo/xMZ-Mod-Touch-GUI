@@ -11,18 +11,19 @@ public class Application : Gtk.Application {
     assert (true);
   }
 
-  private void on_app_new_window_activated () {
-    new_window ();
-  }
+  //private void on_app_new_window_activated () {
+    //new_window ();
+  //}
 
   protected override void startup () {
     base.startup ();
 
-    try {
-      // XMZ.init ();
-    } catch (Error e) {
-      error ("%s", e.message);
-    }
+    // FIXME: Is here the right place for network/ database update thread startup?
+    //try {
+      //XMZ.init ();
+    //} catch (Error e) {
+      //error ("%s", e.message);
+    //}
 
     // Use our own css provider
     Gtk.CssProvider? provider = Resource.load_css ("style.css");
@@ -45,7 +46,7 @@ public class Application : Gtk.Application {
   }
 
   private void new_window () {
-    var window = Window.create_new (this);
+    Window.create_new (this);
 
     present_window ();
   }

@@ -6,10 +6,10 @@ public class Window : Gtk.ApplicationWindow {
   // Do this to pull in config.h before glib.h (for gettext)
   private const string version = XMZ.Config.VERSION;
 
-  [GtkChild]
-  private Gtk.Overlay overlay;
-  [GtkChild]
-  private Gtk.Grid main_grid;
+  //[GtkChild]
+  //private Gtk.Overlay overlay;
+  //[GtkChild]
+  //private Gtk.Grid main_grid;
   [GtkChild]
   private Gtk.Stack main_stack;
   [GtkChild]
@@ -52,10 +52,7 @@ public class Window : Gtk.ApplicationWindow {
     if (ret != null) {
       ret.application = app;
     }
-
-    try {
-      ret.init ();
-    } catch {}
+    ret.init ();
 
     return ret;
   }
