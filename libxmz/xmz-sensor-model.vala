@@ -43,7 +43,6 @@ public class SensorModel : Object, Gtk.TreeModel {
 
   construct {
     modbus_backend = new ModbusBackend ();
-    Timeout.add (1000, update_sensors);
   }
 
 
@@ -170,20 +169,6 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
 
-  private bool update_sensors () {
-    var iter = Gtk.TreeIter ();
-    uint16[] response_register;
-
-    for (int i = 0; i < data.length; i++) {
-      modbus_backend.read_registers (40+i, 1, 1, out response_register);
-      var sensor = data.get (i);
-      var path = new Gtk.TreePath.from_indices (i);
-      sensor.adc_value = response_register[0];
-      row_changed (path, iter);
-    }
-
-    return true;
-  }
 }
 }
 // ex:set ts=4 noet
