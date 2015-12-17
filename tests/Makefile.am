@@ -95,8 +95,6 @@ tests_modbus_client_LDADD = $(tests_common_ldadd)
 #include tests/xmz/Makefile.am
 
 EXTRA_DIST += \
-	tests/support/xmz-assert.h \
-	tests/support/xmz-assert.vapi \
 	$(NULL)
-
+#
 # vi:ts=8:noet
