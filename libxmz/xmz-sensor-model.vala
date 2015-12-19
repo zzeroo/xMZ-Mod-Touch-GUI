@@ -31,7 +31,6 @@ public class SensorModel : Object, Gtk.TreeModel {
   private uint size;
   private int stamp;
 
-
   public SensorModel (owned GenericArray<Sensor>? data = null) {
     if (data == null) {
       this.data = new GenericArray<Sensor> ();
@@ -39,7 +38,6 @@ public class SensorModel : Object, Gtk.TreeModel {
       this.data = (owned) data;
     }
   }
-
 
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));

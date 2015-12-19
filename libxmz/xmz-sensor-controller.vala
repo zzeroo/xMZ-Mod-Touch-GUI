@@ -47,12 +47,15 @@ public class SensorController : Object {
     Thread.usleep (1000000);
   }
 
-  public void update_sensors () {
-    sensors.foreach ((sensor) => {
-                     if (sensor.modbus_address != 0) {
+  public int update_sensors () {
+    while (true) {
+      sensors.foreach ((sensor) => {
+                       if (sensor.modbus_address != 0) {
                        read_adc (sensor.modbus_address, sensor);
-                     }
-                     });
+                       }
+                       });
+    }
+    return 0;
   }
 
 
