@@ -45,7 +45,7 @@ public class Window : Gtk.ApplicationWindow {
     }
 
     setup_sensors_treeview ();
-    Thread thread = new Thread<int> ("Sensor update thread", sensor_controller.update_sensors);
+    new Thread<int> ("Sensor update thread", sensor_controller.update_sensors);
 
     main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
     main_stack.set_visible_child (sensors_list_grid);

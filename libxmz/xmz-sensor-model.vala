@@ -39,6 +39,10 @@ public class SensorModel : Object, Gtk.TreeModel {
     }
   }
 
+  construct {
+    Timeout.add (1000, update_rows);
+  }
+
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));
     stamp++;
@@ -161,7 +165,15 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
+  private bool update_rows () {
+    var iter = Gtk.TreeIter ();
 
+    for (int i = 0; i < data.length; i++) {
+      var path = new Gtk.TreePath.from_indices (i);
+      row_changed (path, iter);
+    }
+    return false;
+  }
 }
 }
 // ex:set ts=4 noet

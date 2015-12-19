@@ -44,7 +44,7 @@ public class SensorController : Object {
     if (modbus_backend.read_registers ((uint16)id, 1, 1, out response_register) == 0) {
       sensor.adc_value = response_register[0];
     };
-    Thread.usleep (1000000);
+    Thread.usleep (10000);
   }
 
   public int update_sensors () {
