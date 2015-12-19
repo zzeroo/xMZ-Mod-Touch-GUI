@@ -28,7 +28,6 @@ public enum SensorModelColumns {
 
 public class SensorModel : Object, Gtk.TreeModel {
   private GenericArray<Sensor> data;
-  private ModbusBackend modbus_backend;
   private uint size;
   private int stamp;
 
@@ -39,10 +38,6 @@ public class SensorModel : Object, Gtk.TreeModel {
     } else {
       this.data = (owned) data;
     }
-  }
-
-  construct {
-    modbus_backend = new ModbusBackend ();
   }
 
 
