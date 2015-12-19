@@ -3,13 +3,21 @@ namespace XMZ {
 public enum SensorModelColumns {
   NAME,
   ADC_VALUE,
+  VOLT,
+  VALUE,
+  SI_UNIT,
+  MODBUS_ADDRESS,
   NUM;
 
   public Type type () {
     switch (this) {
       case NAME:
+      case SI_UNIT:
         return typeof (string);
       case ADC_VALUE:
+      case VOLT:
+      case VALUE:
+      case MODBUS_ADDRESS:
         return typeof (int);
       default:
         break;
@@ -19,12 +27,9 @@ public enum SensorModelColumns {
 }
 
 public class SensorModel : Object, Gtk.TreeModel {
-  private Thread<void*>? thread;
   private GenericArray<Sensor> data;
-
   private uint size;
   private int stamp;
-
 
   public SensorModel (owned GenericArray<Sensor>? data = null) {
     if (data == null) {
@@ -35,9 +40,8 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   construct {
-    Timeout.add (100, update_sensors);
+    Timeout.add (1000, update_rows);
   }
-
 
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));
@@ -78,6 +82,9 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   public void get_value (Gtk.TreeIter iter, int column, out Value val) {
+    // Fix the error: "warning: use of possibly unassigned parameter `val'`"
+    val = {};
+
     assert (iter.stamp == stamp);
 
     uint idx = (uint) (ulong) iter.user_data;
@@ -152,24 +159,20 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
-
-
   private bool invalid_iter (out Gtk.TreeIter iter) {
     iter = Gtk.TreeIter ();
     iter.stamp =-1;
     return false;
   }
 
-  private bool update_sensors () {
+  private bool update_rows () {
     var iter = Gtk.TreeIter ();
+
     for (int i = 0; i < data.length; i++) {
-      var sensor = data.get (i);
       var path = new Gtk.TreePath.from_indices (i);
-      sensor.adc_value += 1;
       row_changed (path, iter);
     }
-
-    return true;
+    return false;
   }
 }
 }

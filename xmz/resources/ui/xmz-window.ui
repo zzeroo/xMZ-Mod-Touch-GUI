@@ -34,6 +34,9 @@
                           <object class="GtkTreeView" id="sensors_treeview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <style>
+                              <class name="sensor_treeview" />
+                            </style>
                           </object>
 
                         </child>

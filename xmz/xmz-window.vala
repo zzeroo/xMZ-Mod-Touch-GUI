@@ -6,20 +6,26 @@ public class Window : Gtk.ApplicationWindow {
   // Do this to pull in config.h before glib.h (for gettext)
   private const string version = XMZ.Config.VERSION;
 
-  [GtkChild]
-  private Gtk.Overlay overlay;
-  [GtkChild]
-  private Gtk.Grid main_grid;
+  //[GtkChild]
+  //private Gtk.Overlay overlay;
+  //[GtkChild]
+  //private Gtk.Grid main_grid;
   [GtkChild]
   private Gtk.Stack main_stack;
   [GtkChild]
   private Gtk.Grid sensors_list_grid;
   [GtkChild]
   private Gtk.TreeView sensors_treeview;
-
+  private SensorController sensor_controller;
+  private GenericArray<Sensor> sensors;
+  private SensorModel model;
   private Gdk.Geometry hints;
 
+
   construct {
+    sensor_controller = new SensorController ();
+    sensors = sensor_controller.get_sensors ();
+    model = new SensorModel (sensors);
   }
 
 
@@ -39,6 +45,7 @@ public class Window : Gtk.ApplicationWindow {
     }
 
     setup_sensors_treeview ();
+    new Thread<int> ("Sensor update thread", sensor_controller.update_sensors);
 
     main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
     main_stack.set_visible_child (sensors_list_grid);
@@ -52,10 +59,7 @@ public class Window : Gtk.ApplicationWindow {
     if (ret != null) {
       ret.application = app;
     }
-
-    try {
-      ret.init ();
-    } catch {}
+    ret.init ();
 
     return ret;
   }
@@ -66,26 +70,19 @@ public class Window : Gtk.ApplicationWindow {
   }
 
   private void setup_sensors_treeview () {
-    // Model
-    GenericArray<Sensor> data = new GenericArray<Sensor> ();
-    data.add (new Sensor ("Sensor 1 CO", -1));
-    data.add (new Sensor ("Sensor 1 NO²", -1));
-    data.add (new Sensor ("Sensor 2 CO", -1));
-    data.add (new Sensor ("Sensor 2 NO²", -1));
-    data.add (new Sensor ("Sensor 3 CO", -1));
-    data.add (new Sensor ("Sensor 3 NO²", -1));
-    data.add (new Sensor ("Sensor 4 CO", -1));
-    data.add (new Sensor ("Sensor 4 NO²", -1));
-    data.add (new Sensor ("Sensor 5 CO", -1));
-    data.add (new Sensor ("Sensor 5 NO²", -1));
-    data.add (new Sensor ("Sensor 6 CO", -1));
-    data.add (new Sensor ("Sensor 6 NO²", -1));
-
-    SensorModel model = new SensorModel (data);
     // View
+    sensors_treeview.set_rules_hint (true);
     sensors_treeview.set_model (model);
-    sensors_treeview.insert_column_with_attributes (-1, _("Name"), new Gtk.CellRendererText (), "text", 0);
-    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), new Gtk.CellRendererText (), "text", 1);
+
+    var cell_name = new Gtk.CellRendererText ();
+    cell_name.width = 300;
+    var cell = new Gtk.CellRendererText ();
+
+    sensors_treeview.insert_column_with_attributes (-1, _("Name"),      cell_name, "text", 0);
+    sensors_treeview.insert_column_with_attributes (-1, _("ADC_Value"), cell, "text", 1);
+    sensors_treeview.insert_column_with_attributes (-1, _("Volt"), cell, "text", 2);
+    sensors_treeview.insert_column_with_attributes (-1, _("Value"), cell, "text", 3);
+    sensors_treeview.insert_column_with_attributes (-1, _("SI"), cell, "text", 4);
 
     sensors_treeview.expand = true;
   }
