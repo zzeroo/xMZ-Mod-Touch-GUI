@@ -16,10 +16,16 @@ public class Window : Gtk.ApplicationWindow {
   private Gtk.Grid sensors_list_grid;
   [GtkChild]
   private Gtk.TreeView sensors_treeview;
-
+  private SensorController sensor_controller;
+  private GenericArray<Sensor> sensors;
+  private SensorModel model;
   private Gdk.Geometry hints;
 
+
   construct {
+    sensor_controller = new SensorController ();
+    sensors = sensor_controller.get_sensors ();
+    model = new SensorModel (sensors);
   }
 
 
@@ -39,6 +45,7 @@ public class Window : Gtk.ApplicationWindow {
     }
 
     setup_sensors_treeview ();
+    new Thread<int> ("Sensor update thread", sensor_controller.update_sensors);
 
     main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT;
     main_stack.set_visible_child (sensors_list_grid);
@@ -63,11 +70,6 @@ public class Window : Gtk.ApplicationWindow {
   }
 
   private void setup_sensors_treeview () {
-    // Model
-    var sensor_controller = new SensorController ();
-    var sensors = sensor_controller.get_sensors ();
-    SensorModel model = new SensorModel (sensors);
-
     // View
     sensors_treeview.set_rules_hint (true);
     sensors_treeview.set_model (model);

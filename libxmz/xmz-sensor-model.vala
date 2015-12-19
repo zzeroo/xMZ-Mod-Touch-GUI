@@ -28,10 +28,8 @@ public enum SensorModelColumns {
 
 public class SensorModel : Object, Gtk.TreeModel {
   private GenericArray<Sensor> data;
-  private ModbusBackend modbus_backend;
   private uint size;
   private int stamp;
-
 
   public SensorModel (owned GenericArray<Sensor>? data = null) {
     if (data == null) {
@@ -42,10 +40,8 @@ public class SensorModel : Object, Gtk.TreeModel {
   }
 
   construct {
-    modbus_backend = new ModbusBackend ();
-    Timeout.add (1000, update_sensors);
+    Timeout.add (1000, update_rows);
   }
-
 
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));
@@ -169,20 +165,14 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
-
-  private bool update_sensors () {
+  private bool update_rows () {
     var iter = Gtk.TreeIter ();
-    uint16[] response_register;
 
     for (int i = 0; i < data.length; i++) {
-      modbus_backend.read_registers (40+i, 1, 1, out response_register);
-      var sensor = data.get (i);
       var path = new Gtk.TreePath.from_indices (i);
-      sensor.adc_value = response_register[0];
       row_changed (path, iter);
     }
-
-    return true;
+    return false;
   }
 }
 }
