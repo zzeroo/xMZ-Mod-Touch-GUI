@@ -14,8 +14,9 @@ public class SensorController : Object {
     modbus_backend = new ModbusBackend ();
 
     for (int i = 1; i < 7; i++) {
-      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " CO" , 0, i+40) );
-      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " NO²", 0, i+40) );
+      // Sensor (Name, ADC_Value, Modbus_Address, ADC_Register)
+      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " CO" , 0, i+40, 10) );
+      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " NO²", 0, i+40, 1) );
     }
   }
 
@@ -42,10 +43,10 @@ public class SensorController : Object {
 
                        while(true) {
                        sensors.foreach ((sensor) => {
-                                        if (modbus_backend.read_registers ((uint16)sensor.modbus_address, 1, 1, out response_register) == 0) {
+                                        if (modbus_backend.read_registers ((uint16)sensor.modbus_address, (uint16)sensor.adc_register, 1, out response_register) == 0) {
                                         sensor.adc_value = response_register[0];
                                         };
-                                        Thread.usleep (100000);
+                                        Thread.usleep (1000000);
                                         });
                         }
                         Idle.add (update_sensors.callback);
