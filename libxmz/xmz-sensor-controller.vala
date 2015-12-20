@@ -14,7 +14,7 @@ public class SensorController : Object {
     modbus_backend = new ModbusBackend ();
 
     for (int i = 1; i < 7; i++) {
-      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " CO" , 0, 0) );
+      sensors.add ( new Sensor ("Sensor "+ i.to_string () + " CO" , 0, i+40) );
       sensors.add ( new Sensor ("Sensor "+ i.to_string () + " NO²", 0, i+40) );
     }
   }
