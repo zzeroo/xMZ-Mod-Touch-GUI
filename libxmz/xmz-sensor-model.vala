@@ -37,11 +37,11 @@ public class SensorModel : Object, Gtk.TreeModel {
     } else {
       this.data = (owned) data;
     }
+    update_rows.begin ((obj, res) => {
+                       update_rows.end (res);
+                       });
   }
 
-  construct {
-    Timeout.add (1000, update_rows);
-  }
 
   public void add (string name, int adc_value) {
     data.add (new Sensor (name, adc_value));
@@ -165,14 +165,25 @@ public class SensorModel : Object, Gtk.TreeModel {
     return false;
   }
 
-  private bool update_rows () {
-    var iter = Gtk.TreeIter ();
+  private async void update_rows_helper () {
+    yield update_rows ();
+  }
 
-    for (int i = 0; i < data.length; i++) {
-      var path = new Gtk.TreePath.from_indices (i);
-      row_changed (path, iter);
-    }
-    return false;
+  private async void update_rows () {
+    new Thread<void*> (null, () => {
+
+                       var iter = Gtk.TreeIter ();
+                       while (true) {
+                         for (int i = 0; i < data.length; i++) {
+                         var path = new Gtk.TreePath.from_indices (i);
+                         row_changed (path, iter);
+                         }
+                        Thread.usleep (1000000);
+                       };
+                       return null;
+                       });
+
+    yield;
   }
 }
 }

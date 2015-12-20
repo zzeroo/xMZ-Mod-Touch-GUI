@@ -36,26 +36,23 @@ public class SensorController : Object {
   }
 
 
-  private void read_adc (int id, Sensor sensor) {
-    uint16[] response_register = {0};
+  public async void update_sensors () {
+    new Thread<void*> (null, () => {
+                       uint16[] response_register = {0};
 
-    // Hold reference to closure to keep it from being freed whilst
-    // thread is active.
-    if (modbus_backend.read_registers ((uint16)id, 1, 1, out response_register) == 0) {
-      sensor.adc_value = response_register[0];
-    };
-    Thread.usleep (10000);
-  }
+                       while(true) {
+                       sensors.foreach ((sensor) => {
+                                        if (modbus_backend.read_registers ((uint16)sensor.modbus_address, 1, 1, out response_register) == 0) {
+                                        sensor.adc_value = response_register[0];
+                                        };
+                                        Thread.usleep (100000);
+                                        });
+                        }
+                        Idle.add (update_sensors.callback);
 
-  public int update_sensors () {
-    while (true) {
-      sensors.foreach ((sensor) => {
-                       if (sensor.modbus_address != 0) {
-                       read_adc (sensor.modbus_address, sensor);
-                       }
+                       return null;
                        });
-    }
-    return 0;
+    yield;
   }
 
 
