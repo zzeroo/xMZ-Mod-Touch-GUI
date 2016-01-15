@@ -70,9 +70,16 @@ noinst_PROGRAMS += $(TESTS_DEMO_PROGS)
 
 TESTS_DEMO_PROGS = \
 		tests/sensor-list \
+		tests/sensor-list-view \
 		tests/modbus-server \
 		tests/modbus-client \
 		$(NULL)
+
+tests_sensor_list_view_SOURCES = tests/sensor-list-view.vala libxmz/libxmz-1.0.vapi
+tests_sensor_list_view_VALAFLAGS = $(tests_common_valaflags)
+tests_sensor_list_view_CFLAGS = $(tests_common_cflags)
+tests_sensor_list_view_CPPFLAGS = $(tests_common_cppflags)
+tests_sensor_list_view_LDADD = $(tests_common_ldadd)
 
 tests_sensor_list_SOURCES = tests/sensor-list.vala libxmz/libxmz-1.0.vapi
 tests_sensor_list_VALAFLAGS = $(tests_common_valaflags)

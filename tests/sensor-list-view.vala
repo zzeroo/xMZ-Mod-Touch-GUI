@@ -1,12 +1,12 @@
 using Gtk;
 using XMZ;
 
-class TestSensorList : Gtk.Window {
+class TestSensorListView : Gtk.Window {
   // gettext
   private const string version = Config.VERSION;
 
 
-  public TestSensorList () {
+  public TestSensorListView () {
     // Prepare Gtk.Window
     this.title = "Test Sensor List";
     this.destroy.connect (Gtk.main_quit);
@@ -27,9 +27,12 @@ class TestSensorList : Gtk.Window {
 
 
   public static int main (string[] args) {
+#if DEBUG
+    message ("Test\n");
+#endif
     Gtk.init (ref args);
 
-    TestSensorList app = new TestSensorList ();
+    TestSensorListView app = new TestSensorListView ();
     app.show_all ();
     Gtk.main ();
 
