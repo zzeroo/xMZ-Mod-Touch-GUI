@@ -60,7 +60,7 @@ tests_common_ldadd = \
 tests_common_valaflags = \
 		$(LIBXMZ_VALAFLAGS) \
 		--pkg config \
-		--pkg gee-0.8 \
+		--pkg gee-1.0 \
 		--pkg gtk+-3.0 \
 		--pkg libmodbus \
 		--vapidir $(top_srcdir)/vapi \
