@@ -16,6 +16,6 @@
 
 ### restliche Bibliotheken
 
-    apt-get install libgirepository1.0-dev
-    apt-get install gnome-common
+    apt-get install libgtk-3-0 gsettings-desktop-schemas-dev libgee-dev libsqlite3-dev inttool
+    apt-get install libgirepository1.0-dev gnome-common
 

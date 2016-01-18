@@ -38,8 +38,10 @@ public class ModbusBackend : Object {
     return_code = context.read_registers (start_register_address, size, response_register);
     if (return_code != 1) {
       message ("Error read_registers, return_code: %d\n", return_code);
+      context.close ();
       return 1;
     } else {
+      context.close ();
       return 0;
     }
   }

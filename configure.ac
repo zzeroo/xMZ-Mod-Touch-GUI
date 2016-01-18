@@ -36,7 +36,7 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PATH_PROG(GZIP, gzip)
 AC_PROG_MKDIR_P
-AM_PROG_VALAC([0.30.0])
+AM_PROG_VALAC([0.26.1])
 
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
@@ -51,7 +51,7 @@ LT_INIT(disable-static)
 # i18n stuff
 IT_PROG_INTLTOOL([0.40.0])
 
-AM_GNU_GETTEXT_VERSION([0.19.6])
+AM_GNU_GETTEXT_VERSION([0.19.3])
 AM_GNU_GETTEXT([external])
 
 GETTEXT_PACKAGE=xmz
@@ -98,7 +98,7 @@ PKG_CHECK_MODULES(LIBXMZ, [
                         gobject-introspection-1.0 >= $INTROSPECTION_REQUIRED
                         gtk+-3.0 >= $GTK_REQUIRED_VERSION
                         gsettings-desktop-schemas
-                        gee-0.8
+                        gee-1.0
                         sqlite3
                         libmodbus
                         ])
