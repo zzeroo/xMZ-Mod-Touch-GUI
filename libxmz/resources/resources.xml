@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/com/gaswarnanlagen/xmz">
-
-    <file compressed="true">ui/libxmz-style.css</file>
-  </gresource>
-</gresources>
