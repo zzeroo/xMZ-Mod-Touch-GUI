@@ -1,5 +1,11 @@
 
 
+# Compilation
+
+```
+apt-get install libgtk-3-dev
+```
+
 # Links
 ## Rust Dokumentation lokal
 * file:///mnt/src/xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI/target/doc/gtk/trait.WindowExt.html#tymethod.fullscreen
