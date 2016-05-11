@@ -1,5 +1,5 @@
 [root]
-name = "gtk-stack-swipe"
+name = "xmz_mod_touch_gui"
 version = "0.1.0"
 dependencies = [
  "gdk 0.4.0 (git+https://github.com/gtk-rs/gdk)",

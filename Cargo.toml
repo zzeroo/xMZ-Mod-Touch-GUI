@@ -1,5 +1,5 @@
 [package]
-name = "gtk-stack-swipe"
+name = "xmz_mod_touch_gui"
 version = "0.1.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 
