@@ -3,6 +3,23 @@
 # Compilation auf der xMZ-Mod-Touch Hardware
 ## Vorbereitungen
 
+
+Leider geht das Standard Komando `curl https://sh.rustup.rs -sSf | sh` nicht
+mit den nötigen Parametern `--default-toolchain nightly` und `-y`
+Die Alternative Version ist leider etwas ausführlicher, wir arbeiten mit einer
+lokalen Kopie von rustup.sh.
+```
+curl https://sh.rustup.rs -sSf > rustup.sh
+chmod +x rustup.sh
+./rustup.sh --default-toolchain nightly -y
+rm rustup.sh
+```
+
+Zum Aktivieren einfach das `env` File aus dem `.cargo` Verzeichnis sourcen.
+```
+source ~/.cargo/env
+```
+
 ```
 apt-get install libgtk-3-dev
 ```

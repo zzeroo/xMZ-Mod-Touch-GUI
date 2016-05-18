@@ -43,7 +43,7 @@ fn main() {
 
     // Constuct Module/ Sensor List
     let scrolled_window = gtk::ScrolledWindow::new(None, None);
-    scrolled_window.set_min_content_width(1200);
+    scrolled_window.set_min_content_width(800);
     let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
     let modules = ModulesController::get_modules();
     for module in modules {
