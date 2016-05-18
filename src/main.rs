@@ -1,4 +1,3 @@
-// Diese Includes sind alle nötig
 extern crate gdk;
 extern crate gtk;
 use std::env;
@@ -8,6 +7,7 @@ mod app;
 use app::App;
 
 
+#[allow(unused_variables)]
 fn main() {
     gtk::init().unwrap_or_else(|_| panic!("Failed to initalize GTK."));
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
@@ -46,10 +46,21 @@ fn main() {
 
     // Swipe
     let swipe = gtk::GestureSwipe::new(&app.stack);
-    swipe.connect_swipe(move |_swipe, swipe_x, _swipe_y| {
+    swipe.connect_swipe(move |swipe, swipe_x, swipe_y| {
+        // println!("swipe: {:?}", swipe);
+        // println!("swipe_x: {:?}", swipe_x);
+        // println!("swipe_y: {:?}", swipe_y);
         match swipe_x < 0f64 {
-            true  => { app.next_window() },
-            false => { app.prev_window() },
+            true  => {
+                if swipe_x < -100.0 && swipe_y > - 80.0 {
+                    app.next_window();
+                }
+            },
+            false => {
+                if swipe_x > 100.0 && swipe_y < 80.0{
+                    app.prev_window();
+                }
+            },
         };
     });
 
