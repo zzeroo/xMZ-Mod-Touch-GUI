@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 
 [dependencies]
-gtk = { git = "https://github.com/gtk-rs/gtk", features = ["v3_14"] }
+gtk = { git = "https://github.com/gtk-rs/gtk", features = ["v3_16"] }
 gdk = { git = "https://github.com/gtk-rs/gdk" }
+pango = { git = "https://github.com/gtk-rs/pango" }

@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "gdk 0.4.0 (git+https://github.com/gtk-rs/gdk)",
  "gtk 0.0.8 (git+https://github.com/gtk-rs/gtk)",
+ "pango 0.0.8 (git+https://github.com/gtk-rs/pango)",
 ]
 
 [[package]]

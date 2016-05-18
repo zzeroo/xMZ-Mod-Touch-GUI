@@ -1,15 +1,22 @@
 extern crate gdk;
 extern crate gtk;
-use std::env;
-use gdk::enums::*;
-use gtk::prelude::*;
+extern crate pango;
 use app::App;
 use controllers::modules_controller::ModulesController;
+use gdk::enums::*;
+use gtk::prelude::*;
 use models::modules::Modules;
-
+use pango::*;
+use std::env;
 mod app;
 mod controllers;
 mod models;
+
+macro_rules! color {
+    (white) => (gdk::RGBA{red: 1f64, green: 1f64, blue: 1f64, alpha: 1f64});
+    (black) => (gdk::RGBA{red: 0f64, green: 0f64, blue: 0f64, alpha: 0f64});
+    (green) => (gdk::RGBA{red: 0.2f64, blue: 0.2f64, green: 0.5f64, alpha: 1f64});
+}
 
 #[allow(unused_variables)]
 fn main() {
@@ -19,6 +26,8 @@ fn main() {
     // Window properties
     window.set_title("Stack switcher test");
     window.set_default_size(1200, 600);
+
+
     match env::var("XMZ_HARDWARE") {
         Ok(_) => { window.fullscreen() },
         Err(_) => {},
@@ -45,14 +54,21 @@ fn main() {
     let scrolled_window = gtk::ScrolledWindow::new(None, None);
     scrolled_window.set_min_content_width(800);
     let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    container.override_background_color(gtk::StateFlags::empty(), &color!(green));
     let modules = ModulesController::get_modules();
     for module in modules {
+        let mut bold = pango::FontDescription::new();
+        bold.set_weight(pango::Weight::Heavy);
+
         let url = format!("{}", module.name);
         let module_and_url = gtk::LinkButton::new_with_label(&url, Some(&module.name));
+        // module_and_url.set_size_request(1200, -1);
         module_and_url.set_halign(gtk::Align::Start);
-        module_and_url.set_hexpand(true);
+        module_and_url.override_font(&bold);
+        module_and_url.override_background_color(gtk::StateFlags::empty(), &color!(green));
+        module_and_url.override_color(gtk::StateFlags::empty(), &color!(white));
 
-        container.add(&module_and_url);
+        container.pack_start(&module_and_url, true, true, 0);
 
         for sensor in module.get_sensors() {
             let sensor_details = gtk::TextView::new();
@@ -62,8 +78,10 @@ fn main() {
             sensor_details.set_right_margin(10);
             sensor_details.set_editable(false);
             sensor_details.get_buffer().unwrap().set_text(&format!("{}: {}", &sensor.name, &sensor.adc_value));
+            sensor_details.set_size_request(1200, -1);
+            sensor_details.set_monospace(true);
 
-            container.add(&sensor_details);
+            container.pack_start(&sensor_details, true, true, 0);
         }
         container.add(&gtk::Separator::new(gtk::Orientation::Horizontal));
 
