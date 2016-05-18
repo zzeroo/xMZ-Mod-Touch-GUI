@@ -25,7 +25,7 @@ fn main() {
 
     // Window properties
     window.set_title("Stack switcher test");
-    window.set_default_size(1200, 600);
+    window.set_default_size(1024, 600);
 
 
     match env::var("XMZ_HARDWARE") {
@@ -52,7 +52,7 @@ fn main() {
 
     // Constuct Module/ Sensor List
     let scrolled_window = gtk::ScrolledWindow::new(None, None);
-    scrolled_window.set_min_content_width(800);
+    scrolled_window.set_min_content_width(1024);
     let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
     container.override_background_color(gtk::StateFlags::empty(), &color!(green));
     let modules = ModulesController::get_modules();
@@ -62,7 +62,7 @@ fn main() {
 
         let url = format!("{}", module.name);
         let module_and_url = gtk::LinkButton::new_with_label(&url, Some(&module.name));
-        // module_and_url.set_size_request(1200, -1);
+        // module_and_url.set_size_request(1024, -1);
         module_and_url.set_halign(gtk::Align::Start);
         module_and_url.override_font(&bold);
         module_and_url.override_background_color(gtk::StateFlags::empty(), &color!(green));
@@ -78,7 +78,7 @@ fn main() {
             sensor_details.set_right_margin(10);
             sensor_details.set_editable(false);
             sensor_details.get_buffer().unwrap().set_text(&format!("{}: {}", &sensor.name, &sensor.adc_value));
-            sensor_details.set_size_request(1200, -1);
+            sensor_details.set_size_request(1024, -1);
             sensor_details.set_monospace(true);
 
             container.pack_start(&sensor_details, true, true, 0);
