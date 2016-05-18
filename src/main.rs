@@ -3,9 +3,13 @@ extern crate gtk;
 use std::env;
 use gdk::enums::*;
 use gtk::prelude::*;
-mod app;
 use app::App;
+use controllers::modules_controller::ModulesController;
+use models::modules::Modules;
 
+mod app;
+mod controllers;
+mod models;
 
 #[allow(unused_variables)]
 fn main() {
@@ -34,14 +38,29 @@ fn main() {
         Inhibit(false)
     });
 
-    let box_main = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     let mut app = App::new();
+
+    let box_main = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     box_main.pack_start(&app.stack, true, true, 0);
     window.add(&box_main);
 
+    let scrolled_window = gtk::ScrolledWindow::new(None, None);
+    scrolled_window.set_min_content_width(1200);
+    let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    let modules = ModulesController::get_modules();
+    for module in modules {
+        let url = format!("{}", module.name);
+        let module_and_url = gtk::LinkButton::new_with_label(&url, Some(&module.name));
+        module_and_url.set_halign(gtk::Align::Start);
+
+        container.add(&module_and_url);
+    }
+    app.create_windows("Übersicht Sensoren", container);
+
     // Construct the StackSwitcher
-    for i in &["Sensor 1", "Sensor 2", "Sensor 3", "Einstellungen"] {
-        app.create_windows(&i.to_string());
+    for title in &["Sensor 1", "Sensor 2", "Sensor 3", "Einstellungen"] {
+        let label = gtk::Label::new(Some(title));
+        app.create_windows(&title.to_string(), label);
     }
 
     // Swipe

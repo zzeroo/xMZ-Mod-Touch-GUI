@@ -1,7 +1,6 @@
 extern crate gdk;
 extern crate gtk;
 
-
 pub struct App {
     pub stack: gtk::Stack,
     pub windows: Vec<String>,
@@ -15,9 +14,8 @@ impl App {
         }
     }
 
-    pub fn create_windows(&mut self, title: &str) {
-        let label = gtk::Label::new(Some(title));
-        self.stack.add_named(&label, &title);
+    pub fn create_windows<T: gtk::IsA<gtk::Widget>> (&mut self, title: &str, widget: T) {
+        self.stack.add_named(&widget, &title);
 
         self.windows.push(title.to_string());
     }

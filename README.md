@@ -1,13 +1,25 @@
 
 
-# Compilation
+# Compilation auf der xMZ-Mod-Touch Hardware
+## Vorbereitungen
 
 ```
 apt-get install libgtk-3-dev
 ```
 
-# Systemd
-# GUI Unit file
+```
+git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
+cd xMZ-Mod-Touch-GUI
+cargo build --release
+```
+
+# Installation
+```
+cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
+```
+
+## Systemd
+### GUI Systemd Unit file
 
 ```
 cat <<EOF >/etc/systemd/system/xmz_mod_touch_gui.service
@@ -42,6 +54,12 @@ systemctl daemon-reload
 ```
 systemctl enable xmz_mod_touch_gui
 ```
+
+```
+systemctl start xmz_mod_touch_gui
+```
+
+
 
 # Links
 ## Rust Dokumentation lokal
