@@ -39,11 +39,9 @@ fn main() {
     });
 
     let mut app = App::new();
+    window.add(&app.stack);
 
-    let box_main = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    box_main.pack_start(&app.stack, true, true, 0);
-    window.add(&box_main);
-
+    // Constuct Module/ Sensor List
     let scrolled_window = gtk::ScrolledWindow::new(None, None);
     scrolled_window.set_min_content_width(1200);
     let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
@@ -52,16 +50,34 @@ fn main() {
         let url = format!("{}", module.name);
         let module_and_url = gtk::LinkButton::new_with_label(&url, Some(&module.name));
         module_and_url.set_halign(gtk::Align::Start);
+        module_and_url.set_hexpand(true);
 
         container.add(&module_and_url);
-    }
-    app.create_windows("Übersicht Sensoren", container);
 
-    // Construct the StackSwitcher
+        for sensor in module.get_sensors() {
+            let sensor_details = gtk::TextView::new();
+            sensor_details.set_halign(gtk::Align::Start);
+            sensor_details.set_hexpand(true);
+            sensor_details.set_left_margin(10);
+            sensor_details.set_right_margin(10);
+            sensor_details.set_editable(false);
+            sensor_details.get_buffer().unwrap().set_text(&format!("{}: {}", &sensor.name, &sensor.adc_value));
+
+            container.add(&sensor_details);
+        }
+        container.add(&gtk::Separator::new(gtk::Orientation::Horizontal));
+
+    }
+    scrolled_window.add(&container);
+    app.create_windows("Übersicht Sensoren", scrolled_window);
+
+    // Construct the Stack
     for title in &["Sensor 1", "Sensor 2", "Sensor 3", "Einstellungen"] {
         let label = gtk::Label::new(Some(title));
         app.create_windows(&title.to_string(), label);
     }
+
+
 
     // Swipe
     let swipe = gtk::GestureSwipe::new(&app.stack);
