@@ -2,14 +2,14 @@ extern crate gdk;
 extern crate gtk;
 
 
-pub struct Stack {
+pub struct App {
     pub stack: gtk::Stack,
     pub windows: Vec<String>,
 }
 
-impl Stack {
-    pub fn new() -> Stack {
-        Stack {
+impl App {
+    pub fn new() -> Self {
+        App {
             stack: gtk::Stack::new(),
             windows: Vec::new(),
         }

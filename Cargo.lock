@@ -168,7 +168,7 @@ dependencies = [
 [[package]]
 name = "gtk"
 version = "0.0.8"
-source = "git+https://github.com/gtk-rs/gtk#081c7b61f6cf554656cf88b52d191e691b4dd88b"
+source = "git+https://github.com/gtk-rs/gtk#128c904c035c08c5c48f007bc04635b5e639ecfb"
 dependencies = [
  "bitflags 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cairo-rs 0.0.9 (git+https://github.com/gtk-rs/cairo)",

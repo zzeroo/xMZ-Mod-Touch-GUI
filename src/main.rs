@@ -4,8 +4,8 @@ extern crate gtk;
 use std::env;
 use gdk::enums::*;
 use gtk::prelude::*;
-mod stack;
-use stack::Stack;
+mod app;
+use app::App;
 
 
 fn main() {
@@ -35,21 +35,21 @@ fn main() {
     });
 
     let box_main = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    let mut stack = Stack::new();
-    box_main.pack_start(&stack.stack, true, true, 0);
+    let mut app = App::new();
+    box_main.pack_start(&app.stack, true, true, 0);
+    window.add(&box_main);
 
     // Construct the StackSwitcher
     for i in &["Sensor 1", "Sensor 2", "Sensor 3", "Einstellungen"] {
-        stack.create_windows(&i.to_string());
+        app.create_windows(&i.to_string());
     }
-    window.add(&box_main);
 
     // Swipe
-    let swipe = gtk::GestureSwipe::new(&stack.stack);
+    let swipe = gtk::GestureSwipe::new(&app.stack);
     swipe.connect_swipe(move |_swipe, swipe_x, _swipe_y| {
         match swipe_x < 0f64 {
-            true => {stack.next_window()},
-            false => {stack.prev_window()},
+            true  => { app.next_window() },
+            false => { app.prev_window() },
         };
     });
 
