@@ -77,6 +77,18 @@ systemctl start xmz_mod_touch_gui
 ```
 
 
+# Update Code auf der xMZ-Mod-Touch Hardware
+
+```
+cd xMZ-Mod-Touch-GUI
+git pull
+cargo build --release
+systemctl stop xmz_mod_touch_gui
+cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
+systemctl start xmz_mod_touch_gui
+```
+
+
 
 # Links
 ## Rust Dokumentation lokal
