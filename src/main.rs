@@ -72,6 +72,7 @@ fn main() {
 
         for sensor in module.get_sensors() {
             let sensor_details = gtk::TextView::new();
+            sensor_details.set_sensitive(false);
             sensor_details.set_halign(gtk::Align::Start);
             sensor_details.set_hexpand(true);
             sensor_details.set_left_margin(10);
