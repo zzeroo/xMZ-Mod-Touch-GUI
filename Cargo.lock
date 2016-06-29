@@ -1,6 +1,6 @@
 [root]
 name = "xmz_mod_touch_gui"
-version = "0.1.0"
+version = "0.7.0"
 dependencies = [
  "gdk 0.4.0 (git+https://github.com/gtk-rs/gdk)",
  "gtk 0.0.8 (git+https://github.com/gtk-rs/gtk)",
