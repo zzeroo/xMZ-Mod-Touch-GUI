@@ -72,14 +72,19 @@ fn main() {
 
     srv.borrow_mut().refresh_all_sensors();
 
+    let v_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
+
+    v_box.pack_start(&notebook.notebook, true, true, 0);
+
+    window.add(&v_box);
+    window.show_all();
+
 
     gtk::timeout_add(1000, move || {
         update_window(&srv);
 
         glib::Continue(true)
     });
-
-    window.show_all();
 
     gtk::main();
 }
