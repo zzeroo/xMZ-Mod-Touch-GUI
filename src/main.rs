@@ -6,25 +6,23 @@ extern crate libmodbus_rs;
 mod server;
 mod module;
 mod sensor;
+mod notebook;
+mod sensor_index;
+
 
 use gdk::Screen;
-use gtk::{Builder, Notebook, Window};
+use gtk::{Builder, Window};
 use gtk::prelude::*;
 use std::cell::RefCell;
 use std::env;
 use std::rc::Rc;
 use server::*;
-
+use sensor_index::*;
+use notebook::*;
 
 fn update_window(server: &Rc<RefCell<server::Server>>) {
     let mut server = server.borrow_mut();
-    for module in server.modules.iter_mut() {
-        for sensor in module.sensors.iter_mut() {
-            sensor.update_adc();
-            println!("{:?}", sensor.adc_value);
-        }
-    }
-
+    server.refresh_all_sensors();
 }
 
 fn window_setup(window: &gtk::Window) {
@@ -66,9 +64,14 @@ fn main() {
     server.init();
 
     let srv = Rc::new(RefCell::new(server));
-    let mut notebook = Notebook::new();
+    let mut notebook = notebook::Notebook::new();
+    let sensor_index = SensorIndex::new(srv.borrow().get_sensor_index(), &mut notebook);
+    let info_button = sensor_index.info_button.clone();
 
     window_setup(&window);
+
+    srv.borrow_mut().refresh_all_sensors();
+
 
     gtk::timeout_add(1000, move || {
         update_window(&srv);
