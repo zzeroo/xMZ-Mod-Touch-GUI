@@ -14,8 +14,9 @@ impl Server {
 
     pub fn init(&mut self) {
         let mut module = Module::new();
-        let sensor1 = Sensor::new();
-        let sensor2 = Sensor::new();
+        let mut sensor1 = Sensor::new();
+        let mut sensor2 = Sensor::new();
+        sensor1.modbus_slave_id = Some(46);
         module.sensors.push(sensor1);
         module.sensors.push(sensor2);
         self.modules.push(module);
