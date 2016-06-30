@@ -16,7 +16,7 @@ impl Sensor {
     pub fn update_adc(&mut self) {
         let mut modbus = Modbus::new_rtu("/dev/ttyUSB0", 9600, 'N', 8, 1);
         let _ = modbus.set_slave(46);
-        let _ = modbus.set_debug(true);
+        // let _ = modbus.set_debug(true);
         let _ = modbus.rtu_set_rts(libmodbus_rs::MODBUS_RTU_RTS_DOWN);
         let mut tab_reg: Vec<u16> = vec![];
 

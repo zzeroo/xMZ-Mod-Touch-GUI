@@ -13,15 +13,10 @@ use gtk::prelude::*;
 use std::cell::RefCell;
 use std::env;
 use std::rc::Rc;
-use std::thread;
-use std::time::Duration;
 use server::*;
-use sensor::*;
-use module::*;
 
 
 fn update_window(server: &Rc<RefCell<server::Server>>) {
-    println!("Update window");
     let mut server = server.borrow_mut();
     for module in server.modules.iter_mut() {
         for sensor in module.sensors.iter_mut() {
@@ -68,21 +63,18 @@ fn main() {
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
     let mut server = Server::new();
-    let mut module = Module::new();
-    let sensor1 = Sensor::new();
-    let sensor2 = Sensor::new();
-    module.sensors.push(sensor1);
-    module.sensors.push(sensor2);
-    server.modules.push(module);
+    server.init();
+
     let srv = Rc::new(RefCell::new(server));
+    let mut notebook = Notebook::new();
+
+    window_setup(&window);
 
     gtk::timeout_add(1000, move || {
         update_window(&srv);
 
         glib::Continue(true)
     });
-
-    window_setup(&window);
 
     window.show_all();
 

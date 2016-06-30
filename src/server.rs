@@ -1,4 +1,5 @@
 use module::Module;
+use sensor::Sensor;
 
 pub struct Server {
     pub modules: Vec<Module>,
@@ -9,6 +10,15 @@ impl Server {
         Server {
             modules: vec![],
         }
+    }
+
+    pub fn init(&mut self) {
+        let mut module = Module::new();
+        let sensor1 = Sensor::new();
+        let sensor2 = Sensor::new();
+        module.sensors.push(sensor1);
+        module.sensors.push(sensor2);
+        self.modules.push(module);
     }
 }
 
