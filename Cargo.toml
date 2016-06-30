@@ -2,9 +2,21 @@
 name = "xmz_mod_touch_gui"
 version = "0.7.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
+description = "xMZ-Mod-Touch GUI"
+documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
+homepage = "https://gaswarnanlagen.com/xmz-mod-touch"
+repository = "https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git"
+license = "GPL-2.0"
+
+
+[dependencies.gtk]
+version = "0.1.0"
+features = ["v3_16"]
 
 [dependencies]
-gtk = { git = "https://github.com/gtk-rs/gtk", features = ["v3_16"] }
-gdk = { git = "https://github.com/gtk-rs/gdk" }
-pango = { git = "https://github.com/gtk-rs/pango" }
+gtk-sys = "0.3.1"
+pango-sys = "0.3.1"
+glib = "0.1.0"
+gdk = "0.5.0"
+libc = "0.2"
 libmodbus-rs = { git = "https://github.com/zzeroo/libmodbus-rs.git" }
