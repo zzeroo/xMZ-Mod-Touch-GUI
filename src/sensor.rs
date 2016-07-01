@@ -1,6 +1,6 @@
 use libmodbus_rs;
 use libmodbus_rs::modbus::Modbus;
-
+use std::env;
 
 pub struct Sensor {
     pub name: String,
@@ -18,7 +18,11 @@ impl Sensor {
     }
 
     pub fn update_adc(&mut self) {
-        let mut modbus = Modbus::new_rtu("/dev/ttyUSB0", 9600, 'N', 8, 1);
+        let device = match env::var("XMZ_HARDWARE") {
+            Ok(_) => "/dev/ttyS1",
+            Err(_) => "/dev/ttyUSB0",
+        };
+        let mut modbus = Modbus::new_rtu(device, 9600, 'N', 8, 1);
         modbus.set_slave(self.modbus_slave_id);
         let _ = modbus.set_debug(true);
         let _ = modbus.rtu_set_rts(libmodbus_rs::MODBUS_RTU_RTS_DOWN);
