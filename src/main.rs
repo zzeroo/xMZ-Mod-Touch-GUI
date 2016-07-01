@@ -1,36 +1,84 @@
 extern crate gdk;
 extern crate gtk;
-extern crate pango;
-use app::App;
-use controllers::modules_controller::ModulesController;
-use gdk::enums::*;
-use gtk::prelude::*;
-use models::modules::Modules;
-use pango::*;
-use std::env;
-mod app;
-mod controllers;
-mod models;
+extern crate glib;
+extern crate libmodbus_rs;
 
-macro_rules! color {
-    (white) => (gdk::RGBA{red: 1f64, green: 1f64, blue: 1f64, alpha: 1f64});
-    (black) => (gdk::RGBA{red: 0f64, green: 0f64, blue: 0f64, alpha: 0f64});
-    (green) => (gdk::RGBA{red: 0.2f64, blue: 0.2f64, green: 0.5f64, alpha: 1f64});
+mod server;
+mod module;
+mod sensor;
+mod notebook;
+mod sensor_index;
+
+use gdk::Screen;
+use gtk::{Builder, Window};
+use gtk::prelude::*;
+use std::cell::RefCell;
+use std::env;
+use std::rc::Rc;
+use server::*;
+use sensor_index::*;
+use notebook::*;
+use std::collections::{HashMap, HashSet};
+use sensor::*;
+
+fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
+    let mut server = server.borrow_mut();
+    server.refresh_all();
+
+    let mut sensors: HashMap<i32, &Sensor> = HashMap::new();
+    let mut seen: HashSet<i32> = HashSet::new();
+
+    for module in server.modules.iter() {
+        for sensor in module.sensors.iter() {
+            sensors.entry(sensor.modbus_slave_id).or_insert(sensor);
+        }
+    }
+
+    if let Some(mut iter) = list.get_iter_first() {
+        let mut valid = true;
+        while valid {
+            let modbus_slave_id = list.get_value(&iter, 0).get::<i32>().unwrap();
+            if let Some(sensor) = sensors.get(&(modbus_slave_id)) {
+                list.set(&iter,
+                        &[0, 1, 2],
+                        &[&sensor.modbus_slave_id, &"Sensor", &(sensor.adc_value as i32)]);
+                // println!(">>{:?}", sensor.adc_value);
+                valid = list.iter_next(&mut iter);
+                seen.insert(modbus_slave_id);
+            } else {
+                valid = list.remove(&mut iter);
+            }
+        }
+    }
+
+    for (modbus_slave_id, sensor) in sensors.iter() {
+        if !seen.contains(modbus_slave_id) {
+            create_and_fill_model(list, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
+        }
+    }
 }
 
-#[allow(unused_variables)]
-fn main() {
-    gtk::init().unwrap_or_else(|_| panic!("Failed to initalize GTK."));
-    let window = gtk::Window::new(gtk::WindowType::Toplevel);
-
+fn window_setup(window: &gtk::Window) {
     // Window properties
-    window.set_title("Stack switcher test");
+    let window_title = "xMZ-Mod-Touch GUI ".to_string() + env!("CARGO_PKG_VERSION");
+    window.set_title(&window_title);
     window.set_default_size(1024, 600);
 
 
     match env::var("XMZ_HARDWARE") {
-        Ok(_) => { window.fullscreen() },
-        Err(_) => {},
+        Ok(_) => {
+            window.fullscreen();
+        },
+        Err(_) => {
+            // Connect ESC key press event, and quit the gui if ESC was pressed
+            window.connect_key_press_event(move |_, key| {
+                match key.get_keyval() as u32 {
+                    gdk::enums::key::Escape => gtk::main_quit(),
+                    _ => (),
+                }
+                Inhibit(false)
+            });
+        },
     }
 
     // Connect delete event to quit the gtk::main thread
@@ -38,87 +86,37 @@ fn main() {
         gtk::main_quit();
         Inhibit(true)
     });
-    // Connect ESC key press event, and quit the gui if ESC was pressed
-    window.connect_key_press_event(move |_, key| {
-        match key.get_keyval() as u32 {
-            key::Escape => gtk::main_quit(),
-            _ => (),
-        }
-        Inhibit(false)
-    });
-
-    let mut app = App::new();
-    window.add(&app.stack);
-
-    // Constuct Module/ Sensor List
-    let scrolled_window = gtk::ScrolledWindow::new(None, None);
-    scrolled_window.set_min_content_width(1024);
-    let container = gtk::Box::new(gtk::Orientation::Vertical, 0);
-    container.override_background_color(gtk::StateFlags::empty(), &color!(green));
-    let modules = ModulesController::get_modules();
-    for module in modules {
-        let mut bold = pango::FontDescription::new();
-        bold.set_weight(pango::Weight::Heavy);
-
-        let url = format!("{}", module.name);
-        let module_and_url = gtk::LinkButton::new_with_label(&url, Some(&module.name));
-        // module_and_url.set_size_request(1024, -1);
-        module_and_url.set_halign(gtk::Align::Start);
-        module_and_url.override_font(&bold);
-        module_and_url.override_background_color(gtk::StateFlags::empty(), &color!(green));
-        module_and_url.override_color(gtk::StateFlags::empty(), &color!(white));
-
-        container.pack_start(&module_and_url, true, true, 0);
-
-        for sensor in module.get_sensors() {
-            let sensor_details = gtk::TextView::new();
-            sensor_details.set_sensitive(false);
-            sensor_details.set_halign(gtk::Align::Start);
-            sensor_details.set_hexpand(true);
-            sensor_details.set_left_margin(10);
-            sensor_details.set_right_margin(10);
-            sensor_details.set_editable(false);
-            sensor_details.get_buffer().unwrap().set_text(&format!("{}: {}", &sensor.name, &sensor.adc_value));
-            sensor_details.set_size_request(1024, -1);
-            sensor_details.set_monospace(true);
-
-            container.pack_start(&sensor_details, true, true, 0);
-        }
-        container.add(&gtk::Separator::new(gtk::Orientation::Horizontal));
-
-    }
-    scrolled_window.add(&container);
-    app.create_windows("Übersicht Sensoren", scrolled_window);
-
-    // Construct the Stack
-    for title in &["Sensor 1", "Sensor 2", "Sensor 3", "Einstellungen"] {
-        let label = gtk::Label::new(Some(title));
-        app.create_windows(&title.to_string(), label);
-    }
+}
 
 
+fn main() {
+    gtk::init().unwrap_or_else(|_| panic!("Failed to initalize GTK."));
+    let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
-    // Swipe
-    let swipe = gtk::GestureSwipe::new(&app.stack);
-    swipe.connect_swipe(move |swipe, swipe_x, swipe_y| {
-        // println!("swipe: {:?}", swipe);
-        // println!("swipe_x: {:?}", swipe_x);
-        // println!("swipe_y: {:?}", swipe_y);
-        match swipe_x < 0f64 {
-            true  => {
-                if swipe_x < -100.0 && swipe_y > - 80.0 {
-                    app.next_window();
-                }
-            },
-            false => {
-                if swipe_x > 100.0 && swipe_y < 80.0{
-                    app.prev_window();
-                }
-            },
-        };
-    });
+    let mut server = Server::new();
+    server.init();
 
+    let srv = Rc::new(RefCell::new(server));
+    let mut notebook = notebook::Notebook::new();
+    let sensor_index = SensorIndex::new(&srv, &mut notebook);
+    let info_button = sensor_index.info_button.clone();
+
+    window_setup(&window);
+
+    let v_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
+
+    v_box.pack_start(&notebook.notebook, true, true, 0);
+
+    window.add(&v_box);
     window.show_all();
+
+    let list_store = sensor_index.list_store.clone();
+
+    gtk::timeout_add(1000, move || {
+        update_window(&list_store, &srv);
+
+        glib::Continue(true)
+    });
 
     gtk::main();
 }
