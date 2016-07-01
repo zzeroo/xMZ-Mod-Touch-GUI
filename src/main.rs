@@ -63,7 +63,9 @@ fn window_setup(window: &gtk::Window) {
     let window_title = "xMZ-Mod-Touch GUI ".to_string() + env!("CARGO_PKG_VERSION");
     window.set_title(&window_title);
     window.set_default_size(1024, 600);
-
+    let display = window.get_display().unwrap();
+    let screen = display.get_screen(0);
+    screen.set_resolution(180.0);
 
     match env::var("XMZ_HARDWARE") {
         Ok(_) => {

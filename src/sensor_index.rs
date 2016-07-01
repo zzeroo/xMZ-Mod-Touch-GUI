@@ -30,7 +30,7 @@ impl SensorIndex {
         let info_button1 = info_button.clone();
 
         scroll.set_min_content_width(1024);
-        scroll.set_min_content_height(600);
+        scroll.set_min_content_height(400);
 
         let mut columns: Vec<gtk::TreeViewColumn> = Vec::new();
 
