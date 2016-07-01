@@ -72,11 +72,11 @@ systemctl daemon-reload
 ```
 
 ```
-systemctl enable xmz_mod_touch_gui
+systemctl enable xmz-mod-touch-GUI.service
 ```
 
 ```
-systemctl start xmz_mod_touch_gui
+systemctl start xmz-mod-touch-GUI.service
 ```
 
 
