@@ -41,7 +41,7 @@ fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
             if let Some(sensor) = sensors.get(&(modbus_slave_id)) {
                 list.set(&iter,
                         &[0, 1, 2],
-                        &[&sensor.modbus_slave_id, &"foo", &(sensor.adc_value as i32)]);
+                        &[&sensor.modbus_slave_id, &"Sensor", &(sensor.adc_value as i32)]);
                 // println!(">>{:?}", sensor.adc_value);
                 valid = list.iter_next(&mut iter);
                 seen.insert(modbus_slave_id);

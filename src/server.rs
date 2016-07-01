@@ -41,8 +41,8 @@ impl Server {
     pub fn refresh_sensors(&mut self) {
         for module in self.modules.iter_mut() {
             for sensor in module.sensors.iter_mut() {
+                println!("\nModbus Adresse: {} ADC: {:?}", sensor.modbus_slave_id, sensor.adc_value);
                 sensor.update_adc();
-                // println!("{:?}", sensor.adc_value);
             }
         }
         self.refresh_sensor_list();
