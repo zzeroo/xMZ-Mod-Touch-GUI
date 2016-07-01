@@ -3,6 +3,7 @@ use libmodbus_rs::modbus::Modbus;
 
 
 pub struct Sensor {
+    pub name: String,
     pub adc_value: u16,
     pub modbus_slave_id: Option<i32>,
 }
@@ -10,6 +11,7 @@ pub struct Sensor {
 impl Sensor {
     pub fn new() -> Self {
         Sensor {
+            name: "Sensor".to_string(),
             adc_value: 0,
             modbus_slave_id: None,
         }

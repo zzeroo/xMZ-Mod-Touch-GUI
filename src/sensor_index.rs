@@ -4,7 +4,7 @@ use gtk::prelude::{
     BoxExt, ContainerExt, ScrolledWindowExt, TreeModelExt,
     TreeViewSignals, WidgetExt};
 
-use server::*;
+use server;
 use notebook;
 use sensor::Sensor;
 use std::cell::RefCell;
@@ -22,7 +22,8 @@ pub struct SensorIndex {
 }
 
 impl SensorIndex {
-    pub fn new(sensor_list: &Vec<Sensor>, notebook: &mut notebook::Notebook) -> Self {
+    pub fn new(server: &Rc<RefCell<server::Server>>, notebook: &mut notebook::Notebook) -> Self {
+        let mut server = server.borrow_mut();
         let tree = gtk::TreeView::new();
         let scroll = gtk::ScrolledWindow::new(None, None);
         let info_button = gtk::Button::new_with_label("Information");
@@ -34,16 +35,20 @@ impl SensorIndex {
         let mut columns: Vec<gtk::TreeViewColumn> = Vec::new();
 
         let list_store = gtk::ListStore::new(&[
-            Type::String,       // name
+            Type::I32,          // modbus slave id
+            Type::String,       // name (Später mal SensorType.to_string())
             Type::I32,          // adc_value
         ]);
 
+        append_column("modbus_slave_id", &mut columns, &tree);
         append_column("name", &mut columns, &tree);
         append_column("adc_value", &mut columns, &tree);
 
-        // for sensor in sensor_list {
-        //     create_and_fill_model(&list_store, &sensor.name, sensor.adc_value as u32);
-        // }
+        for module in server.modules.iter() {
+            for sensor in module.sensors.iter() {
+                create_and_fill_model(&list_store, sensor.modbus_slave_id.unwrap_or(0) as u32, &sensor.name, sensor.adc_value as u32);
+            }
+        }
 
         tree.set_model(Some(&list_store));
         tree.set_headers_visible(true);
@@ -95,10 +100,11 @@ fn append_column(title: &str, v: &mut Vec<gtk::TreeViewColumn>, tree: &gtk::Tree
     v.push(column);
 }
 
-pub fn create_and_fill_model(list_store: &gtk::ListStore, name: &str, adc_value: u32) {
+pub fn create_and_fill_model(list_store: &gtk::ListStore, modbus_slave_id: u32, name: &str, adc_value: u32) {
     list_store.insert_with_values(None,
-                                &[0, 1],
-                                &[&name,
-                                  &adc_value
+                                &[0, 1, 2],
+                                &[  &modbus_slave_id,
+                                    &name,
+                                    &adc_value
                                 ]);
 }

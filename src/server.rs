@@ -1,17 +1,18 @@
 use module::Module;
 use sensor::Sensor;
+use std::collections::HashMap;
 
 pub struct Server {
     pub modules: Vec<Module>,
-    sensor_index: Vec<Sensor>,
 }
 
 impl Server {
     pub fn new() -> Self {
-        Server {
+        let mut s = Server {
             modules: vec![],
-            sensor_index: vec![],
-        }
+        };
+        s.refresh_all();
+        s
     }
 
     pub fn init(&mut self) {
@@ -24,17 +25,17 @@ impl Server {
         self.modules.push(module);
     }
 
-    pub fn refresh_all_sensors(&mut self) {
+    pub fn refresh_all(&mut self) {
+        self.refresh_sensors();
+    }
+
+    pub fn refresh_sensors(&mut self) {
         for module in self.modules.iter_mut() {
             for sensor in module.sensors.iter_mut() {
                 sensor.update_adc();
                 println!("{:?}", sensor.adc_value);
             }
         }
-    }
-
-    pub fn get_sensor_index<'a>(&'a self) -> &'a Vec<Sensor> {
-        &self.sensor_index
     }
 }
 

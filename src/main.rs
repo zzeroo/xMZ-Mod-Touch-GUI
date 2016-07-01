@@ -20,9 +20,17 @@ use server::*;
 use sensor_index::*;
 use notebook::*;
 
-fn update_window(server: &Rc<RefCell<server::Server>>) {
+fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
     let mut server = server.borrow_mut();
-    server.refresh_all_sensors();
+    server.refresh_all();
+
+    if let Some(mut iter) = list.get_iter_first() {
+        let mut valid = true;
+        while valid {
+            println!("{:?}", list.get_value(&iter, 1));
+            valid = list.iter_next(&mut iter);
+        }
+    }
 }
 
 fn window_setup(window: &gtk::Window) {
@@ -65,12 +73,10 @@ fn main() {
 
     let srv = Rc::new(RefCell::new(server));
     let mut notebook = notebook::Notebook::new();
-    let sensor_index = SensorIndex::new(srv.borrow().get_sensor_index(), &mut notebook);
+    let sensor_index = SensorIndex::new(&srv, &mut notebook);
     let info_button = sensor_index.info_button.clone();
 
     window_setup(&window);
-
-    srv.borrow_mut().refresh_all_sensors();
 
     let v_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
 
@@ -79,9 +85,10 @@ fn main() {
     window.add(&v_box);
     window.show_all();
 
+    let list_store = sensor_index.list_store.clone();
 
     gtk::timeout_add(1000, move || {
-        update_window(&srv);
+        update_window(&list_store, &srv);
 
         glib::Continue(true)
     });
