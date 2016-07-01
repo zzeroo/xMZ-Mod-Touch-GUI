@@ -2,12 +2,11 @@
 
 # Compilation auf der xMZ-Mod-Touch Hardware
 ## Vorbereitungen
-
+### Installation Rust
 
 Leider geht das Standard Komando `curl https://sh.rustup.rs -sSf | sh` nicht
 mit den nötigen Parametern `--default-toolchain nightly` und `-y`
-Die Alternative Version ist leider etwas ausführlicher, wir arbeiten mit einer
-lokalen Kopie von rustup.sh.
+Die Installation ist aber mit einer lokalen Kopie von rustup.sh möglich.
 ```
 curl https://sh.rustup.rs -sSf > rustup.sh
 chmod +x rustup.sh
@@ -20,9 +19,13 @@ Zum Aktivieren einfach das `env` File aus dem `.cargo` Verzeichnis sourcen.
 source ~/.cargo/env
 ```
 
+### Gtk Bibliotheken
+
 ```
 apt-get install libgtk-3-dev
 ```
+
+# Auschecken des Quellcodes und Compilation
 
 ```
 git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
@@ -39,7 +42,7 @@ cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
 ### GUI Systemd Unit file
 
 ```
-cat <<EOF >/etc/systemd/system/xmz_mod_touch_gui.service
+cat <<EOF >/etc/systemd/system/xmz-mod-touch-GUI.service
 #
 # xMZ-Mod-Touch-GUI systemd service unit file
 #
@@ -83,9 +86,9 @@ systemctl start xmz_mod_touch_gui
 cd xMZ-Mod-Touch-GUI
 git pull
 cargo build --release
-systemctl stop xmz_mod_touch_gui
+systemctl stop xmz-mod-touch-GUI.service
 cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
-systemctl start xmz_mod_touch_gui
+systemctl start xmz-mod-touch-GUI.service
 ```
 
 
