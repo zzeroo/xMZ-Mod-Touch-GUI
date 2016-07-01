@@ -9,7 +9,6 @@ mod sensor;
 mod notebook;
 mod sensor_index;
 
-
 use gdk::Screen;
 use gtk::{Builder, Window};
 use gtk::prelude::*;
@@ -19,16 +18,42 @@ use std::rc::Rc;
 use server::*;
 use sensor_index::*;
 use notebook::*;
+use std::collections::{HashMap, HashSet};
+use sensor::*;
 
 fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
     let mut server = server.borrow_mut();
     server.refresh_all();
 
+    let mut sensors: HashMap<i32, &Sensor> = HashMap::new();
+    let mut seen: HashSet<i32> = HashSet::new();
+
+    for module in server.modules.iter() {
+        for sensor in module.sensors.iter() {
+            sensors.entry(sensor.modbus_slave_id).or_insert(sensor);
+        }
+    }
+
     if let Some(mut iter) = list.get_iter_first() {
         let mut valid = true;
         while valid {
-            println!("{:?}", list.get_value(&iter, 1));
-            valid = list.iter_next(&mut iter);
+            let modbus_slave_id = list.get_value(&iter, 0).get::<i32>().unwrap();
+            if let Some(sensor) = sensors.get(&(modbus_slave_id)) {
+                list.set(&iter,
+                        &[0, 1, 2],
+                        &[&sensor.modbus_slave_id, &"foo", &(sensor.adc_value as i32)]);
+                // println!(">>{:?}", sensor.adc_value);
+                valid = list.iter_next(&mut iter);
+                seen.insert(modbus_slave_id);
+            } else {
+                valid = list.remove(&mut iter);
+            }
+        }
+    }
+
+    for (modbus_slave_id, sensor) in sensors.iter() {
+        if !seen.contains(modbus_slave_id) {
+            create_and_fill_model(list, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
         }
     }
 }

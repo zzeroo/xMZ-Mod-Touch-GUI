@@ -46,7 +46,7 @@ impl SensorIndex {
 
         for module in server.modules.iter() {
             for sensor in module.sensors.iter() {
-                create_and_fill_model(&list_store, sensor.modbus_slave_id.unwrap_or(0) as u32, &sensor.name, sensor.adc_value as u32);
+                create_and_fill_model(&list_store, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
             }
         }
 
