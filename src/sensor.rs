@@ -36,6 +36,11 @@ impl fmt::Display for SensorType {
 }
 
 pub struct Sensor {
+    /// ID Identifkationsnummer in der Form `n.n` Die erste Ziffer ist die Modulnummer
+    /// die zweite Ziffer die Sensornummer bezogen auf das Modul (zum Beispiel `1.1` Erstes Modul.Erster Sonsor)
+    /// Die `id` ist nicht einfach eine laufende Nummer. So hatt zum Beispiel der dritte Sensor,
+    /// der am 2. Modul als erster Sensor angeschlossen ist die id 2.1!
+    pub id: String,
     /// Sensor Typ
     pub sensor_type: SensorType,
     /// ADC Wert    - wird vom Server Prozess über das Modbus Protokoll ausgelesen und aktualisiert
@@ -65,12 +70,13 @@ impl Sensor {
     /// ```
     /// use xmz_mod_touch_gui::sensor::{Sensor, SensorError, SensorType};
     ///
-    /// let mut sensor = Sensor::new(SensorType::NemotoNO2);
+    /// let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
     /// ```
-    pub fn new(sensor_type: SensorType) -> Self {
+    pub fn new(sensor_type: SensorType, id: &str) -> Self {
         match sensor_type {
             SensorType::NemotoNO2 => {
                 Sensor {
+                    id: id.to_string(),
                     sensor_type: SensorType::NemotoNO2,
                     adc_value: None,
                     si: "ppm".to_string(),
@@ -83,6 +89,7 @@ impl Sensor {
             },
             SensorType::NemotoCO => {
                 Sensor {
+                    id: id.to_string(),
                     sensor_type: SensorType::NemotoCO,
                     adc_value: None,
                     si: "ppm".to_string(),
@@ -110,7 +117,7 @@ impl Sensor {
     /// ```
     /// use xmz_mod_touch_gui::sensor::{Sensor, SensorError, SensorType};
     ///
-    /// let mut sensor = Sensor::new(SensorType::NemotoNO2);
+    /// let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
     /// assert_eq!(sensor.concentration(), Err(SensorError::NoADCValue));
     /// ```
     pub fn concentration(&self) -> Result<f32> {
@@ -178,7 +185,7 @@ mod tests {
 
     // Helper Funktion die ein NO2 Sensor mit default Werten zurück gibt
     fn default_no2_sensor() -> Sensor {
-        let mut sensor = Sensor::new(SensorType::NemotoNO2);
+        let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
         sensor.adc_value = Some(772);
         sensor.adc_value_at_nullgas = Some(922);
         sensor.concentration_nullgas = Some(0);
@@ -189,20 +196,14 @@ mod tests {
 
     #[test]
     fn modbus_register_adresse_nemoto_no2() {
-        let sensor = Sensor::new(SensorType::NemotoNO2);
+        let sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
         assert_eq!(sensor.modbus_register_address, 1);
     }
 
     #[test]
     fn modbus_register_address_nemoto_co() {
-        let sensor = Sensor::new(SensorType::NemotoCO);
+        let sensor = Sensor::new(SensorType::NemotoCO, "1.1");
         assert_eq!(sensor.modbus_register_address, 11);
-    }
-
-
-    #[test]
-    fn concentration() {
-        let sensor = Sensor::new(SensorType::NemotoNO2);
     }
 
     // ADC
@@ -242,7 +243,7 @@ mod tests {
 
     #[test]
     fn concentration_co() {
-        let mut sensor = Sensor::new(SensorType::NemotoCO);
+        let mut sensor = Sensor::new(SensorType::NemotoCO, "1.1");
         sensor.adc_value = Some(333);
         sensor.adc_value_at_nullgas = Some(114);
         sensor.concentration_nullgas = Some(0);

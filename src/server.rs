@@ -18,20 +18,24 @@ impl Server {
     }
 
     pub fn init(&mut self) {
-        let mut module = Module::new();
-        let mut sensor1 = Sensor::new(SensorType::NemotoNO2);
-        let mut sensor2 = Sensor::new(SensorType::NemotoCO);
-        let mut sensor3 = Sensor::new(SensorType::NemotoNO2);
-        let mut sensor4 = Sensor::new(SensorType::NemotoCO);
-        let mut sensor5 = Sensor::new(SensorType::NemotoNO2);
-        let mut sensor6 = Sensor::new(SensorType::NemotoCO);
-        module.sensors.push(sensor1);
-        module.sensors.push(sensor2);
-        module.sensors.push(sensor3);
-        module.sensors.push(sensor4);
-        module.sensors.push(sensor5);
-        module.sensors.push(sensor6);
-        self.modules.push(module);
+        let mut module1 = Module::new();
+        let mut module2 = Module::new();
+        let mut module3 = Module::new();
+        let mut sensor1 = Sensor::new(SensorType::NemotoNO2, "1.1");
+        let mut sensor2 = Sensor::new(SensorType::NemotoCO, "1.2");
+        let mut sensor3 = Sensor::new(SensorType::NemotoNO2, "2.1");
+        let mut sensor4 = Sensor::new(SensorType::NemotoCO, "2.2");
+        let mut sensor5 = Sensor::new(SensorType::NemotoNO2, "3.1");
+        let mut sensor6 = Sensor::new(SensorType::NemotoCO, "3.2");
+        module1.sensors.push(sensor1);
+        module1.sensors.push(sensor2);
+        module2.sensors.push(sensor3);
+        module2.sensors.push(sensor4);
+        module3.sensors.push(sensor5);
+        module3.sensors.push(sensor6);
+        self.modules.push(module1);
+        self.modules.push(module2);
+        self.modules.push(module3);
     }
 
     pub fn refresh_all(&mut self) {
