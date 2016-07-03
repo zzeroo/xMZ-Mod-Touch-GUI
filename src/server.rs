@@ -19,12 +19,12 @@ impl Server {
 
     pub fn init(&mut self) {
         let mut module = Module::new();
-        let mut sensor1 = Sensor::new(SensorType::NemotoNO2, 1);
-        let mut sensor2 = Sensor::new(SensorType::NemotoCO, 1);
-        let mut sensor3 = Sensor::new(SensorType::NemotoNO2, 2);
-        let mut sensor4 = Sensor::new(SensorType::NemotoCO, 2);
-        let mut sensor5 = Sensor::new(SensorType::NemotoNO2, 3);
-        let mut sensor6 = Sensor::new(SensorType::NemotoCO, 3);
+        let mut sensor1 = Sensor::new(SensorType::NemotoNO2);
+        let mut sensor2 = Sensor::new(SensorType::NemotoCO);
+        let mut sensor3 = Sensor::new(SensorType::NemotoNO2);
+        let mut sensor4 = Sensor::new(SensorType::NemotoCO);
+        let mut sensor5 = Sensor::new(SensorType::NemotoNO2);
+        let mut sensor6 = Sensor::new(SensorType::NemotoCO);
         module.sensors.push(sensor1);
         module.sensors.push(sensor2);
         module.sensors.push(sensor3);
