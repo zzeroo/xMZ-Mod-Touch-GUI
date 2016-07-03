@@ -1,13 +1,15 @@
-use sensor::Sensor;
+use sensor::*;
 
 pub struct Module {
     pub sensors: Vec<Sensor>,
+    pub modbus_slave_id: i32,
 }
 
 impl Module {
     pub fn new() -> Self {
         Module {
             sensors: vec![],
+            modbus_slave_id: 1,
         }
     }
 }
@@ -16,13 +18,13 @@ impl Module {
 #[cfg(test)]
 mod tests {
     use module::Module;
-    use sensor::Sensor;
+    use sensor::*;
 
     #[test]
     fn add_sensors() {
         let mut module = Module::new();
-        let sensor1 = Sensor::new(1);
-        let sensor2 = Sensor::new(2);
+        let sensor1 = Sensor::new(SensorType::NemotoNO2, 1);
+        let sensor2 = Sensor::new(SensorType::NemotoCO, 1);
 
         assert_eq!(module.sensors.len(), 0);
         module.sensors.push(sensor1);

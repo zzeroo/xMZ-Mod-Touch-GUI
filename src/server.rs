@@ -1,5 +1,5 @@
 use module::Module;
-use sensor::Sensor;
+use sensor::*;
 use std::collections::HashMap;
 
 pub struct Server {
@@ -19,12 +19,12 @@ impl Server {
 
     pub fn init(&mut self) {
         let mut module = Module::new();
-        let mut sensor1 = Sensor::new(1);
-        let mut sensor2 = Sensor::new(2);
-        let mut sensor3 = Sensor::new(3);
-        let mut sensor4 = Sensor::new(4);
-        let mut sensor5 = Sensor::new(5);
-        let mut sensor6 = Sensor::new(6);
+        let mut sensor1 = Sensor::new(SensorType::NemotoNO2, 1);
+        let mut sensor2 = Sensor::new(SensorType::NemotoCO, 1);
+        let mut sensor3 = Sensor::new(SensorType::NemotoNO2, 2);
+        let mut sensor4 = Sensor::new(SensorType::NemotoCO, 2);
+        let mut sensor5 = Sensor::new(SensorType::NemotoNO2, 3);
+        let mut sensor6 = Sensor::new(SensorType::NemotoCO, 3);
         module.sensors.push(sensor1);
         module.sensors.push(sensor2);
         module.sensors.push(sensor3);
@@ -41,7 +41,7 @@ impl Server {
     pub fn refresh_sensors(&mut self) {
         for module in self.modules.iter_mut() {
             for sensor in module.sensors.iter_mut() {
-                println!("\nModbus Adresse: {} ADC: {:?}", sensor.modbus_slave_id, sensor.adc_value);
+                println!("\nModbus Adresse: {} ADC: {:?}", module.modbus_slave_id, sensor.adc_value);
                 sensor.update_adc();
             }
         }

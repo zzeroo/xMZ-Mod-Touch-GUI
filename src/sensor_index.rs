@@ -35,18 +35,21 @@ impl SensorIndex {
         let mut columns: Vec<gtk::TreeViewColumn> = Vec::new();
 
         let list_store = gtk::ListStore::new(&[
-            Type::I32,          // modbus slave id
-            Type::String,       // name (Später mal SensorType.to_string())
+            Type::I32,          // Sensor Nummer
+            Type::I32,          // Module Nummer
+            Type::I32,          // Modbus Adresse
+            Type::String,       // Sensor Typ
+            Type::String,       // Konzentartion
             Type::I32,          // adc_value
         ]);
 
-        append_column("modbus_slave_id", &mut columns, &tree);
-        append_column("name", &mut columns, &tree);
-        append_column("adc_value", &mut columns, &tree);
+        append_column("Modbus\nAdresse", &mut columns, &tree);
+        append_column("Typ", &mut columns, &tree);
+        append_column("Konzentration", &mut columns, &tree);
 
         for module in server.modules.iter() {
             for sensor in module.sensors.iter() {
-                create_and_fill_model(&list_store, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
+                //create_and_fill_model(&list_store, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
             }
         }
 
@@ -54,7 +57,7 @@ impl SensorIndex {
         tree.set_headers_visible(true);
         scroll.add(&tree);
         let vertical_layout = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        let Horizontal_layout = gtk::Grid::new();
+        let horizontal_layout = gtk::Grid::new();
 
         tree.connect_cursor_changed(move |tree_view| {
             let selection = tree_view.get_selection();
@@ -67,9 +70,9 @@ impl SensorIndex {
         info_button.set_sensitive(false);
 
         vertical_layout.pack_start(&scroll, true, true, 0);
-        Horizontal_layout.attach(&info_button, 0, 0, 2, 1);
-        Horizontal_layout.set_column_homogeneous(true);
-        vertical_layout.pack_start(&Horizontal_layout, false, true, 0);
+        horizontal_layout.attach(&info_button, 0, 0, 2, 1);
+        horizontal_layout.set_column_homogeneous(true);
+        vertical_layout.pack_start(&horizontal_layout, false, true, 0);
 
         let vertical_layout: Widget = vertical_layout.upcast();
         notebook.create_tab("Sensoren Liste", &vertical_layout);

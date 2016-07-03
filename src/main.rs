@@ -25,12 +25,12 @@ fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
     let mut server = server.borrow_mut();
     server.refresh_all();
 
-    let mut sensors: HashMap<i32, &Sensor> = HashMap::new();
-    let mut seen: HashSet<i32> = HashSet::new();
+    let mut sensors: HashMap<String, &Sensor> = HashMap::new();
+    let mut seen: HashSet<String> = HashSet::new();
 
     for module in server.modules.iter() {
         for sensor in module.sensors.iter() {
-            sensors.entry(sensor.modbus_slave_id).or_insert(sensor);
+            sensors.entry(format!("{}{}", sensor.sensor_type, sensor.modbus_register_address)).or_insert(sensor);
         }
     }
 
@@ -38,22 +38,22 @@ fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
         let mut valid = true;
         while valid {
             let modbus_slave_id = list.get_value(&iter, 0).get::<i32>().unwrap();
-            if let Some(sensor) = sensors.get(&(modbus_slave_id)) {
-                list.set(&iter,
-                        &[0, 1, 2],
-                        &[&sensor.modbus_slave_id, &"Sensor", &(sensor.adc_value as i32)]);
-                // println!(">>{:?}", sensor.adc_value);
-                valid = list.iter_next(&mut iter);
-                seen.insert(modbus_slave_id);
-            } else {
-                valid = list.remove(&mut iter);
-            }
+            // if let Some(sensor) = sensors.get(&(modbus_slave_id)) {
+            //     // list.set(&iter,
+            //     //         &[0, 1, 2],
+            //     //         &[&sensor.modbus_slave_id, &"Sensor", &(sensor.adc_value as i32)]);
+            //     // // println!(">>{:?}", sensor.adc_value);
+            //     valid = list.iter_next(&mut iter);
+            //     seen.insert(modbus_slave_id);
+            // } else {
+            //     valid = list.remove(&mut iter);
+            // }
         }
     }
 
     for (modbus_slave_id, sensor) in sensors.iter() {
         if !seen.contains(modbus_slave_id) {
-            create_and_fill_model(list, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
+            //create_and_fill_model(list, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
         }
     }
 }
