@@ -23,8 +23,8 @@ mod tests {
     #[test]
     fn add_sensors() {
         let mut module = Module::new();
-        let sensor1 = Sensor::new(SensorType::NemotoNO2, "1.1");
-        let sensor2 = Sensor::new(SensorType::NemotoCO, "1.2");
+        let sensor1 = Sensor::new(SensorType::NemotoNO2);
+        let sensor2 = Sensor::new(SensorType::NemotoCO);
 
         assert_eq!(module.sensors.len(), 0);
         module.sensors.push(sensor1);

@@ -18,6 +18,7 @@ pub enum SensorError {
 // Rust type alias
 pub type Result<T> = result::Result<T, SensorError>;
 
+#[derive(Debug)]
 pub enum SensorType {
     /// Nemoto NO2 Messzelle, EC NAP-550 https://www.nemoto.co.jp/nse/sensor-search/nap-550.html?lang=en
     NemotoNO2,
@@ -35,12 +36,10 @@ impl fmt::Display for SensorType {
     }
 }
 
+#[derive(Debug)]
 pub struct Sensor {
-    /// ID Identifkationsnummer in der Form `n.n` Die erste Ziffer ist die Modulnummer
-    /// die zweite Ziffer die Sensornummer bezogen auf das Modul (zum Beispiel `1.1` Erstes Modul.Erster Sonsor)
-    /// Die `id` ist nicht einfach eine laufende Nummer. So hatt zum Beispiel der dritte Sensor,
-    /// der am 2. Modul als erster Sensor angeschlossen ist die id 2.1!
-    pub id: String,
+    /// ID
+    pub id: u32,
     /// Sensor Typ
     pub sensor_type: SensorType,
     /// ADC Wert    - wird vom Server Prozess über das Modbus Protokoll ausgelesen und aktualisiert
@@ -48,7 +47,7 @@ pub struct Sensor {
     /// SI Einheit
     pub si: String,
     /// Adresse des Modbus Registers für den ADC Wert
-    pub modbus_register_address: u32,
+    pub modbus_register_address: i32,
     /// Kalibrationspunkt Nullgas
     adc_value_at_nullgas: Option<u32>,
     /// Kalibrationspunkt Messgas
@@ -70,13 +69,12 @@ impl Sensor {
     /// ```
     /// use xmz_mod_touch_gui::sensor::{Sensor, SensorError, SensorType};
     ///
-    /// let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
+    /// let mut sensor = Sensor::new(SensorType::NemotoNO2);
     /// ```
-    pub fn new(sensor_type: SensorType, id: &str) -> Self {
+    pub fn new(sensor_type: SensorType) -> Self {
         match sensor_type {
             SensorType::NemotoNO2 => {
                 Sensor {
-                    id: id.to_string(),
                     sensor_type: SensorType::NemotoNO2,
                     adc_value: None,
                     si: "ppm".to_string(),
@@ -85,11 +83,11 @@ impl Sensor {
                     concentration_nullgas: Some(0),  // TODO: Read in sensor calibration data
                     concentration_messgas: Some(20),  // TODO: Read in sensor calibration data
                     modbus_register_address: 1,
+                    id: 0,
                 }
             },
             SensorType::NemotoCO => {
                 Sensor {
-                    id: id.to_string(),
                     sensor_type: SensorType::NemotoCO,
                     adc_value: None,
                     si: "ppm".to_string(),
@@ -98,6 +96,7 @@ impl Sensor {
                     concentration_nullgas: Some(0),  // TODO: Read in sensor calibration data
                     concentration_messgas: Some(280),  // TODO: Read in sensor calibration data
                     modbus_register_address: 11,
+                    id: 0,
                 }
             },
         }
@@ -117,7 +116,7 @@ impl Sensor {
     /// ```
     /// use xmz_mod_touch_gui::sensor::{Sensor, SensorError, SensorType};
     ///
-    /// let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
+    /// let mut sensor = Sensor::new(SensorType::NemotoNO2);
     /// assert_eq!(sensor.concentration(), Err(SensorError::NoADCValue));
     /// ```
     pub fn concentration(&self) -> Result<f32> {
@@ -143,11 +142,21 @@ impl Sensor {
         };
 
         let result: f32 = (y2 as f32 - y1 as f32) / (x2 as f32 - x1 as f32) * (x as f32 - x1 as f32) + y1 as f32;
+        println!("ADC{} CON@Mess{} CON@Null{} ADC@Mess{} ADC@Null{} == {}", x, y2, y1, x2, x1, result);
 
         Ok(result)
     }
 
-    pub fn update_adc(&mut self) {
+    /// `update_adc`    - Update das ADC Feld im Sensor über Modbus
+    ///
+    /// # Attributes
+    /// * `modbus_slave_id`     - Modbus Slave Adresse
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// ```
+    pub fn update_adc(&mut self, modbus_slave_id: i32) {
         let device = match env::var("XMZ_HARDWARE") {
             Ok(_) => "/dev/ttyS1",
             Err(_) => "/dev/ttyUSB0",
@@ -158,7 +167,7 @@ impl Sensor {
             Ok(_) => {
                 let mut modbus = Modbus::new_rtu(device, 9600, 'N', 8, 1);
                 //TODO: Reenable this
-                //modbus.set_slave(self.modbus_slave_id);
+                modbus.set_slave(modbus_slave_id);
                 let _ = modbus.set_debug(true);
                 let _ = modbus.rtu_set_rts(libmodbus_rs::MODBUS_RTU_RTS_DOWN);
                 let mut tab_reg: Vec<u16> = vec![];
@@ -166,7 +175,7 @@ impl Sensor {
                 match modbus.connect() {
                     Err(_) => { modbus.free(); }
                     Ok(_) => {
-                        tab_reg = modbus.read_registers(1, 1);
+                        tab_reg = modbus.read_registers(self.modbus_register_address, 1);
                     }
                 }
                 tab_reg.get(0).map(|var| self.adc_value = Some(*var));
@@ -185,7 +194,7 @@ mod tests {
 
     // Helper Funktion die ein NO2 Sensor mit default Werten zurück gibt
     fn default_no2_sensor() -> Sensor {
-        let mut sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
+        let mut sensor = Sensor::new(SensorType::NemotoNO2);
         sensor.adc_value = Some(772);
         sensor.adc_value_at_nullgas = Some(922);
         sensor.concentration_nullgas = Some(0);
@@ -196,14 +205,20 @@ mod tests {
 
     #[test]
     fn modbus_register_adresse_nemoto_no2() {
-        let sensor = Sensor::new(SensorType::NemotoNO2, "1.1");
+        let sensor = Sensor::new(SensorType::NemotoNO2);
         assert_eq!(sensor.modbus_register_address, 1);
     }
 
     #[test]
     fn modbus_register_address_nemoto_co() {
-        let sensor = Sensor::new(SensorType::NemotoCO, "1.1");
+        let sensor = Sensor::new(SensorType::NemotoCO);
         assert_eq!(sensor.modbus_register_address, 11);
+    }
+
+
+    #[test]
+    fn concentration() {
+        let sensor = Sensor::new(SensorType::NemotoNO2);
     }
 
     // ADC
@@ -243,7 +258,7 @@ mod tests {
 
     #[test]
     fn concentration_co() {
-        let mut sensor = Sensor::new(SensorType::NemotoCO, "1.1");
+        let mut sensor = Sensor::new(SensorType::NemotoCO);
         sensor.adc_value = Some(333);
         sensor.adc_value_at_nullgas = Some(114);
         sensor.concentration_nullgas = Some(0);

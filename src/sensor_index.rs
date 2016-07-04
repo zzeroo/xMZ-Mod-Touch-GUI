@@ -35,21 +35,19 @@ impl SensorIndex {
         let mut columns: Vec<gtk::TreeViewColumn> = Vec::new();
 
         let list_store = gtk::ListStore::new(&[
-            Type::I32,          // Sensor Nummer
-            Type::I32,          // Module Nummer
-            Type::I32,          // Modbus Adresse
+            Type::I32,          // ID
             Type::String,       // Sensor Typ
             Type::String,       // Konzentartion
             Type::I32,          // adc_value
         ]);
 
-        append_column("Modbus\nAdresse", &mut columns, &tree);
+        append_column("ID", &mut columns, &tree);
         append_column("Typ", &mut columns, &tree);
         append_column("Konzentration", &mut columns, &tree);
 
         for module in server.modules.iter() {
             for sensor in module.sensors.iter() {
-                //create_and_fill_model(&list_store, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
+                create_and_fill_model(&list_store, sensor.id, sensor.sensor_type.to_string(), sensor.concentration().unwrap_or(0.0).to_string(), sensor.adc_value.unwrap_or(0) as u32);
             }
         }
 
@@ -75,7 +73,7 @@ impl SensorIndex {
         vertical_layout.pack_start(&horizontal_layout, false, true, 0);
 
         let vertical_layout: Widget = vertical_layout.upcast();
-        notebook.create_tab("Sensoren Liste", &vertical_layout);
+        notebook.create_tab("Sensoren", &vertical_layout);
 
         SensorIndex {
             tree: tree,
@@ -103,11 +101,12 @@ fn append_column(title: &str, v: &mut Vec<gtk::TreeViewColumn>, tree: &gtk::Tree
     v.push(column);
 }
 
-pub fn create_and_fill_model(list_store: &gtk::ListStore, modbus_slave_id: u32, name: &str, adc_value: u32) {
+pub fn create_and_fill_model(list_store: &gtk::ListStore, id: u32, sensor_type: String, concentration: String, adc_value: u32) {
     list_store.insert_with_values(None,
-                                &[0, 1, 2],
-                                &[  &modbus_slave_id,
-                                    &name,
+                                &[0, 1, 2, 3],
+                                &[  &id,
+                                    &sensor_type,
+                                    &concentration,
                                     &adc_value
                                 ]);
 }
