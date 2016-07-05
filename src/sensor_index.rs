@@ -6,7 +6,7 @@ use gtk::prelude::{
 
 use server;
 use notebook;
-use sensor::Sensor;
+use sensor::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::collections::HashMap;
@@ -44,10 +44,14 @@ impl SensorIndex {
         append_column("ID", &mut columns, &tree);
         append_column("Typ", &mut columns, &tree);
         append_column("Konzentration", &mut columns, &tree);
+        // append_column("ADC", &mut columns, &tree);
 
         for module in server.modules.iter() {
             for sensor in module.sensors.iter() {
-                create_and_fill_model(&list_store, sensor.id, sensor.sensor_type.to_string(), sensor.concentration().unwrap_or(0.0).to_string(), sensor.adc_value.unwrap_or(0) as u32);
+                create_and_fill_model(&list_store,
+                                    sensor.id, sensor.sensor_type.to_string(),
+                                    pretty_concentration(sensor.concentration(), sensor.si.clone()),
+                                    sensor.adc_value.unwrap_or(0) as u32);
             }
         }
 

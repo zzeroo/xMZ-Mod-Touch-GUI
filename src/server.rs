@@ -75,22 +75,11 @@ impl Server {
     }
 
     pub fn refresh_all(&mut self) {
-        self.refresh_sensors();
-    }
-
-    pub fn refresh_sensors(&mut self) {
         for module in self.modules.iter_mut() {
             for sensor in module.sensors.iter_mut() {
-                println!("\nModbus Adresse: {} ADC: {:?} Konzentration: {:?}", module.modbus_slave_id, sensor.adc_value, sensor.concentration().unwrap_or(0.0));
                 sensor.update_adc(module.modbus_slave_id);
             }
         }
-        self.refresh_sensor_list();
-    }
-
-    fn refresh_sensor_list(&mut self) {
-        // self.sensor_list.entry(46).or_insert(self.modules[0].sensors[0].clone());
-        // self.sensor_list.entry(46).or_insert(Sensor::new(66));
     }
 
     pub fn get_sensor_list<'a>(&'a self) -> &'a HashMap<i32, Sensor> {

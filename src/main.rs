@@ -41,10 +41,12 @@ fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
             let id = list.get_value(&iter, 0).get::<i32>().unwrap();
             if let Some(sensor) = sensors.get(&(id as u32)) {
                 list.set(&iter,
-                        &[0, 1, 2],
-                        &[&sensor.id, &sensor.sensor_type.to_string(), &(sensor.concentration().unwrap_or(0.0).to_string())]);
-                println!("{:?}", &sensor.concentration().unwrap_or(0.0));
-                println!("{:?}", &sensor.adc_value.unwrap_or(0));
+                        &[0, 1, 2, 3],
+                        &[&sensor.id,
+                          &sensor.sensor_type.to_string(),
+                          &(pretty_concentration(sensor.concentration(), sensor.si.clone())),
+                          &(sensor.adc_value.unwrap_or(0) as u32),
+                          ]);
                 valid = list.iter_next(&mut iter);
                 seen.insert(id as u32);
             } else {
@@ -53,8 +55,8 @@ fn update_window(list: &gtk::ListStore, server: &Rc<RefCell<server::Server>>) {
         }
     }
 
-    for (modbus_slave_id, sensor) in sensors.iter() {
-        if !seen.contains(modbus_slave_id) {
+    for (id, sensor) in sensors.iter() {
+        if !seen.contains(id) {
             create_and_fill_model(list, sensor.id, sensor.sensor_type.to_string(), sensor.concentration().unwrap_or(0.0).to_string(), sensor.adc_value.unwrap_or(0) as u32);
         }
     }
@@ -67,7 +69,7 @@ fn window_setup(window: &gtk::Window) {
     window.set_default_size(1024, 600);
     let display = window.get_display().unwrap();
     let screen = display.get_screen(0);
-    screen.set_resolution(120.0);
+    screen.set_resolution(150.0);
 
     match env::var("XMZ_HARDWARE") {
         Ok(_) => {
@@ -116,7 +118,7 @@ fn main() {
 
     let list_store = sensor_index.list_store.clone();
 
-    gtk::timeout_add(1000, move || {
+    gtk::timeout_add(2000, move || {
         update_window(&list_store, &srv);
 
         glib::Continue(true)

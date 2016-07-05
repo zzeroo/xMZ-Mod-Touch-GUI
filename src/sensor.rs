@@ -5,6 +5,7 @@ use std::fs;
 use std::result;
 use std::fmt;
 
+
 #[derive(Debug, Eq, PartialEq)]
 pub enum SensorError {
     InvalidValue,
@@ -121,7 +122,7 @@ impl Sensor {
     /// ```
     pub fn concentration(&self) -> Result<f32> {
         let x = match self.adc_value {
-            None => {return Err(SensorError::NoADCValue); }
+            None => { return Err(SensorError::NoADCValue); }
             Some(value) => {value}
         };
         let y2 = match self.concentration_messgas {
@@ -142,7 +143,6 @@ impl Sensor {
         };
 
         let result: f32 = (y2 as f32 - y1 as f32) / (x2 as f32 - x1 as f32) * (x as f32 - x1 as f32) + y1 as f32;
-        println!("ADC{} CON@Mess{} CON@Null{} ADC@Mess{} ADC@Null{} == {}", x, y2, y1, x2, x1, result);
 
         Ok(result)
     }
@@ -168,7 +168,7 @@ impl Sensor {
                 let mut modbus = Modbus::new_rtu(device, 9600, 'N', 8, 1);
                 //TODO: Reenable this
                 modbus.set_slave(modbus_slave_id);
-                let _ = modbus.set_debug(true);
+                // let _ = modbus.set_debug(true);
                 let _ = modbus.rtu_set_rts(libmodbus_rs::MODBUS_RTU_RTS_DOWN);
                 let mut tab_reg: Vec<u16> = vec![];
 
@@ -186,6 +186,35 @@ impl Sensor {
         }
     }
 }
+
+/// `pretty_concentration`  - Konzentration mit gegebenen Suffix
+///
+/// # Attributes
+/// * `result`  - Result<f32> welches formatiert werden soll
+/// * `suffix`  - String der dem Result angehangen werden soll
+///
+/// # Examples
+///
+/// ```
+/// use xmz_mod_touch_gui::sensor::*;
+///
+/// let result: Result<f32> = Ok(300.0);
+/// let suffix = "ppm";
+/// assert_eq!(pretty_concentration(Ok(333.0), "ppm".to_string()), "333 ppm");
+/// ```
+pub fn pretty_concentration(result: Result<f32>, suffix: String) -> String {
+    match result {
+        Ok(result) => {
+            if result > 0.0 {
+                return format!("{} {}", ((result * 100.0).round() / 100.0), suffix);
+            } else {
+                return format!("0 {}", suffix);
+            }
+        },
+        Err(_) => "".to_string(),
+    }
+}
+
 
 
 #[cfg(test)]
