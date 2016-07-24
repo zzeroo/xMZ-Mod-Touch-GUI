@@ -6,7 +6,7 @@ use gtk::prelude::{
 
 use server;
 use notebook;
-use sensor::Sensor;
+use sensor::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::collections::HashMap;
@@ -30,23 +30,28 @@ impl SensorIndex {
         let info_button1 = info_button.clone();
 
         scroll.set_min_content_width(1024);
-        scroll.set_min_content_height(600);
+        scroll.set_min_content_height(400);
 
         let mut columns: Vec<gtk::TreeViewColumn> = Vec::new();
 
         let list_store = gtk::ListStore::new(&[
-            Type::I32,          // modbus slave id
-            Type::String,       // name (Später mal SensorType.to_string())
+            Type::I32,          // ID
+            Type::String,       // Sensor Typ
+            Type::String,       // Konzentartion
             Type::I32,          // adc_value
         ]);
 
-        append_column("modbus_slave_id", &mut columns, &tree);
-        append_column("name", &mut columns, &tree);
-        append_column("adc_value", &mut columns, &tree);
+        append_column("ID", &mut columns, &tree);
+        append_column("Typ", &mut columns, &tree);
+        append_column("Konzentration", &mut columns, &tree);
+        // append_column("ADC", &mut columns, &tree);
 
         for module in server.modules.iter() {
             for sensor in module.sensors.iter() {
-                create_and_fill_model(&list_store, sensor.modbus_slave_id as u32, &sensor.name, sensor.adc_value as u32);
+                create_and_fill_model(&list_store,
+                                    sensor.id, sensor.sensor_type.to_string(),
+                                    pretty_concentration(sensor.concentration(), sensor.si.clone()),
+                                    sensor.adc_value.unwrap_or(0) as u32);
             }
         }
 
@@ -54,7 +59,7 @@ impl SensorIndex {
         tree.set_headers_visible(true);
         scroll.add(&tree);
         let vertical_layout = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        let Horizontal_layout = gtk::Grid::new();
+        let horizontal_layout = gtk::Grid::new();
 
         tree.connect_cursor_changed(move |tree_view| {
             let selection = tree_view.get_selection();
@@ -67,12 +72,12 @@ impl SensorIndex {
         info_button.set_sensitive(false);
 
         vertical_layout.pack_start(&scroll, true, true, 0);
-        Horizontal_layout.attach(&info_button, 0, 0, 2, 1);
-        Horizontal_layout.set_column_homogeneous(true);
-        vertical_layout.pack_start(&Horizontal_layout, false, true, 0);
+        horizontal_layout.attach(&info_button, 0, 0, 2, 1);
+        horizontal_layout.set_column_homogeneous(true);
+        vertical_layout.pack_start(&horizontal_layout, false, true, 0);
 
         let vertical_layout: Widget = vertical_layout.upcast();
-        notebook.create_tab("Sensoren Liste", &vertical_layout);
+        notebook.create_tab("Sensoren", &vertical_layout);
 
         SensorIndex {
             tree: tree,
@@ -100,11 +105,12 @@ fn append_column(title: &str, v: &mut Vec<gtk::TreeViewColumn>, tree: &gtk::Tree
     v.push(column);
 }
 
-pub fn create_and_fill_model(list_store: &gtk::ListStore, modbus_slave_id: u32, name: &str, adc_value: u32) {
+pub fn create_and_fill_model(list_store: &gtk::ListStore, id: u32, sensor_type: String, concentration: String, adc_value: u32) {
     list_store.insert_with_values(None,
-                                &[0, 1, 2],
-                                &[  &modbus_slave_id,
-                                    &name,
+                                &[0, 1, 2, 3],
+                                &[  &id,
+                                    &sensor_type,
+                                    &concentration,
                                     &adc_value
                                 ]);
 }
