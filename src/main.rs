@@ -19,15 +19,17 @@ fn update_window(list: &gtk::ListStore) {
 }
 
 fn window_setup(window: &gtk::Window) {
-    // Window properties
-    // TODO: PKG_CARGO_ENV Description einbinden
-    let window_title = "xMZ-Mod-Touch GUI ".to_string() + env!("CARGO_PKG_VERSION");
+    // Window basic properties
+    let window_title = format!("{} {}", env!("CARGO_PKG_DESCRIPTION"), env!("CARGO_PKG_VERSION"));
     window.set_title(&window_title);
     window.set_default_size(1024, 600);
+    window.set_border_width(10);
+
     let display = window.get_display().unwrap();
     let screen = display.get_screen(0);
     screen.set_resolution(150.0);
 
+    // env! Macro funktioniert hier nicht wenn XMZ_HARDWARE nicht existiert.
     match env::var("XMZ_HARDWARE") {
         Ok(_) => {
             window.fullscreen();
