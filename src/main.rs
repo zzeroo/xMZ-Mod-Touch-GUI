@@ -46,7 +46,7 @@ fn window_setup(window: &gtk::Window) {
 
     let display = window.get_display().unwrap();
     let screen = display.get_screen(0);
-    screen.set_resolution(150.0);
+    screen.set_resolution(130.0);
 
     // env! Macro funktioniert hier nicht wenn XMZ_HARDWARE nicht existiert.
     match env::var("XMZ_HARDWARE") {
