@@ -1,21 +1,36 @@
 extern crate gdk;
 extern crate glib;
 extern crate gtk;
+extern crate rustc_serialize;
+extern crate xmz_client;
+extern crate xmz_server;
 
 use gdk::Screen;
-use gtk::{Builder, Window};
+use gtk::{ Builder, CellRendererText, TreeStore, TreeView, TreeViewColumn, Window };
 use gtk::prelude::*;
+use rustc_serialize::json;
 use std::cell::RefCell;
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::rc::Rc;
-use std::collections::{HashMap, HashSet};
+use xmz_client::client::Client;
+use xmz_server::module::{Module, ModuleType};
+use xmz_server::sensor::Sensor;
 
-fn update_window(list: &gtk::ListStore) {
-    // for (id, sensor) in sensors.iter() {
-    //     if !seen.contains(id) {
-    //         create_and_fill_model(list, sensor.id, sensor.sensor_type.to_string(), sensor.concentration().unwrap_or(0.0).to_string(), sensor.adc_value.unwrap_or(0) as u32);
-    //     }
-    // }
+fn update_window(store: &gtk::TreeStore, client: &mut Client) {
+    // Ugly hack, but agile like I
+    store.clear();
+    let modules: Vec<Module> = json::decode(&client.execute("module list").unwrap()).unwrap();
+
+    for module in modules {
+        let module_iter = store.insert_with_values(None, None, &[1],
+                                        &[&format!("{:?}", module.modbus_slave_id())]);
+
+        for sensor in module.sensors {
+            store.insert_with_values(Some(&module_iter), None, &[1],
+                                        &[&format!("{:?}", sensor.concentration())]);
+        }
+    }
 }
 
 fn window_setup(window: &gtk::Window) {
@@ -59,14 +74,36 @@ fn main() {
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
     window_setup(&window);
 
+    let module_tree = TreeView::new();
+    let module_column_types = [String::static_type(), String::static_type()];
+    let module_store = TreeStore::new(&module_column_types);
+    let col = TreeViewColumn::new();
+    let text_renderer = CellRendererText::new();
+
+    // TODO: Module Namen oder Beschreibung ist hier besser
+    col.set_title("Modbus Adresse");
+    col.pack_start(&text_renderer, true);
+    col.add_attribute(&text_renderer, "text", 1);
+    module_tree.append_column(&col);
+
+    module_tree.set_model(Some(&module_store));
+    module_tree.set_headers_visible(true);
+
+    let mut client = Client::new();
+    update_window(&module_store, &mut client);
+
+
     let v_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
-    // v_box.pack_start(&notebook.notebook, true, true, 0);
-
+    v_box.add(&module_tree);
     window.add(&v_box);
-    window.show_all();
 
-    gtk::timeout_add(2000, move || {
-        // update_window(&list_store);
+    window.show_all();
+    module_tree.expand_all();
+
+    // Timer zum Update alle Sekunden
+    gtk::timeout_add(1000, move || {
+        update_window(&module_store, &mut client);
+        module_tree.expand_all();
 
         glib::Continue(true)
     });
