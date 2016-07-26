@@ -1,54 +1,46 @@
+Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform.
 
+Diese GUI fragt über Nanomsg Sockets den [Server][server] der 'xMZ-Mod-Touch' ab.
+Außerdem ist es möglich diverse Parameter von der GUI an den Server zu senden,
+zum Beispiel die Modbus Konfiguration ändern, oder neu Module anlegen.
 
-# Compilation auf der xMZ-Mod-Touch Hardware
-## Vorbereitungen
-### Installation Rust
-
-Leider geht das Standard Komando `curl https://sh.rustup.rs -sSf | sh` nicht
-mit den nötigen Parametern `--default-toolchain nightly` und `-y`
-Die Installation ist aber mit einer lokalen Kopie von rustup.sh möglich.
-```
-curl https://sh.rustup.rs -sSf > rustup.sh
-chmod +x rustup.sh
-./rustup.sh --default-toolchain nightly -y
-rm rustup.sh
-```
-
-Zum Aktivieren einfach das `env` File aus dem `.cargo` Verzeichnis sourcen.
-```
-source ~/.cargo/env
-```
-
-### Gtk Bibliotheken
+# Anhängigkeiten installieren
+## Gtk Bibliotheken
 
 ```
 apt-get install libgtk-3-dev
 ```
 
-# Auschecken des Quellcodes und Compilation
+# Build, Compilation auf der 'xMZ-Mod-Touch'-Hardware
+Die folgenden Befehle gehen davon aus das das Meta Git Repository
+['xMZ-Mod-Touch-Software'][1] im HOME Verzeichnis ausgecheckt wurde.
 
-```
-git clone https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
-cd xMZ-Mod-Touch-GUI
+```bash
+cd
+cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
 cargo build --release
 ```
 
 # Installation
-```
-cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
+## Programmdateien installieren
+
+```bash
+cd
+cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
+cp target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
 ```
 
-## Systemd
-### GUI Systemd Unit file
+## Systemd Unit File anlegen
+Dieser Schritt muss nur ein mal ausgeführt werden. Im Zweifel kann der Befehl aber
+immer wieder aufgerufen werden (zum Beispiel im Update Fall).
 
-```
-cat <<EOF >/etc/systemd/system/xmz-mod-touch-GUI.service
+```bash
+cat <<EOF >/etc/systemd/system/xmz-mod-touch-gui.service
 #
-# xMZ-Mod-Touch-GUI systemd service unit file
+# xMZ-Mod-Touch-GUI systemd unit file
 #
-
 [Unit]
-Description=xMZ-Mod-Touch Graphical User Interface (GUI)
+Description="xMZ-Mod-Touch-GUI (Graphical User Interface) der 'xMZ-Mod-Touch'-Platform"
 # Wants=syslog.target dbus.service
 After=weston.service
 
@@ -57,43 +49,66 @@ Environment="XDG_RUNTIME_DIR=/run/shm/wayland"
 Environment="GDK_BACKEND=wayland"
 Environment="XMZ_HARDWARE=0.1.0"
 Environment="LANG=de_DE.UTF-8"
-ExecStart=/usr/bin/xmz_mod_touch_gui
+ExecStart=/usr/bin/xmz-mod-touch-gui
 Restart=always
 RestartSec=10
 
 [Install]
-Alias=xmz.service
+Alias=xmz-gui.service
 WantedBy=graphical.target
 EOF
 ```
 
-```
-systemctl daemon-reload
+Danach muss der service noch aktiviert ...
+
+```bash
+systemctl enable xmz-mod-touch-gui.service
+# systemctl daemon-reload # Dieser Befehl ist nur bei nachträglichen Änderungen am Unit File nötig!
 ```
 
-```
-systemctl enable xmz-mod-touch-GUI.service
+... und gestartet werden.
+
+```bash
+systemctl restart xmz-mod-touch-gui.service
 ```
 
-```
-systemctl start xmz-mod-touch-GUI.service
-```
+# Update des Entwicklungssystems
+Für ein Update muss zunächst die laufende Instanz beendet werden `systemctl stop`,
+danach wird in das Verzeichnis mit dem Quellcode gewechselt, der aktuelle
+Softwarestand mit `git pull` herunter geladen und anschließend die Software
+gebaut.
+Angeschlossen wird das Ganze indem die neu erstellen Binaries nach `/usr/bin`
+kopiert werden und die Software neu gestartet wird `systemctl start`.
 
-
-# Update Code auf der xMZ-Mod-Touch Hardware
-
-```
-cd xMZ-Mod-Touch-GUI
+```bash
+# systemctl daemon-reload # Evtl. wenn das systemd Unit File geändert wurde
+systemctl stop xmz-mod-touch-gui.service
+cd
+cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
 git pull
 cargo build --release
-systemctl stop xmz-mod-touch-GUI.service
-cp target/release/xmz_mod_touch_gui /usr/bin/xmz_mod_touch_gui
-systemctl start xmz-mod-touch-GUI.service
+cp target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
+
+systemctl start xmz-mod-touch-gui.service
 ```
 
+
+# Tests
+
+Optional können auch die Tests aufgerufen werden.
+
+```bash
+cd
+cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
+cargo test
+```
 
 
 # Links
-## Rust Dokumentation lokal
-* file:///mnt/src/xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI/target/doc/gtk/trait.WindowExt.html#tymethod.fullscreen
-* file:///home/smueller/src/Rust/gtk/target/doc/gtk/index.html
+
+* https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Software
+* https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server
+
+
+[1]: https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Software
+[server]: https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server
