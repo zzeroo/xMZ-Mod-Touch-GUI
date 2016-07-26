@@ -20,17 +20,21 @@ use xmz_server::sensor::Sensor;
 fn update_window(store: &gtk::TreeStore, client: &mut Client) {
     // Ugly hack, but agile like I
     store.clear();
-    let modules: Vec<Module> = json::decode(&client.execute("module list").unwrap()).unwrap();
+    &client.execute("module list").map(|data| {
+        json::decode(&data).map(|modules: Vec<Module>| {
+            for module in modules {
+                let module_iter = store.insert_with_values(None, None, &[1],
+                                                &[&format!("{:?}", module.modbus_slave_id())]);
 
-    for module in modules {
-        let module_iter = store.insert_with_values(None, None, &[1],
-                                        &[&format!("{:?}", module.modbus_slave_id())]);
-
-        for sensor in module.sensors {
-            store.insert_with_values(Some(&module_iter), None, &[1],
-                                        &[&format!("{:?}", sensor.concentration())]);
-        }
-    }
+                for sensor in module.sensors {
+                    store.insert_with_values(Some(&module_iter), None, &[1],
+                                                &[&format!("{:.02}", sensor.concentration().unwrap_or(0.0))]);
+                }
+            }
+        });
+    });
+    // let modules: Vec<Module> = json::decode(data.unwrap()).unwrap();
+    //
 }
 
 fn window_setup(window: &gtk::Window) {
@@ -101,7 +105,7 @@ fn main() {
     module_tree.expand_all();
 
     // Timer zum Update alle Sekunden
-    gtk::timeout_add(1000, move || {
+    gtk::timeout_add(2000, move || {
         update_window(&module_store, &mut client);
         module_tree.expand_all();
 
