@@ -1,6 +1,6 @@
 [package]
 name = "xmz_mod_touch_gui"
-version = "0.8.0"
+version = "0.9.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "xMZ-Mod-Touch GUI"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
@@ -13,9 +13,12 @@ version = "0.1.0"
 features = ["v3_16"]
 
 [dependencies]
-gtk-sys = "0.3.1"
-pango-sys = "0.3.1"
-glib = "0.1.0"
 gdk = "0.5.0"
+glib = "0.1.0"
+gtk-sys = "0.3.1"
 libc = "0.2"
-libmodbus-rs = { git = "https://github.com/zzeroo/libmodbus-rs.git" }
+nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
+pango-sys = "0.3.1"
+rustc-serialize = "0.3"
+xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "v0.5.x", version = "0.5.0" }
+xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git", branch = "v0.2.0", version = "0.2.2" }
