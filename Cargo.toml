@@ -20,5 +20,5 @@ libc = "0.2"
 nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
 pango-sys = "0.3.1"
 rustc-serialize = "0.3"
-xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "v0.5.x", version = "0.5.0" }
-xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git", branch = "v0.2.0", version = "0.2.2" }
+xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git", branch = "master", version = ">=0.2.2" }
+xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = ">=0.5.0" }
