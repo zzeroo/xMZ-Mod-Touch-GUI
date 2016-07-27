@@ -24,11 +24,11 @@ fn update_window(store: &gtk::TreeStore, client: &mut Client) {
         json::decode(&data).map(|modules: Vec<Module>| {
             for module in modules {
                 let module_iter = store.insert_with_values(None, None, &[1],
-                                                &[&format!("{:?}", module.modbus_slave_id())]);
+                                                &[&format!("{:?} - {}", module.modbus_slave_id(), module.module_type())]);
 
                 for sensor in module.sensors {
                     store.insert_with_values(Some(&module_iter), None, &[1],
-                                                &[&format!("{:.02}", sensor.concentration().unwrap_or(0.0))]);
+                                                &[&format!("{:.02} {}", sensor.concentration().unwrap_or(0.0), sensor.si())]);
                 }
             }
         });
