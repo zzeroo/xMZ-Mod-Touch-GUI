@@ -20,6 +20,7 @@ use xmz_server::sensor::Sensor;
 fn update_window(store: &gtk::TreeStore, client: &mut Client) {
     // Ugly hack, but agile like I
     store.clear();
+
     &client.execute("module list").map(|data| {
         json::decode(&data).map(|modules: Vec<Module>| {
             for module in modules {
@@ -33,8 +34,6 @@ fn update_window(store: &gtk::TreeStore, client: &mut Client) {
             }
         });
     });
-    // let modules: Vec<Module> = json::decode(data.unwrap()).unwrap();
-    //
 }
 
 fn window_setup(window: &gtk::Window) {
