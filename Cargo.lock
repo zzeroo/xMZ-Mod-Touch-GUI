@@ -1,14 +1,11 @@
 [root]
 name = "xmz_mod_touch_gui"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "gdk 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "glib 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gtk 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "gtk-sys 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "nanomsg 0.7.0 (git+https://github.com/thehydroimpulse/nanomsg.rs.git)",
- "pango-sys 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "xmz_client 0.2.2 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git)",
  "xmz_server 0.5.1 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)",
