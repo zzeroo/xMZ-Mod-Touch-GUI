@@ -29,6 +29,15 @@ pub fn launch() {
     let builder = gtk::Builder::new_from_string(include_str!("interface.glade"));
     let window: gtk::Window                         = builder.get_object("main_window").unwrap();
     let main_window_stack: gtk::Stack               = builder.get_object("main_window_stack").unwrap();
+    let info_bar: gtk::InfoBar                      = builder.get_object("info_bar").unwrap();
+
+
+    // Hide info_bar
+    info_bar.connect_response(move |foo, _| {
+        println!("{:?}", foo);
+        foo.hide()
+    });
+
 
 
     window_setup(&window);
