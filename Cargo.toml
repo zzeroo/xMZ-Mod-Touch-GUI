@@ -2,7 +2,7 @@
 name = "xmz_mod_touch_gui"
 version = "0.10.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
-description = "xMZ-Mod-Touch GUI"
+description = "Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
 homepage = "https://gaswarnanlagen.com/xmz-mod-touch"
 repository = "https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git"
