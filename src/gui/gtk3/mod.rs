@@ -14,9 +14,9 @@ fn window_setup(window: &gtk::Window) {
     let screen = display.get_screen(0);
     screen.set_resolution(130.0);
 
-    match option_env!("XMZ_HARDWARE") {
-        Some(_) => { window.fullscreen(); }
-        None    => {}
+    match ::std::env::var("XMZ_HARDWARE") {
+        Ok(_) => { window.fullscreen(); }
+        Err(_)=> {}
     }
 }
 
