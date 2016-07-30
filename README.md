@@ -1,4 +1,4 @@
-Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform.
+Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform
 
 Diese GUI fragt über Nanomsg Sockets den [Server][server] der 'xMZ-Mod-Touch' ab.
 Außerdem ist es möglich diverse Parameter von der GUI an den Server zu senden,
