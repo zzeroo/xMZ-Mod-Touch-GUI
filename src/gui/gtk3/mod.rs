@@ -1,7 +1,9 @@
+
 use gtk::{self};
 use gtk::prelude::*;
 use gdk::enums::key;
 
+mod module_index;
 
 // Basic Setup des Windows
 fn window_setup(window: &gtk::Window) {
@@ -35,17 +37,21 @@ pub fn launch() {
 
 
 
-    // Hide info_bar
-    info_bar.connect_response(move |info_bar, _| {
-        info_bar.hide()
-    });
+    {// Hide info_bar
+        let info_bar = info_bar.clone();
+        info_bar.connect_response(move |info_bar, _| {
+            info_bar.hide()
+        });
+    }
+
+    // Module Index aufbauen
+    module_index::setup(&builder);
 
 
-
+    // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_setup(&window);
-    window.show_all();
 
-    // hide info_bar
+    window.show_all();
     info_bar.hide();
 
     // Beende Programm wenn das Fenster geschlossen wurde

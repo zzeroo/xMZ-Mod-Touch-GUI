@@ -21,7 +21,7 @@ dependencies = [
 
 [[package]]
 name = "ansi_term"
-version = "0.7.5"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -49,6 +49,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "bitflags"
 version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "bitflags"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -83,11 +88,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "clap"
-version = "2.9.3"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "ansi_term 0.7.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "bitflags 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ansi_term 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "strsim 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "term_size 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -469,9 +474,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "xmz_client"
 version = "0.2.2"
-source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git#930fd4a0ceb6298751c76ad5d0a822081cacddb1"
+source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git#b6f1b124359591069c427a5e3bc963a135248026"
 dependencies = [
- "clap 2.9.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clap 2.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "nanomsg 0.7.0 (git+https://github.com/thehydroimpulse/nanomsg.rs.git)",
  "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "xmz_server 0.5.1 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)",
@@ -480,7 +485,7 @@ dependencies = [
 [[package]]
 name = "xmz_server"
 version = "0.5.1"
-source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git#5dcba58343bfa11c4f2ee95183922361f1e9d8c1"
+source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git#acb2a7fcf2f2051b00043f827fef2964528bc145"
 dependencies = [
  "libmodbus-rs 0.1.5 (git+https://github.com/zzeroo/libmodbus-rs.git)",
  "nanomsg 0.7.0 (git+https://github.com/thehydroimpulse/nanomsg.rs.git)",

@@ -129,11 +129,20 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkTreeView" id="modules_treeview">
+                          <object class="GtkScrolledWindow" id="scroll_module_index">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <property name="shadow_type">in</property>
+                            <property name="min_content_width">1024</property>
+                            <property name="min_content_height">400</property>
+                            <child>
+                              <object class="GtkTreeView" id="modules_treeview">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                           <packing>
@@ -145,7 +154,7 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                       </object>
                       <packing>
                         <property name="name">module_index</property>
-                        <property name="title" translatable="yes">Übersicht</property>
+                        <property name="title" translatable="yes">Übersicht Module</property>
                       </packing>
                     </child>
                     <child>
