@@ -2,6 +2,7 @@
 use gtk::{self};
 use gtk::prelude::*;
 use gdk::enums::key;
+use xmz_client::client::Client;
 
 mod module_index;
 
@@ -44,8 +45,9 @@ pub fn launch() {
         });
     }
 
+    let mut client = Client::new();
     // Module Index aufbauen
-    module_index::setup(&builder);
+    module_index::setup(&builder, &mut client);
 
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
