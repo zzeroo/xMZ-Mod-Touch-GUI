@@ -14,12 +14,43 @@ use xmz_server::sensor::{Sensor, SensorType};
 use xmz_client::client::Client;
 
 
+fn update_window(list: &TreeStore) {
+    let module = default_module();
+
+    if let Some(mut iter) = list.get_iter_first() {
+        let mut valid = true;
+        while valid {
+            let id = list.get_value(&iter, 0).get::<i64>().unwrap_or(0) as usize;
+            println!("{}", id);
+            if let Some(m) = module.get(id) {
+                list.set(   &iter,
+                            &[1, 2],
+                            &[&m.modbus_slave_id(), &m.module_type()]);
+                valid = list.iter_next(&mut iter);
+            } else {
+                valid = list.remove(&mut iter);
+            }
+            valid = false;
+        }
+    }
+}
+
+
 fn create_and_fill_model(modules: &Vec<Module>) -> TreeStore {
-    // Modbus Slave Id, ModuleType, SensorType, Konzentration, SI Einheit
-    let model = TreeStore::new(&[u32::static_type(), String::static_type(), String::static_type(), String::static_type(), String::static_type(), String::static_type(), ]);
+    //                            ModuleID,           Modbus Slave Id,        ModuleType,
+    let model = TreeStore::new(&[ u32::static_type(), String::static_type(), String::static_type(),
+    //                            SensorType,            Konzentration,          SI Einheit
+                                  String::static_type(), String::static_type(), String::static_type(), ]);
 
     for (i, module) in modules.iter().enumerate() {
-        model.insert_with_values(None, None, &[0, 1, 2], &[&(i as u32 + 1), &module.modbus_slave_id(), &module.module_type()]);
+        let module_iter = model.insert_with_values(None, None, &[0, 1, 2], &[&(i as u32 + 1), &module.modbus_slave_id(), &module.module_type()]);
+        for (i, sensor) in module.sensors.iter().enumerate() {
+            model.insert_with_values(Some(&module_iter), None, &[0, 2, 3, 4], &[ &(i as u32 + 1),
+                                                                                 &sensor.sensor_type(),
+                                                                                 &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
+                                                                                 &sensor.si(),
+                                                                              ]);
+        }
     }
     model
 }
@@ -41,18 +72,18 @@ fn create_and_setup_view() -> TreeView {
     append_column(&tree, 0);
     append_column(&tree, 1);
     append_column(&tree, 2);
+
+    append_column(&tree, 3);
+    append_column(&tree, 4);
+    append_column(&tree, 5);
     tree
 }
 
-fn create_module_default() -> Vec<Module> {
+fn default_module() -> Vec<Module> {
     let mut ret_val = vec![];
 
-    for _ in (1..11) {
-        let mut module = Module::new(ModuleType::RAGAS_CO_NO2);
-        let sensor1 = Sensor::new(SensorType::NemotoNO2);
-        let sensor2 = Sensor::new(SensorType::NemotoCO);
-        module.sensors.push(sensor1); module.sensors.push(sensor2);
-        ret_val.push(module);
+    for _ in 1..11 {
+        ret_val.push(Module::new(ModuleType::RAGAS_CO_NO2));
     }
 
     ret_val
@@ -85,9 +116,11 @@ fn main() {
 
     let tree = create_and_setup_view();
 
-    let modules = create_module_default();
+    let modules = default_module();
 
     let model = create_and_fill_model(&modules);
+
+    update_window(&model);
 
     // Set Model im View
     tree.set_model(Some(&model));
