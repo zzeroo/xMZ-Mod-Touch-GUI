@@ -13,9 +13,18 @@ use xmz_server::module::{Module, ModuleType};
 use xmz_server::sensor::{Sensor, SensorType};
 use xmz_client::client::Client;
 
+fn test_treestore(list: &TreeStore) -> i32 {
+    let mut num: i32 = 0;
+
+    if let Some(mut iter) = list.get_iter_first() {
+        num = list.iter_n_children(None);
+        println!("{:?}", num);
+    }
+    num
+}
 
 fn update_window(list: &TreeStore) {
-    let module = default_module();
+    let module = make_module(6);
 
     if let Some(mut iter) = list.get_iter_first() {
         let mut valid = true;
@@ -65,6 +74,7 @@ fn append_column(tree: &TreeView, id: i32) {
     tree.append_column(&column);
 }
 
+// Erzeugt ein TreeView mit 6 Text Spalten, mit nicht sichtbaren Spaltenköpfen 
 fn create_and_setup_view() -> TreeView {
     let tree = TreeView::new();
 
@@ -89,13 +99,17 @@ fn default_module() -> Vec<Module> {
     ret_val
 }
 
-
-fn main() {
-    if gtk::init().is_err() {
-        println!("Failed to initialise Gtk3.");
-        return;
+fn make_module(num: i32) -> Vec<Module> {
+    let mut ret_val = vec![];
+    for _ in 1..num {
+        ret_val.push(Module::new(ModuleType::RAGAS_CO_NO2));
     }
+    ret_val
+}
 
+
+// Basis Fenster erstellen und einigen Eigenschaften und Attribute einrichten.
+fn create_and_setup_window() -> Window {
     let window = Window::new(WindowType::Toplevel);
 
     window.set_title("TreeView Tests");
@@ -111,16 +125,27 @@ fn main() {
         Inhibit(false)
     });
 
+    window
+}
+
+
+fn main() {
+    if gtk::init().is_err() {
+        println!("Failed to initialise Gtk3.");
+        return;
+    }
+
+    let window = create_and_setup_window();
+
     // Verticales Layout für den TreeView und evtl. weitere Widgets
     let vertical_layout = gtk::Box::new(Orientation::Vertical, 0);
 
     let tree = create_and_setup_view();
-
     let modules = default_module();
-
     let model = create_and_fill_model(&modules);
 
     update_window(&model);
+    test_treestore(&model);
 
     // Set Model im View
     tree.set_model(Some(&model));
@@ -130,6 +155,8 @@ fn main() {
     // gtk::Box in Window Container packen
     window.add(&vertical_layout);
 
+    // Alles anzeigen
     window.show_all();
+    // und main loop starten.
     gtk::main();
 }
