@@ -48,15 +48,6 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     }
 }
 
-fn create_and_fill_model(treestore: &TreeStore, module: &Module, id: usize) {
-    treestore.insert_with_values(None,
-                                 None,
-                                 &[0, 1, 2],
-                                 &[&(id as u32 + 1),
-                                   &module.modbus_slave_id(),
-                                   &module.module_type()]);
-}
-
 // Beispiel Daten `num` Module, mit je 2 Sensoren
 //
 fn create_module(num: u32) -> Vec<Module> {
@@ -113,7 +104,7 @@ fn create_and_setup_treeview() -> TreeView {
     treeview
 }
 
-fn create_and_fill_treestore(module: &Vec<Module>) -> TreeStore {
+fn create_and_fill_treestore(modules: &Vec<Module>) -> TreeStore {
     let treestore = TreeStore::new(&[u32::static_type(), // Module::Module ID
                                      String::static_type(), // Module::Modbus Slave ID
                                      String::static_type(), // Module::ModuleType
@@ -121,26 +112,30 @@ fn create_and_fill_treestore(module: &Vec<Module>) -> TreeStore {
                                      String::static_type(), // Sensor::Konzentration
                                      String::static_type() /* Sensor::SI Einheit */]);
 
-    for (i, module) in module.iter().enumerate() {
-        let module_iter = treestore.insert_with_values(None,
-                                                       None,
-                                                       &[0, 1, 2],
-                                                       &[&(i as u32 + 1),
-                                                         &module.modbus_slave_id(),
-                                                         &module.module_type()]);
-        for (i, sensor) in module.sensors.iter().enumerate() {
-            treestore.insert_with_values(Some(&module_iter),
-                                         None,
-                                         &[0, 2, 3, 4],
-                                         &[&(i as u32 + 1),
-                                           &sensor.sensor_type(),
-                                           &format!("{:.02}",
-                                                    sensor.concentration().unwrap_or(0.0)),
-                                           &sensor.si()]);
-        }
+    for (id, module) in modules.iter().enumerate() {
+        create_and_fill_model(&treestore, &module, id);
     }
 
     treestore
+}
+
+// Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
+fn create_and_fill_model(treestore: &TreeStore, module: &Module, id: usize) {
+    let module_iter = treestore.insert_with_values(None,
+                                                   None,
+                                                   &[0, 1, 2],
+                                                   &[&(id as u32 + 1),
+                                                     &module.modbus_slave_id(),
+                                                     &module.module_type()]);
+    for (i, sensor) in module.sensors.iter().enumerate() {
+        treestore.insert_with_values(Some(&module_iter),
+                                     None,
+                                     &[0, 2, 3, 4],
+                                     &[&(i as u32 + 1),
+                                       &sensor.sensor_type(),
+                                       &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
+                                       &sensor.si()]);
+    }
 }
 
 // Basis Fenster erstellen und einige Attribute und Funktionen einrichten.
@@ -195,7 +190,7 @@ fn main() {
     let treestore1 = treestore.clone();
     let window1 = window.clone();
     gtk::timeout_add(1000, move || {
-        let modules = create_module(8);
+        let modules = create_module(9);
 
         update_treestore(&treestore1, &modules);
 
