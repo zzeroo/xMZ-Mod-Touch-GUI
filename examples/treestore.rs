@@ -3,6 +3,7 @@ extern crate gtk;
 extern crate gdk;
 extern crate glib;
 extern crate xmz_server;
+extern crate rand;
 
 use gtk::prelude::*;
 use gtk::{Orientation, TreeStore, TreeView, TreeViewColumn, CellRendererText, Window,
@@ -11,16 +12,12 @@ use gdk::enums::key;
 use xmz_server::sensor::{Sensor, SensorType};
 use xmz_server::module::{Module, ModuleType};
 use std::collections::HashSet;
+use rand::distributions::{IndependentSample, Range};
 
 
 // Update TreeStore mit gegebenen Model
 fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     let mut seen: HashSet<usize> = HashSet::new();
-
-    let num_module = modules.len();
-    println!("Anzahl Module: {}", num_module);
-    let num_treestore = treestore.iter_n_children(None);
-    println!("TreeStore Clients: {:?}", num_treestore);
 
     if let Some(mut iter) = treestore.get_iter_first() {
         let mut valid = true;
@@ -36,9 +33,6 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
                 valid = treestore.remove(&mut iter);
             }
         }
-        let num_treestore = treestore.iter_n_children(None);
-        println!("TreeStore Clients: {:?}", num_treestore);
-        println!("seen: {:?}", seen);
     }
 
     for (id, module) in modules.iter().enumerate() {
@@ -66,7 +60,34 @@ fn create_module(num: u32) -> Vec<Module> {
 }
 
 // Random Modules mit je 2 Sensoren erzeugen
-fn create_module_random() {}
+fn create_module_random() -> Vec<Module> {
+    let mut modules: Vec<Module> = vec![];
+
+    let mut rng = rand::thread_rng();
+    let range_modules = Range::new(1, 11);
+    let range_sensors = Range::new(0, 3);
+
+    let num_modules = range_modules.ind_sample(&mut rng);
+    let num_sensors = range_sensors.ind_sample(&mut rng);
+
+    for _ in 0..num_modules {
+        let mut module = Module::new(ModuleType::RAGAS_CO_NO2);
+
+        for i in 0..num_sensors {
+            if i % 2 == 0 {
+                let sensor = Sensor::new(SensorType::NemotoNO2);
+                module.sensors.push(sensor);
+            } else {
+                let sensor = Sensor::new(SensorType::NemotoCO);
+                module.sensors.push(sensor);
+            }
+        }
+        modules.push(module);
+    }
+
+    // Return value
+    modules
+}
 
 // Helper Funktion zum Anfügen weiterer Spalten (columns)
 fn append_column(treeview: &TreeView, id: i32) {
@@ -174,9 +195,9 @@ fn main() {
     // Erzeuge ein neues TreeView
     let treeview = create_and_setup_treeview();
     // Beispieldaten
-    let module = create_module(4);
+    let modules = create_module_random();
     // TreeStore
-    let treestore = create_and_fill_treestore(&module);
+    let treestore = create_and_fill_treestore(&modules);
 
     // Verbinde View und Model (TreeStore)
     treeview.set_model(Some(&treestore));
@@ -190,7 +211,7 @@ fn main() {
     let treestore1 = treestore.clone();
     let window1 = window.clone();
     gtk::timeout_add(1000, move || {
-        let modules = create_module(9);
+        let modules = create_module_random();
 
         update_treestore(&treestore1, &modules);
 
