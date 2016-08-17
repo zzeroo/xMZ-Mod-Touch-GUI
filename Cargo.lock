@@ -3,6 +3,7 @@ name = "xmz_mod_touch_gui"
 version = "0.10.0"
 dependencies = [
  "gdk 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glib 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gtk 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "nanomsg 0.7.0 (git+https://github.com/thehydroimpulse/nanomsg.rs.git)",
