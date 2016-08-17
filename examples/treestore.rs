@@ -1,6 +1,7 @@
 
 extern crate gtk;
 extern crate gdk;
+extern crate glib;
 extern crate xmz_server;
 
 use gtk::prelude::*;
@@ -9,14 +10,59 @@ use gtk::{Orientation, TreeStore, TreeView, TreeViewColumn, CellRendererText, Wi
 use gdk::enums::key;
 use xmz_server::sensor::{Sensor, SensorType};
 use xmz_server::module::{Module, ModuleType};
+use std::collections::HashSet;
 
 
-// Beispiel Daten 10 Module, 20 Sensoren
+// Update TreeStore mit gegebenen Model
+fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+    let mut seen: HashSet<usize> = HashSet::new();
+
+    let num_module = modules.len();
+    println!("Anzahl Module: {}", num_module);
+    let num_treestore = treestore.iter_n_children(None);
+    println!("TreeStore Clients: {:?}", num_treestore);
+
+    if let Some(mut iter) = treestore.get_iter_first() {
+        let mut valid = true;
+        while valid {
+            let id = treestore.get_value(&iter, 0).get::<u32>().unwrap() as usize;
+            if let Some(module) = modules.get(id - 1) {
+                treestore.set(&iter,
+                              &[0, 1, 2],
+                              &[&(id as u32), &module.modbus_slave_id(), &module.module_type()]);
+                valid = treestore.iter_next(&mut iter);
+                seen.insert(id);
+            } else {
+                valid = treestore.remove(&mut iter);
+            }
+        }
+        let num_treestore = treestore.iter_n_children(None);
+        println!("TreeStore Clients: {:?}", num_treestore);
+        println!("seen: {:?}", seen);
+    }
+
+    for (id, module) in modules.iter().enumerate() {
+        if !seen.contains(&(id + 1)) {
+            create_and_fill_model(treestore, &module, id);
+        }
+    }
+}
+
+fn create_and_fill_model(treestore: &TreeStore, module: &Module, id: usize) {
+    treestore.insert_with_values(None,
+                                 None,
+                                 &[0, 1, 2],
+                                 &[&(id as u32 + 1),
+                                   &module.modbus_slave_id(),
+                                   &module.module_type()]);
+}
+
+// Beispiel Daten `num` Module, mit je 2 Sensoren
 //
-fn create_module() -> Vec<Module> {
+fn create_module(num: u32) -> Vec<Module> {
     let mut modules: Vec<Module> = vec![];
 
-    for _ in 1..11 {
+    for _ in 1..num + 1 {
         let sensor1 = Sensor::new(SensorType::NemotoNO2);
         let sensor2 = Sensor::new(SensorType::NemotoCO);
         let mut module = Module::new(ModuleType::RAGAS_CO_NO2);
@@ -27,6 +73,9 @@ fn create_module() -> Vec<Module> {
     // Return value
     modules
 }
+
+// Random Modules mit je 2 Sensoren erzeugen
+fn create_module_random() {}
 
 // Helper Funktion zum Anfügen weiterer Spalten (columns)
 fn append_column(treeview: &TreeView, id: i32) {
@@ -130,7 +179,7 @@ fn main() {
     // Erzeuge ein neues TreeView
     let treeview = create_and_setup_treeview();
     // Beispieldaten
-    let module = create_module();
+    let module = create_module(4);
     // TreeStore
     let treestore = create_and_fill_treestore(&module);
 
@@ -141,6 +190,18 @@ fn main() {
     vertical_layout.add(&treeview);
     // Box in Fenster packen
     window.add(&vertical_layout);
+
+    // Update TreeStore/ Model usw.
+    let treestore1 = treestore.clone();
+    let window1 = window.clone();
+    gtk::timeout_add(1000, move || {
+        let modules = create_module(8);
+
+        update_treestore(&treestore1, &modules);
+
+        window1.queue_draw();
+        glib::Continue(true)
+    });
 
     // Alles anzeigen
     window.show_all();
