@@ -374,7 +374,6 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
                                 <property name="cursor_visible">False</property>
-                                <property name="populate_all">True</property>
                                 <property name="monospace">True</property>
                               </object>
                             </child>
