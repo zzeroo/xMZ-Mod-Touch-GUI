@@ -10,6 +10,8 @@ mod gui {
     pub mod gtk3;
 }
 
+pub mod sysinfo;
+
 fn main() {
     gui::gtk3::launch();
 }

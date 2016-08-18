@@ -5,6 +5,8 @@ use gdk::enums::key;
 use xmz_client::client::Client;
 
 mod module_index;
+mod sysinfo_index;
+
 
 // Basic Setup des Fensters
 fn window_setup(window: &gtk::Window) {
@@ -28,7 +30,6 @@ fn window_setup(window: &gtk::Window) {
 }
 
 pub fn launch() {
-    // TODO: Programm Name aus env!("CARGO_PKG_NAME") nutzen
     gtk::init().unwrap_or_else(|_| {
         panic!(format!("{}: GTK konnte nicht initalisiert werden.",
                        env!("CARGO_PKG_NAME")))
@@ -42,18 +43,20 @@ pub fn launch() {
     let modules_treeview: gtk::TreeView = builder.get_object("modules_treeview").unwrap();
 
 
-
-
     {
         // Hide info_bar
         let info_bar = info_bar.clone();
         info_bar.connect_response(move |info_bar, _| info_bar.hide());
     }
 
+    // Client erzeugen.
+    // Der Client ist das Gegenstück um mit dem Server zu kommunizieren
     let mut client = Client::new();
     // Module Index aufbauen
     module_index::setup(&builder, &mut client);
 
+    // System Information bauen
+    sysinfo_index::setup(&builder);
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_setup(&window);
@@ -67,6 +70,7 @@ pub fn launch() {
         Inhibit(false)
     });
 
+
     // Registriert die Esc Taste mit main_quit() (schliesst also das Fenster mit der Esc Taste),
     // nur in DEBUG Builds. Wird das Programm mit `--release` übersetzt, funktioniert dies nicht.
     #[cfg(debug_assertions)]
@@ -76,6 +80,7 @@ pub fn launch() {
         }
         Inhibit(false)
     });
+
 
     gtk::main();
 }

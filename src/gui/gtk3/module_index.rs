@@ -1,3 +1,5 @@
+/// Diese Datei representiert den Module Index View, die Übersichtsseite mit den Modulen und
+/// deren Sensoren.
 extern crate rustc_serialize;
 extern crate xmz_client;
 extern crate xmz_server;
@@ -10,7 +12,10 @@ use self::xmz_server::module::{Module, ModuleType};
 use self::xmz_server::sensor::Sensor;
 
 
-// Module Index
+/// Module Index
+/// Diese Funktion wird vom Module (mod.rs) als Erste Funktion aufgerufen. Hier werden die
+/// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
+/// und Sensoren gebildet.
 pub fn setup(builder: &Builder, client: &mut Client) {
     let modules_tree: TreeView = builder.get_object("modules_treeview").unwrap();
     let scroll: ScrolledWindow = builder.get_object("scroll_module_index").unwrap();
