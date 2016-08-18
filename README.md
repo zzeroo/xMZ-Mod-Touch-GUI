@@ -30,6 +30,17 @@ cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
 cp target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
 ```
 
+## Assets installieren
+
+```bash
+cd
+cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
+# Verzeichnis anlegen wenn es noch nicht existiert
+[ -d "/usr/share/xmz-mod-touch-gui/" ] || mkdir /usr/share/xmz-mod-touch-gui/
+cp ./src/gui/gtk3/interface.glade /usr/share/xmz-mod-touch-gui/
+```
+
+
 ## Systemd Unit File anlegen
 Dieser Schritt muss nur ein mal ausgeführt werden. Im Zweifel kann der Befehl aber
 immer wieder aufgerufen werden (zum Beispiel im Update Fall).

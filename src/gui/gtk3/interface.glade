@@ -352,6 +352,100 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                         <property name="position">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkBox" id="sys_info">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkFrame" id="frame_net_info">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">none</property>
+                            <child>
+                              <object class="GtkAlignment">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="left_padding">12</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="valign">start</property>
+                                            <property name="margin_right">10</property>
+                                            <property name="label" translatable="yes">IP Konfiguration:</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkScrolledWindow">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="hscrollbar_policy">never</property>
+                                            <property name="shadow_type">in</property>
+                                            <property name="min_content_height">400</property>
+                                            <child>
+                                              <object class="GtkTextView" id="textview_ifconfig">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Netzwerk</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">sys_info</property>
+                        <property name="icon_name">dialog-information</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -455,5 +549,11 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkTreeStore" id="modules_treestore">
+    <columns>
+      <!-- column-name module_id -->
+      <column type="guint"/>
+    </columns>
   </object>
 </interface>
