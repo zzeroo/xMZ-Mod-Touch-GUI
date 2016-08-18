@@ -27,7 +27,7 @@ cargo build --release
 ```bash
 cd
 cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
-cp target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
+cp -v ./target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
 ```
 
 ## Assets installieren
@@ -98,11 +98,12 @@ cd
 cd xMZ-Mod-Touch-Software/xMZ-Mod-Touch-GUI
 git pull
 cargo build --release
-cp target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
+cp -v ./target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
 
 systemctl start xmz-mod-touch-gui.service
 ```
 
+| Siehe dazu auch das Script `update.sh`!
 
 # Tests
 

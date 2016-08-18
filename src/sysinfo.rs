@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 
 /// IP Konfiguration der Hardware Platform
 pub fn ifconfig<'a>() -> String {

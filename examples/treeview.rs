@@ -21,6 +21,8 @@ fn test_treestore(list: &TreeStore) -> i32 {
 
 fn iter_treestore(treestore: &TreeStore) {
     // Liefert den ersten Iter des TreeStores (store),
+    if let Some(mut _iter) = treestore.get_iter_first() {
+    }
 }
 
 fn update_window(treestore: &TreeStore) {
