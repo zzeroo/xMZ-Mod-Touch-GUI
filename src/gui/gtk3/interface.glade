@@ -30,9 +30,11 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
   <!-- interface-authors Stefan M\303\274ller <s.mueller@it.kls-glt.de> -->
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
+    <property name="resizable">False</property>
     <property name="window_position">center</property>
     <property name="default_width">1024</property>
     <property name="default_height">600</property>
+    <property name="deletable">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -356,37 +358,49 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkNotebook">
-                        <property name="name">notebook_sysinfo</property>
+                      <object class="GtkBox" id="sysinfo_index">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="tab_pos">bottom</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkNotebook">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="hscrollbar_policy">never</property>
-                            <property name="shadow_type">in</property>
-                            <property name="min_content_height">450</property>
+                            <property name="tab_pos">bottom</property>
                             <child>
-                              <object class="GtkTextView" id="textview_ifconfig">
+                              <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="editable">False</property>
-                                <property name="cursor_visible">False</property>
-                                <property name="monospace">True</property>
+                                <property name="shadow_type">in</property>
+                                <property name="min_content_height">400</property>
+                                <child>
+                                  <object class="GtkTextView" id="textview_ifconfig">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="editable">False</property>
+                                    <property name="cursor_visible">False</property>
+                                    <property name="accepts_tab">False</property>
+                                    <property name="input_hints">GTK_INPUT_HINT_INHIBIT_OSK | GTK_INPUT_HINT_NONE</property>
+                                    <property name="monospace">True</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
-                          </object>
-                        </child>
-                        <child type="tab">
-                          <object class="GtkLabel" id="tab_network">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Netzwerk</property>
+                            <child type="tab">
+                              <object class="GtkLabel" id="tab_ifconfig">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Netzwerk Konfiguration</property>
+                              </object>
+                              <packing>
+                                <property name="tab_fill">False</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
-                            <property name="tab_fill">False</property>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                       </object>
