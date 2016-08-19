@@ -15,6 +15,8 @@ systemctl stop xmz-mod-touch-gui.service
 cargo build --release
 # Kopiere neu erstellte Binaries und Assets in das Dateisystem
 cp -v ./target/release/xmz_mod_touch_gui /usr/bin/xmz-mod-touch-gui
+## Erstelle Assets Verzeichnis
+[ -d "/usr/share/xmz-mod-touch-gui/" ] || mkdir "/usr/share/xmz-mod-touch-gui/"
 cp -v ./src/gui/gtk3/interface.glade /usr/share/xmz-mod-touch-gui/
 # Starte Instanz wieder
 systemctl start xmz-mod-touch-gui.service
