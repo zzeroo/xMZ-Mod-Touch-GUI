@@ -42,8 +42,7 @@ pub fn launch() {
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
 
-    {
-        // Hide info_bar
+    {   // Hide info_bar
         let info_bar = info_bar.clone();
         info_bar.connect_response(move |info_bar, _| info_bar.hide());
     }
