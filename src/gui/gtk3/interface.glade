@@ -161,6 +161,7 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                                 <property name="model">treestore_modules</property>
                                 <property name="headers_clickable">False</property>
                                 <property name="enable_search">False</property>
+                                <property name="enable_grid_lines">horizontal</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
                                 </child>
