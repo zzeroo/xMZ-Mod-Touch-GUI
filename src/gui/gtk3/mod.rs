@@ -41,6 +41,7 @@ pub fn launch() {
     let main_window_stack: gtk::Stack = builder.get_object("main_window_stack").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
+
     {
         // Hide info_bar
         let info_bar = info_bar.clone();
