@@ -40,11 +40,9 @@ pub fn launch() {
     let window: gtk::Window = builder.get_object("main_window").unwrap();
     let main_window_stack: gtk::Stack = builder.get_object("main_window_stack").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
-    let modules_treeview: gtk::TreeView = builder.get_object("modules_treeview").unwrap();
 
 
-    {
-        // Hide info_bar
+    {   // Hide info_bar
         let info_bar = info_bar.clone();
         info_bar.connect_response(move |info_bar, _| info_bar.hide());
     }
