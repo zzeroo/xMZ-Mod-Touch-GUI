@@ -28,6 +28,20 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
   <!-- interface-description Grafische Oberfl\303\244che der 'xMZ-Mod-Touch'-Platform -->
   <!-- interface-copyright 2016 -->
   <!-- interface-authors Stefan M\303\274ller <s.mueller@it.kls-glt.de> -->
+  <object class="GtkTreeStore" id="treestore_modules">
+    <columns>
+      <!-- column-name module_id -->
+      <column type="guint"/>
+      <!-- column-name module_type -->
+      <column type="gchararray"/>
+      <!-- column-name sensor_type -->
+      <column type="gchararray"/>
+      <!-- column-name sensor_concentration -->
+      <column type="gchararray"/>
+      <!-- column-name sensor_si -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="default_width">440</property>
@@ -138,9 +152,12 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                             <property name="min_content_width">1024</property>
                             <property name="min_content_height">400</property>
                             <child>
-                              <object class="GtkTreeView" id="modules_treeview">
+                              <object class="GtkTreeView" id="treeview_modules">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="model">treestore_modules</property>
+                                <property name="headers_clickable">False</property>
+                                <property name="enable_search">False</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
                                 </child>
@@ -426,8 +443,6 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
               <object class="GtkBox" id="settings">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkStackSwitcher">
@@ -496,6 +511,9 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="name">page1</property>
@@ -512,11 +530,5 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTreeStore" id="modules_treestore">
-    <columns>
-      <!-- column-name module_id -->
-      <column type="guint"/>
-    </columns>
   </object>
 </interface>
