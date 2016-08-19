@@ -30,7 +30,7 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
   <!-- interface-authors Stefan M\303\274ller <s.mueller@it.kls-glt.de> -->
   <object class="GtkTreeStore" id="treestore_modules">
     <columns>
-      <!-- column-name module_id -->
+      <!-- column-name guint1 -->
       <column type="guint"/>
       <!-- column-name module_type -->
       <column type="gchararray"/>

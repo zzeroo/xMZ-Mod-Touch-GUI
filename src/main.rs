@@ -2,6 +2,7 @@
 
 extern crate gtk;
 extern crate gdk;
+extern crate glib;
 extern crate xmz_client;
 extern crate xmz_server;
 
