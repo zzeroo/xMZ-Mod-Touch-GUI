@@ -394,6 +394,7 @@ Author: Stefan Müller <s.mueller@it.kls-glt.de>
                                 <child>
                                   <object class="GtkTextView" id="textview_ifconfig">
                                     <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="editable">False</property>
                                     <property name="cursor_visible">False</property>
