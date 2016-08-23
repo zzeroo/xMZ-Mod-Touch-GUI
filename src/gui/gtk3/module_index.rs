@@ -1,18 +1,11 @@
 /// Diese Datei representiert den Module Index View, die Übersichtsseite mit den Modulen und
 /// deren Sensoren.
-extern crate gtk;
-extern crate gdk;
-extern crate glib;
-extern crate rustc_serialize;
-extern crate xmz_client;
-extern crate xmz_server;
-
 use gtk::prelude::*;
-use gtk::{Builder, CellRendererText, InfoBar, ScrolledWindow, TreeView, TreeViewColumn, TreeStore,
+use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore,
           Window};
-use self::rustc_serialize::json;
-use self::xmz_client::client::Client;
-use self::xmz_server::module::Module;
+use rustc_serialize::json;
+use xmz_client::client::Client;
+use xmz_server::module::Module;
 use std::collections::HashSet;
 
 
@@ -139,7 +132,6 @@ fn get_modules(client: &mut Client) -> Vec<Module> {
 /// und Sensoren gebildet.
 pub fn setup(builder: &Builder, client: &mut Client) {
     let window: Window = builder.get_object("main_window").unwrap();
-    let info_bar: InfoBar = builder.get_object("info_bar").unwrap();
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column() `column.add_attribute(&cell, "text", id);`
@@ -166,13 +158,13 @@ pub fn setup(builder: &Builder, client: &mut Client) {
     // Update TreeStore
     let treestore1 = treestore_modules.clone();
     let window1 = window.clone();
-    gtk::timeout_add(1000, move || {
+    ::gtk::timeout_add(1000, move || {
         let mut client = Client::new();
         let modules = get_modules(&mut client);
 
         update_treestore(&treestore1, &modules);
 
         window1.queue_draw();
-        glib::Continue(true)
+        ::glib::Continue(true)
     });
 }
