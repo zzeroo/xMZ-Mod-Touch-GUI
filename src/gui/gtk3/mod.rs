@@ -4,8 +4,10 @@ use gtk::prelude::*;
 use gdk::enums::key;
 use xmz_client::client::Client;
 
+// Die einzelnen Unterfenster sind in seperaten Modulen organisiert
 mod module_index;
 mod sysinfo_index;
+mod settings_index;
 
 
 // Basic Setup des Fensters
@@ -38,7 +40,6 @@ pub fn launch() {
     // Initialisiere alle Widgets die das Programm nutzt aus dem Glade File.
     let builder = gtk::Builder::new_from_string(include_str!("interface.glade"));
     let window: gtk::Window = builder.get_object("main_window").unwrap();
-    let main_window_stack: gtk::Stack = builder.get_object("main_window_stack").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
 
@@ -55,6 +56,9 @@ pub fn launch() {
 
     // System Information bauen
     sysinfo_index::setup(&builder);
+
+    // Einstellungen Fenster (Settings) bauen
+    settings_index::setup(&builder);
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_setup(&window);

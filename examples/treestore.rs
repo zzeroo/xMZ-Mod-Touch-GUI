@@ -37,7 +37,7 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
 
     for (id, module) in modules.iter().enumerate() {
         if !seen.contains(&(id + 1)) {
-            create_and_fill_model(treestore, &module, id);
+            fill_model(treestore, &module, id);
         }
     }
 }
@@ -134,14 +134,14 @@ fn create_and_fill_treestore(modules: &Vec<Module>) -> TreeStore {
                                      String::static_type() /* Sensor::SI Einheit */]);
 
     for (id, module) in modules.iter().enumerate() {
-        create_and_fill_model(&treestore, &module, id);
+        fill_model(&treestore, &module, id);
     }
 
     treestore
 }
 
 // Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
-fn create_and_fill_model(treestore: &TreeStore, module: &Module, id: usize) {
+fn fill_model(treestore: &TreeStore, module: &Module, id: usize) {
     let module_iter = treestore.insert_with_values(None,
                                                    None,
                                                    &[0, 1, 2],
