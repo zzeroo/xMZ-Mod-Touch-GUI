@@ -1,6 +1,6 @@
 [package]
 name = "xmz_mod_touch_gui"
-version = "0.12.0"
+version = "0.13.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"

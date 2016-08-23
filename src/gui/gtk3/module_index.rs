@@ -16,11 +16,21 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     if let Some(mut iter) = treestore.get_iter_first() {
         let mut valid = true;
         while valid {
+            // ID ist Nummer der Spalte, von 1 gezält
             let id = treestore.get_value(&iter, 0).get::<u32>().unwrap() as usize;
             if let Some(module) = modules.get(id - 1) {
                 treestore.set(&iter,
                               &[0, 1, 2],
                               &[&(id as u32), &module.modbus_slave_id(), &module.module_type()]);
+                  for (i, sensor) in module.sensors.iter().enumerate() {
+                      treestore.set(&treestore.iter_nth_child(Some(&iter), i as i32).unwrap(),
+                                   &[0, 2, 3, 4],
+                                   &[&(i as u32 + 1),
+                                     &sensor.sensor_type(),
+                                     &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
+                                     &sensor.si()]);
+                  }
+
                 valid = treestore.iter_next(&mut iter);
                 seen.insert(id);
             } else {
@@ -86,6 +96,9 @@ fn setup_treeview(treeview: &TreeView) {
     append_column(&treeview, 3);
     append_column(&treeview, 4);
     append_column(&treeview, 5);
+
+    // Alle Spalten aufklappen, so das die Sensoren sichtbar sind.
+    treeview.expand_all();
 }
 
 
@@ -134,7 +147,8 @@ pub fn setup(builder: &Builder, client: &mut Client) {
     let window: Window = builder.get_object("main_window").unwrap();
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
-    // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column() `column.add_attribute(&cell, "text", id);`
+    // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
+    /// `column.add_attribute(&cell, "text", id);`
     // let treestore_modules: TreeStore = builder.get_object("treestore_modules")
     //     .expect("TreeStore konnte nicht aus dem Builder File geladen werden.");
     /// FIXME: Manuell erzeugter TreeStore, auch OK oder ><
