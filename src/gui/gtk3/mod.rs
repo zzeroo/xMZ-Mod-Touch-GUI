@@ -12,16 +12,19 @@ mod settings_index;
 
 // Basic Setup des Fensters
 fn window_setup(window: &gtk::Window) {
-    let window_title = format!("{} {}",
+    let window_title = format!("{}-v{}",
                                env!("CARGO_PKG_DESCRIPTION"),
                                env!("CARGO_PKG_VERSION"));
     window.set_title(&window_title);
-    window.set_default_size(1024, 600);
-    // window.set_border_width(10);
 
     let display = window.get_display().unwrap();
     let screen = display.get_screen(0);
     screen.set_resolution(130.0);
+    // CSS
+    let css_style_provider = gtk::CssProvider::new();
+    let css_interface = include_str!("interface.css");
+    css_style_provider.load_from_data(css_interface).unwrap();
+    gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     match ::std::env::var("XMZ_HARDWARE") {
         Ok(_) => {
@@ -42,7 +45,6 @@ pub fn launch() {
     let window: gtk::Window = builder.get_object("main_window").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
-
     {   // Hide info_bar
         let info_bar = info_bar.clone();
         info_bar.connect_response(move |info_bar, _| info_bar.hide());
@@ -51,8 +53,11 @@ pub fn launch() {
     // Client erzeugen.
     // Der Client ist das Gegenstück um mit dem Server zu kommunizieren
     let mut client = Client::new();
+
+
+
     // Module Index aufbauen
-    module_index::setup(&builder, &mut client);
+    module_index::setup(&builder, &window, &mut client);
 
     // System Information bauen
     sysinfo_index::setup(&builder);

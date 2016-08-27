@@ -143,8 +143,7 @@ fn get_modules(client: &mut Client) -> Vec<Module> {
 /// Diese Funktion wird vom Module (mod.rs) als Erste Funktion aufgerufen. Hier werden die
 /// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
 /// und Sensoren gebildet.
-pub fn setup(builder: &Builder, client: &mut Client) {
-    let window: Window = builder.get_object("main_window").unwrap();
+pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
@@ -179,6 +178,7 @@ pub fn setup(builder: &Builder, client: &mut Client) {
         update_treestore(&treestore1, &modules);
 
         window1.queue_draw();
+        println!("Ping");
         ::glib::Continue(true)
     });
 }
