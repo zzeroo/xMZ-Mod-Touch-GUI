@@ -1,4 +1,5 @@
-
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate gtk;
 extern crate gdk;
 extern crate glib;
@@ -182,6 +183,9 @@ fn create_and_setup_window() -> Window {
 }
 
 fn main() {
+    trace!("Initialisiere den Logger");
+    env_logger::init().unwrap();
+
     // Gtk Zeug
     if gtk::init().is_err() {
         println!("Gtk3 konnte nicht initalisisert werden.");

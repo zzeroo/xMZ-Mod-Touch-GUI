@@ -2,6 +2,8 @@
 // Lösung siehe: `examples/gtk_css_global.rs`
 //
 // https://gitlab.com/search?utf8=%E2%9C%93&search=css&group_id=&project_id=1152771&search_code=true&repository_ref=master
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate gtk;
 extern crate gdk;
 
@@ -16,6 +18,9 @@ fn window_setup(window: &gtk::Window) {
 }
 
 fn main() {
+    trace!("Initialisiere den Logger");
+    env_logger::init().unwrap();
+
     gtk::init().unwrap_or_else(|_| {
         panic!(format!("{}: GTK konnte nicht initalisiert werden.",
                        env!("CARGO_PKG_NAME")))
