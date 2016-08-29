@@ -1,5 +1,7 @@
 #![feature(stmt_expr_attributes)]
 
+
+#[macro_use] extern crate log;
 extern crate gtk;
 extern crate gdk;
 extern crate glib;
