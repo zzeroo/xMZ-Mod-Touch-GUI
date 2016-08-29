@@ -147,10 +147,10 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
-    /// `column.add_attribute(&cell, "text", id);`
+    // `column.add_attribute(&cell, "text", id);`
     // let treestore_modules: TreeStore = builder.get_object("treestore_modules")
     //     .expect("TreeStore konnte nicht aus dem Builder File geladen werden.");
-    /// FIXME: Manuell erzeugter TreeStore, auch OK oder ><
+    // FIXME: Manuell erzeugter TreeStore, auch OK oder ><
     let treestore_modules = TreeStore::new(&[u32::static_type(), // Module::Module ID
                                      String::static_type(), // Module::Modbus Slave ID
                                      String::static_type(), // Module::ModuleType
@@ -158,8 +158,8 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
                                      String::static_type(), // Sensor::Konzentration
                                      String::static_type() /* Sensor::SI Einheit */]);
 
-     /// Verbinde View und Model (TreeStore)
-     /// Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
+     // Verbinde View und Model (TreeStore)
+     // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
      treeview_modules.set_model(Some(&treestore_modules));
 
     let modules = get_modules(client);
@@ -171,14 +171,15 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
     // Update TreeStore
     let treestore1 = treestore_modules.clone();
     let window1 = window.clone();
+    let treeview1 = treeview_modules.clone();
     ::gtk::timeout_add(1000, move || {
         let mut client = Client::new();
         let modules = get_modules(&mut client);
-
         update_treestore(&treestore1, &modules);
+        treeview1.expand_all();
 
         window1.queue_draw();
-        println!("Ping");
+
         ::glib::Continue(true)
     });
 }
