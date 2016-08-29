@@ -10,17 +10,18 @@ license = "GPL-2.0"
 
 
 [dependencies]
-gtk = { version = "0.1.0", features = ["v3_16"] }
+env_logger = "0.3"
+error-chain = "0.4"
 gdk = { version = "0.5.0" }
 glib = "*"
+gtk = { version = "0.1.0", features = ["v3_16"] }
 libc = "0.2"
+log = "0.3"
 nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
+rand = "*"
 rustc-serialize = "0.3"
 xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git" }
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
-rand = "*"
-log = "0.3"
-env_logger = "0.3"
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]
