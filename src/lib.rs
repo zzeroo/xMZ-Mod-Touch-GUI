@@ -1,7 +1,6 @@
 #![feature(stmt_expr_attributes)]
 #![recursion_limit = "1024"]
 
-
 #[macro_use]extern crate error_chain;
 #[macro_use] extern crate log;
 extern crate gtk;
@@ -17,3 +16,5 @@ pub mod gui {
 }
 
 pub mod sysinfo;
+/// Fehlerhandling mit dem error-chain crate
+mod errors;

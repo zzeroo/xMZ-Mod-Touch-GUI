@@ -1,5 +1,6 @@
 /// Diese Datei representiert den Module Index View, die Übersichtsseite mit den Modulen und
 /// deren Sensoren.
+use errors::*;
 use gtk::prelude::*;
 use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore,
           Window};
@@ -22,6 +23,7 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
                 treestore.set(&iter,
                               &[0, 1, 2],
                               &[&(id as u32), &module.modbus_slave_id(), &module.module_type()]);
+                  // Durchläuft jeden Sensor der im Modul konfiguriert wurde und setzt die Felder
                   for (i, sensor) in module.sensors.iter().enumerate() {
                       treestore.set(&treestore.iter_nth_child(Some(&iter), i as i32).unwrap(),
                                    &[0, 2, 3, 4],
@@ -41,13 +43,21 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
 
     for (id, module) in modules.iter().enumerate() {
         if !seen.contains(&(id + 1)) {
-            fill_model(treestore, &module, id);
+            fill_treestore_column(treestore, &module, id);
         }
     }
 }
 
-// Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
-fn fill_model(treestore: &TreeStore, module: &Module, id: usize) {
+/// Helper Funktion die den TreeStore nachträglich um eine weitere Zeile `id` (3. Parameter)
+/// mit den Daten des als 2. Parameter übergebenen `module` füllt.
+///
+/// #Parameters
+///
+/// `treestore`     - TreeStore der die Daten hält
+/// `module`        - Module Struct die die neuen Daten enthält
+/// `id`            - ID wo im TreeStore die Daten eingefügt werden sollen
+///
+fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
     let module_iter = treestore.insert_with_values(None,
                                                    None,
                                                    &[0, 1, 2],
@@ -65,9 +75,10 @@ fn fill_model(treestore: &TreeStore, module: &Module, id: usize) {
     }
 }
 
-/// Helper Funktion zum Anfügen weiterer Spalten (columns)
+/// Helper Funktion zum Anfügen weiterer Spalten (columns) in einen TreeView
 ///
 /// # Params
+///
 /// `treeview`  - Der TreeView mit dem gearbeitet werden soll
 /// `id`        - ID der Spalte, Null basiert
 ///
@@ -86,7 +97,9 @@ fn append_column(treeview: &TreeView, id: i32) {
     treeview.append_column(&column);
 }
 
-
+/// Basis Setup des TreeViews
+///
+/// FIXME: Auslagern in Glade!
 fn setup_treeview(treeview: &TreeView) {
     // Header verstecken
     treeview.set_headers_visible(false);
@@ -101,29 +114,18 @@ fn setup_treeview(treeview: &TreeView) {
     treeview.expand_all();
 }
 
-
+/// Füllt den TreeStore mit den Daten der Module
+///
+/// # Params
+///
+/// `treestore` - TreeStore der die Daten hält
+/// `modules`   - Vector mit Modulen
+///
+///
+///
 fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     for (id, module) in modules.iter().enumerate() {
         fill_treestore_column(&treestore, &module, id);
-    }
-}
-
-// Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
-fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
-    let module_iter = treestore.insert_with_values(None,
-                                                   None,
-                                                   &[0, 1, 2],
-                                                   &[&(id as u32 + 1),
-                                                     &module.modbus_slave_id(),
-                                                     &module.module_type()]);
-    for (i, sensor) in module.sensors.iter().enumerate() {
-        treestore.insert_with_values(Some(&module_iter),
-                                     None,
-                                     &[0, 2, 3, 4],
-                                     &[&(i as u32 + 1),
-                                       &sensor.sensor_type(),
-                                       &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
-                                       &sensor.si()]);
     }
 }
 
@@ -183,3 +185,31 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
         ::glib::Continue(true)
     });
 }
+
+// /// Module Index
+// 167:pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
+// - ruft get_modules()
+// - ruft fill_treestore()
+// - ruft setup_treeview()
+// - ruft update_treestore() im Timer auf
+//     /// Frage den Server, über den Client, nach den aktuellen Module Daten ab.
+//     155:fn get_modules(client: &mut Client) -> Vec<Module> {
+//     /// Füllt den TreeStore mit den Daten der Module
+//     126:fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+//     - ruft fill_treestore_column() für jedes Module im modules Vector auf
+//         // Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
+//         60:fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
+//
+//     /// Basis Setup des TreeViews
+//     103:fn setup_treeview(treeview: &TreeView) {
+//     - ruft append_column() für jede Spate des TreeViews auf
+//         /// Helper Funktion zum Anfügen weiterer Spalten (columns) in einen TreeView
+//         85:fn append_column(treeview: &TreeView, id: i32) {
+//
+//     /// Update des TreeStores mit den aktuellen Modul Daten des Servers
+//     14:fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+//
+//
+// /// Helper Funktion die den TreeStore nachträglich um eine weitere Zeile `id` (3. Parameter)
+// /// mit den Daten des als 2. Parameter übergebenen `module` füllt.
+// 60:fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
