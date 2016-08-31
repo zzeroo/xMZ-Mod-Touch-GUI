@@ -33,7 +33,7 @@ impl App {
         // System Information bauen
         sysinfo_index::setup(&builder);
         // Einstellungen Fenster (Settings) bauen
-        settings_index::setup(&builder);
+        try!(settings_index::setup(&builder).chain_err(|| "Einstellung Index konnte nicht aufgebaut werden"));
         // Rufe Funktion für die Basis Fenster Konfiguration auf
         window_setup(&window);
         // Fenster anzeigen und Infobar verstecken
@@ -48,8 +48,23 @@ impl App {
         // nur in DEBUG Builds. Wird das Programm mit `--release` übersetzt, funktioniert dies nicht.
         #[cfg(debug_assertions)]
         window.connect_key_press_event(move |_, key| {
+            debug!("Tastendruck erkannt");
             if let key::Escape = key.get_keyval() {
+                debug!("Escape erkannt");
                 gtk::main_quit()
+            }
+            Inhibit(false)
+        });
+
+        // Registriert die F5 Taste mit info_bar.show().
+        // Wird das Programm mit `--release` übersetzt, funktioniert dies nicht.
+        #[cfg(debug_assertions)]
+        window.connect_key_press_event(move |_, key| {
+            debug!("Tastendruck erkannt");
+            if let key::F5 = key.get_keyval() {
+                debug!("F5 erkannt");
+                debug!("Infobar zeigen");
+                info_bar.show()
             }
             Inhibit(false)
         });
