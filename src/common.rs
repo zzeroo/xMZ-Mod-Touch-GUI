@@ -1,5 +1,4 @@
 use errors::*;
-use std;
 
 
 pub fn report_error(e: &Error) {
