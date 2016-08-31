@@ -10,10 +10,23 @@ use xmz_server::module::Module;
 use std::collections::HashSet;
 
 
-/// Update des TreeStores mit den aktuellen Modul Daten des Servers
+/// Update den TreeStores mit den aktuellen Modul Daten des Servers
+///
+/// Der Module Vector wird im Timer Loop aktualisiert und dieser Funktion übergeben.
+/// Sind mehr Module im Vector als Zeilen im aktullen TreeStore, dann werden Spalten mit der
+/// Funktion `fill_treestore_column` angefügt.
+/// Sind weniger Module im Vector (wurden zur Laufzeit gelöscht) dann wird der TreeStore
+/// entsprechend verkleinert.
+///
+/// # Parameters
+///
+/// `treestore`     - TreeStore der die Daten hält
+/// `modules`       - Vector mit Module Structs welches die Daten enthält
+///
 fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+    // Das HashSet dient zur Erkennung ob mehr Module als TreeStore Zeilen vorhanden sind.
     let mut seen: HashSet<usize> = HashSet::new();
-
+    // Auswahl der ersten Zeile des TreeStores
     if let Some(mut iter) = treestore.get_iter_first() {
         let mut valid = true;
         while valid {
@@ -35,12 +48,16 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
 
                 valid = treestore.iter_next(&mut iter);
                 seen.insert(id);
+            // Existieren mehr Zeilen im TreeStore als Module im Vector vorhanden sind,
+            // wird solange eine Zeile aus dem TreeStore entfernt
+            // bis Anzahl Module und TreeStore Zeilen wieder gleich sind.
             } else {
                 valid = treestore.remove(&mut iter);
             }
         }
     }
-
+    // Alle Module die jetzt noch existieren, noch nicht gesehen also verarbeitet wurden,
+    // wird eine neue Zeile im TreeStore angelegt und die Daten des Modules eingefügt.
     for (id, module) in modules.iter().enumerate() {
         if !seen.contains(&(id + 1)) {
             fill_treestore_column(treestore, &module, id);
@@ -82,6 +99,7 @@ fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
 /// `treeview`  - Der TreeView mit dem gearbeitet werden soll
 /// `id`        - ID der Spalte, Null basiert
 ///
+/// FIXME: Auslagern in Glade!
 fn append_column(treeview: &TreeView, id: i32) {
     let column = TreeViewColumn::new();
     let cell = CellRendererText::new();
@@ -133,19 +151,20 @@ fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
 ///
 /// Liefert ein Vector mit Modules zurück.
 ///
-fn get_modules(client: &mut Client) -> Vec<Module> {
+fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
     let mut modules: Vec<Module> = vec![];
     let _ = client.execute("module list").map(|data| {
         modules = json::decode(&data).unwrap_or(vec![]);
     });
-    modules
+    Ok(modules)
 }
 
 /// Module Index
 /// Diese Funktion wird vom Module (mod.rs) als Erste Funktion aufgerufen. Hier werden die
 /// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
 /// und Sensoren gebildet.
-pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
+/// **Hier ist auch der Timer definiert der (im Sekundentakt) die Module aktualisiert.**
+pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
@@ -164,52 +183,30 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
      // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
      treeview_modules.set_model(Some(&treestore_modules));
 
-    let modules = get_modules(client);
+    let modules = try!(get_modules(client).chain_err(|| "Module konnten nicht vom Server abgefragt werden"));
 
     fill_treestore(&treestore_modules, &modules);
     setup_treeview(&treeview_modules);
 
 
-    // Update TreeStore
+    // Timer gesteuertes Update des TreeStore
     let treestore1 = treestore_modules.clone();
     let window1 = window.clone();
     let treeview1 = treeview_modules.clone();
     ::gtk::timeout_add(1000, move || {
         let mut client = Client::new();
-        let modules = get_modules(&mut client);
-        update_treestore(&treestore1, &modules);
-        treeview1.expand_all();
+        match get_modules(&mut client) {
+            Ok(..) => {
+                update_treestore(&treestore1, &modules);
+                treeview1.expand_all();
+            }
+            Err(_) => {}
+        }
 
         window1.queue_draw();
 
         ::glib::Continue(true)
     });
-}
 
-// /// Module Index
-// 167:pub fn setup(builder: &Builder, window: &Window, client: &mut Client) {
-// - ruft get_modules()
-// - ruft fill_treestore()
-// - ruft setup_treeview()
-// - ruft update_treestore() im Timer auf
-//     /// Frage den Server, über den Client, nach den aktuellen Module Daten ab.
-//     155:fn get_modules(client: &mut Client) -> Vec<Module> {
-//     /// Füllt den TreeStore mit den Daten der Module
-//     126:fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
-//     - ruft fill_treestore_column() für jedes Module im modules Vector auf
-//         // Helper Funktion die den TreeStore nachträglich im eine Spalte mit den Daten des `module` füllt
-//         60:fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
-//
-//     /// Basis Setup des TreeViews
-//     103:fn setup_treeview(treeview: &TreeView) {
-//     - ruft append_column() für jede Spate des TreeViews auf
-//         /// Helper Funktion zum Anfügen weiterer Spalten (columns) in einen TreeView
-//         85:fn append_column(treeview: &TreeView, id: i32) {
-//
-//     /// Update des TreeStores mit den aktuellen Modul Daten des Servers
-//     14:fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
-//
-//
-// /// Helper Funktion die den TreeStore nachträglich um eine weitere Zeile `id` (3. Parameter)
-// /// mit den Daten des als 2. Parameter übergebenen `module` füllt.
-// 60:fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
+    Ok(())
+}

@@ -8,6 +8,10 @@ homepage = "https://gaswarnanlagen.com/xmz-mod-touch"
 repository = "https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git"
 license = "GPL-2.0"
 
+[[bin]]
+name = "xmz_mod_touch_gui"
+path = "src/main.rs"
+doc = false
 
 [dependencies]
 env_logger = "0.3"
