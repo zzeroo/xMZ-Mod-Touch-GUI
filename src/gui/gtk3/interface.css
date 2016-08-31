@@ -1,1 +1,5 @@
 #textview_ifconfig { font-size: 8px; color: blue; }
+
+infobar.info {  }
+
+infobar.error { 	background-color: #DA0000; }

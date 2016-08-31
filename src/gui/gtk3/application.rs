@@ -1,4 +1,5 @@
 use gdk::enums::key;
+// FIXME: Entferne `use gtk` und ersetze es durch `use gtk::{Window, Button, usw...}` in diesem File
 use gtk;
 use gtk::prelude::*;
 use gui::gtk3::*;
@@ -26,9 +27,12 @@ impl App {
         let builder = gtk::Builder::new_from_string(include_str!("interface.glade"));
         let window: gtk::Window = builder.get_object("main_window").unwrap();
         let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
+        let info_bar_error: gtk::InfoBar = builder.get_object("info_bar_error").unwrap();
 
-        {   // Hide info_bar
+        {   // Hide info_bar's
             let info_bar = info_bar.clone();
+            info_bar.connect_response(move |info_bar, _| info_bar.hide());
+            let info_bar = info_bar_error.clone();
             info_bar.connect_response(move |info_bar, _| info_bar.hide());
         }
         // Module Index aufbauen
@@ -42,6 +46,7 @@ impl App {
         // Fenster anzeigen und Infobar verstecken
         window.show_all();
         info_bar.hide();
+        info_bar_error.hide();
         // Beende Programm wenn das Fenster geschlossen wurde
         window.connect_delete_event(|_, _| {
             gtk::main_quit();

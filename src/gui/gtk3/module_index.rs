@@ -2,7 +2,7 @@
 /// deren Sensoren.
 use common::*;
 use errors::*;
-use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore, Window};
+use gtk::{Builder, CellRendererText, InfoBar, TreeView, TreeViewColumn, TreeStore, Window};
 use gtk::prelude::*;
 use rustc_serialize::json;
 use std::collections::HashSet;
@@ -165,6 +165,7 @@ pub fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
 /// **Hier ist auch der Timer definiert der (im Sekundentakt) die Module aktualisiert.**
 pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
+    let info_bar_error: InfoBar = builder.get_object("info_bar_error").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
     // `column.add_attribute(&cell, "text", id);`
@@ -200,6 +201,8 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
                 report_error(&err);
             }
         }
+    } else {
+        info_bar_error.show();
     }
 
     // Timer gesteuertes Update des TreeStore
@@ -225,6 +228,8 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
                     report_error(&err);
                 }
             }
+        } else {
+            info_bar_error.show();
         }
 
         window1.queue_draw();
