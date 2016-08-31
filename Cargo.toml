@@ -25,7 +25,9 @@ nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
 rand = "*"
 rustc-serialize = "0.3"
 xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git" }
+#xmz_client = { path = "../xMZ-Mod-Touch-Client/" }
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
+#xmz_server = { path = "../xMZ-Mod-Touch-Server/" }
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]
