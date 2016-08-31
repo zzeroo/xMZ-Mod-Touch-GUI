@@ -2,8 +2,7 @@ use gdk::enums::key;
 use gtk;
 use gtk::prelude::*;
 use gui::gtk3::*;
-use xmz_client::client::Client;
-
+use errors::*;
 
 pub struct App {
 }
@@ -15,7 +14,7 @@ impl App {
     }
 
     /// Konstruiert die Fensterelemente, Signale und so weiter und zeigt am Ende das Fenster an
-    pub fn launch(&self) {
+    pub fn launch(&self) -> Result<()> {
         gtk::init().unwrap_or_else(|_| {
             panic!(format!("{}: GTK konnte nicht initalisiert werden.",
                            env!("CARGO_PKG_NAME")))
@@ -29,11 +28,8 @@ impl App {
             let info_bar = info_bar.clone();
             info_bar.connect_response(move |info_bar, _| info_bar.hide());
         }
-        // Client erzeugen.
-        // Der Client ist das Gegenstück um mit dem Server zu kommunizieren
-        let mut client = Client::new();
         // Module Index aufbauen
-        module_index::setup(&builder, &window, &mut client);
+        try!(module_index::setup(&builder, &window).chain_err(|| "Module Index konnte nicht aufgebaut werden"));
         // System Information bauen
         sysinfo_index::setup(&builder);
         // Einstellungen Fenster (Settings) bauen
@@ -59,6 +55,8 @@ impl App {
         });
 
         gtk::main();
+
+        Ok(())
     }
 }
 

@@ -21,3 +21,5 @@ pub mod gui {
 pub mod sysinfo;
 /// Fehlerhandling mit dem error-chain crate
 mod errors;
+/// Gemeinsame Funktionen
+pub mod common;

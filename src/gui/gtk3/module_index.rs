@@ -2,8 +2,7 @@
 /// deren Sensoren.
 use errors::*;
 use gtk::prelude::*;
-use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore,
-          Window};
+use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore, Window};
 use rustc_serialize::json;
 use xmz_client::client::Client;
 use xmz_server::module::Module;
@@ -36,21 +35,21 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
                 treestore.set(&iter,
                               &[0, 1, 2],
                               &[&(id as u32), &module.modbus_slave_id(), &module.module_type()]);
-                  // Durchläuft jeden Sensor der im Modul konfiguriert wurde und setzt die Felder
-                  for (i, sensor) in module.sensors.iter().enumerate() {
-                      treestore.set(&treestore.iter_nth_child(Some(&iter), i as i32).unwrap(),
-                                   &[0, 2, 3, 4],
-                                   &[&(i as u32 + 1),
-                                     &sensor.sensor_type(),
-                                     &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
-                                     &sensor.si()]);
-                  }
+                // Durchläuft jeden Sensor der im Modul konfiguriert wurde und setzt die Felder
+                for (i, sensor) in module.sensors.iter().enumerate() {
+                    treestore.set(&treestore.iter_nth_child(Some(&iter), i as i32).unwrap(),
+                                  &[0, 2, 3, 4],
+                                  &[&(i as u32 + 1),
+                                    &sensor.sensor_type(),
+                                    &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
+                                    &sensor.si()]);
+                }
 
                 valid = treestore.iter_next(&mut iter);
                 seen.insert(id);
-            // Existieren mehr Zeilen im TreeStore als Module im Vector vorhanden sind,
-            // wird solange eine Zeile aus dem TreeStore entfernt
-            // bis Anzahl Module und TreeStore Zeilen wieder gleich sind.
+                // Existieren mehr Zeilen im TreeStore als Module im Vector vorhanden sind,
+                // wird solange eine Zeile aus dem TreeStore entfernt
+                // bis Anzahl Module und TreeStore Zeilen wieder gleich sind.
             } else {
                 valid = treestore.remove(&mut iter);
             }
@@ -164,7 +163,7 @@ fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
 /// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
 /// und Sensoren gebildet.
 /// **Hier ist auch der Timer definiert der (im Sekundentakt) die Module aktualisiert.**
-pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<()> {
+pub fn setup(builder: &Builder, window: &Window) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
@@ -173,17 +172,19 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<
     //     .expect("TreeStore konnte nicht aus dem Builder File geladen werden.");
     // FIXME: Manuell erzeugter TreeStore, auch OK oder ><
     let treestore_modules = TreeStore::new(&[u32::static_type(), // Module::Module ID
-                                     String::static_type(), // Module::Modbus Slave ID
-                                     String::static_type(), // Module::ModuleType
-                                     String::static_type(), // Sensor::SensorType
-                                     String::static_type(), // Sensor::Konzentration
-                                     String::static_type() /* Sensor::SI Einheit */]);
+                                             String::static_type(), // Module::Modbus Slave ID
+                                             String::static_type(), // Module::ModuleType
+                                             String::static_type(), // Sensor::SensorType
+                                             String::static_type(), // Sensor::Konzentration
+                                             String::static_type() /* Sensor::SI Einheit */]);
 
-     // Verbinde View und Model (TreeStore)
-     // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
-     treeview_modules.set_model(Some(&treestore_modules));
+    // Verbinde View und Model (TreeStore)
+    // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
+    treeview_modules.set_model(Some(&treestore_modules));
 
-    let modules = try!(get_modules(client).chain_err(|| "Module konnten nicht vom Server abgefragt werden"));
+    let mut client = Client::new();
+    let modules = try!(get_modules(&mut client)
+        .chain_err(|| "Module konnten nicht vom Server abgefragt werden"));
 
     fill_treestore(&treestore_modules, &modules);
     setup_treeview(&treeview_modules);
