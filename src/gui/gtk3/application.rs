@@ -3,6 +3,7 @@ use gtk;
 use gtk::prelude::*;
 use gui::gtk3::*;
 use errors::*;
+use xmz_client::client::*;
 
 pub struct App {
 }
@@ -15,6 +16,8 @@ impl App {
 
     /// Konstruiert die Fensterelemente, Signale und so weiter und zeigt am Ende das Fenster an
     pub fn launch(&self) -> Result<()> {
+        let mut client = Client::new();
+
         gtk::init().unwrap_or_else(|_| {
             panic!(format!("{}: GTK konnte nicht initalisiert werden.",
                            env!("CARGO_PKG_NAME")))
@@ -29,11 +32,11 @@ impl App {
             info_bar.connect_response(move |info_bar, _| info_bar.hide());
         }
         // Module Index aufbauen
-        try!(module_index::setup(&builder, &window).chain_err(|| "Module Index konnte nicht aufgebaut werden"));
+        try!(module_index::setup(&builder, &window, &client).chain_err(|| "Module Index konnte nicht aufgebaut werden"));
         // System Information bauen
         sysinfo_index::setup(&builder);
         // Einstellungen Fenster (Settings) bauen
-        try!(settings_index::setup(&builder).chain_err(|| "Einstellung Index konnte nicht aufgebaut werden"));
+        try!(settings_index::setup(&builder, &window, &mut client).chain_err(|| "Einstellung Index konnte nicht aufgebaut werden"));
         // Rufe Funktion für die Basis Fenster Konfiguration auf
         window_setup(&window);
         // Fenster anzeigen und Infobar verstecken

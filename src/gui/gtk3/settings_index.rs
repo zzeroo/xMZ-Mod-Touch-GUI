@@ -1,7 +1,11 @@
+use common::*;
+use errors::*;
+use gtk::{Builder, Button, ComboBox, TreeView, TreeStore, Window};
 use gtk::prelude::*;
-use gtk::{Builder, Button, ComboBox};
 use rustc_serialize::json;
 use xmz_client::client::Client;
+use std::sync::Arc;
+use gui::gtk3::module_index;
 
 
 pub fn save_server_settings_interface(builder: &Builder) {
@@ -33,11 +37,36 @@ pub fn save_server_settings_interface(builder: &Builder) {
 
 }
 
-pub fn setup(builder: &Builder) {
+pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<()> {
     let button_server_settings_interface_save: Button = builder.get_object("button_server_settings_interface_save").unwrap();
+    let button_reset_client_error_communication: Button = builder.get_object("button_reset_client_error_communication").unwrap();
+    let treeview_settings_module_left: TreeView = builder.get_object("treeview_settings_module_left").unwrap();
+    let treestore_modules: TreeStore = builder.get_object("treestore_modules").unwrap();
+    treeview_settings_module_left.set_model(Some(&treestore_modules));
+
+    let mut client = client.clone();
+    if client.error_communication < 5 {
+        match module_index::get_modules(&mut client) {
+            Ok(modules) => {
+                module_index::fill_treestore(&treestore_modules, &modules);
+            }
+            Err(err) => {
+                if client.error_communication < u32::max_value() {
+                    client.error_communication += 1;
+                }
+                report_error(&err);
+            }
+        }
+    }
+
 
     let builder1 = builder.clone();
     button_server_settings_interface_save.connect_clicked(move |_| {
         save_server_settings_interface(&builder1);
     });
+
+    button_reset_client_error_communication.connect_clicked(move |_| {
+    });
+
+    Ok(())
 }

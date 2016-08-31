@@ -1,12 +1,13 @@
 /// Diese Datei representiert den Module Index View, die Übersichtsseite mit den Modulen und
 /// deren Sensoren.
+use common::*;
 use errors::*;
-use gtk::prelude::*;
 use gtk::{Builder, CellRendererText, TreeView, TreeViewColumn, TreeStore, Window};
+use gtk::prelude::*;
 use rustc_serialize::json;
+use std::collections::HashSet;
 use xmz_client::client::Client;
 use xmz_server::module::Module;
-use std::collections::HashSet;
 
 
 /// Update den TreeStores mit den aktuellen Modul Daten des Servers
@@ -140,7 +141,7 @@ fn setup_treeview(treeview: &TreeView) {
 ///
 ///
 ///
-fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+pub fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     for (id, module) in modules.iter().enumerate() {
         fill_treestore_column(&treestore, &module, id);
     }
@@ -150,11 +151,10 @@ fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
 ///
 /// Liefert ein Vector mit Modules zurück.
 ///
-fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
-    let mut modules: Vec<Module> = vec![];
-    let _ = client.execute("module list").map(|data| {
-        modules = json::decode(&data).unwrap_or(vec![]);
-    });
+pub fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
+    let data = try!(client.execute("module list").chain_err(|| "Module konnten nicht vom Server gelesen werden"));
+    let modules = json::decode(&data).unwrap_or(vec![]);
+
     Ok(modules)
 }
 
@@ -163,7 +163,7 @@ fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
 /// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
 /// und Sensoren gebildet.
 /// **Hier ist auch der Timer definiert der (im Sekundentakt) die Module aktualisiert.**
-pub fn setup(builder: &Builder, window: &Window) -> Result<()> {
+pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
@@ -182,30 +182,52 @@ pub fn setup(builder: &Builder, window: &Window) -> Result<()> {
     // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
     treeview_modules.set_model(Some(&treestore_modules));
 
-    let mut client = Client::new();
-    let modules = try!(get_modules(&mut client)
-        .chain_err(|| "Module konnten nicht vom Server abgefragt werden"));
 
-    fill_treestore(&treestore_modules, &modules);
-    setup_treeview(&treeview_modules);
+    let mut client = client.clone();
 
+    if client.error_communication < 5 {
+        match get_modules(&mut client) {
+            Ok(modules) => {
+                // Reset des Fehlerzählers
+                client.error_communication = 0;
+                fill_treestore(&treestore_modules, &modules);
+                setup_treeview(&treeview_modules);
+            }
+            Err(err) => {
+                if client.error_communication < u32::max_value() {
+                    client.error_communication += 1;
+                }
+                report_error(&err);
+            }
+        }
+    }
 
     // Timer gesteuertes Update des TreeStore
     let treestore1 = treestore_modules.clone();
     let window1 = window.clone();
     let treeview1 = treeview_modules.clone();
     ::gtk::timeout_add(1000, move || {
-        let mut client = Client::new();
-        match get_modules(&mut client) {
-            Ok(..) => {
-                update_treestore(&treestore1, &modules);
-                treeview1.expand_all();
+        trace!("in Update Timer, Client.error_communication: {}", client.error_communication);
+        // Wenn weniger als 5 Kommunikationsfehler vorhanden sind, werden die Module
+        // vom Server erfragt.
+        if client.error_communication < 5 {
+            match get_modules(&mut client) {
+                Ok(modules) => {
+                    // Reset des Fehlerzählers
+                    client.error_communication = 0;
+                    update_treestore(&treestore1, &modules);
+                    treeview1.expand_all();
+                }
+                Err(err) => {
+                    if client.error_communication < u32::max_value() {
+                        client.error_communication += 1;
+                    }
+                    report_error(&err);
+                }
             }
-            Err(_) => {}
         }
 
         window1.queue_draw();
-
         ::glib::Continue(true)
     });
 
