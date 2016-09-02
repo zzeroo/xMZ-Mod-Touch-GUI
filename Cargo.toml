@@ -28,6 +28,10 @@ xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Cli
 #xmz_client = { path = "../xMZ-Mod-Touch-Client/" }
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
 #xmz_server = { path = "../xMZ-Mod-Touch-Server/" }
+# No Animation Gtk Hack
+glib-sys = "*"
+gtk-sys = "*"
+gobject-sys = "*"
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]

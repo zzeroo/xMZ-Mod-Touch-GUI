@@ -2,7 +2,7 @@
 /// deren Sensoren.
 use common::*;
 use errors::*;
-use gtk::{Builder, CellRendererText, InfoBar, TreeView, TreeViewColumn, TreeStore, Window};
+use gtk::{Builder, CellRendererText, InfoBar, Label, Button, TreeView, TreeViewColumn, TreeStore, Window};
 use gtk::prelude::*;
 use rustc_serialize::json;
 use std::collections::HashSet;
@@ -166,6 +166,9 @@ pub fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
 pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
     let info_bar_error: InfoBar = builder.get_object("info_bar_error").unwrap();
+    let info_bar_error_label: Label = builder.get_object("info_bar_error_label").unwrap();
+    let info_bar_error_action_button: Button = builder.get_object("info_bar_error_action_button").unwrap();
+
 
     // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column()
     // `column.add_attribute(&cell, "text", id);`
@@ -183,9 +186,11 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
     // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
     treeview_modules.set_model(Some(&treestore_modules));
 
+    info_bar_error_action_button.connect_clicked(move |_| {
+        println!("{:#?}", client);
+    });
 
     let mut client = client.clone();
-
     if client.error_communication < 5 {
         match get_modules(&mut client) {
             Ok(modules) => {
@@ -202,6 +207,8 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
             }
         }
     } else {
+        info_bar_error_action_button.set_label("Reset Kommunikation");
+        info_bar_error_label.set_text("Server Kommunikationsfehler");
         info_bar_error.show();
     }
 
@@ -229,6 +236,8 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
                 }
             }
         } else {
+            info_bar_error_action_button.set_label("Reset Kommunikation");
+            info_bar_error_label.set_text("Server Kommunikationsfehler");
             info_bar_error.show();
         }
 

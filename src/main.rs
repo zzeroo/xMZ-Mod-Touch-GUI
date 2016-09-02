@@ -8,7 +8,7 @@ use xmz_mod_touch_gui::gui;
 
 
 fn main() {
-    trace!("Initialisiere den Logger");
+    // Initialisiere den Logger (erst nach diesem sind `trace!()`, `debug!()` usw funktional)
     env_logger::init().unwrap();
 
     let application = gui::gtk3::App::new();

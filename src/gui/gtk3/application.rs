@@ -6,6 +6,14 @@ use gui::gtk3::*;
 use errors::*;
 use xmz_client::client::*;
 
+extern crate libc;
+extern crate glib_sys as glib_ffi;
+extern crate gtk_sys as gtk_ffi;
+extern crate gobject_sys as gobject_ffi;
+extern crate glib;
+use glib::translate::ToGlibPtr;
+use self::glib_ffi::gpointer;
+
 pub struct App {
 }
 
@@ -23,6 +31,12 @@ impl App {
             panic!(format!("{}: GTK konnte nicht initalisiert werden.",
                            env!("CARGO_PKG_NAME")))
         });
+
+        unsafe{
+            self::gobject_ffi::g_object_set (gtk_ffi::gtk_settings_get_default () as gpointer,
+            "gtk-enable-animations".to_glib_none().0, glib_ffi::GFALSE, ::std::ptr::null::<libc::c_void>());
+        }
+
         // Initialisiere alle Widgets die das Programm nutzt aus dem Glade File.
         let builder = gtk::Builder::new_from_string(include_str!("interface.glade"));
         let window: gtk::Window = builder.get_object("main_window").unwrap();
@@ -59,7 +73,7 @@ impl App {
             debug!("Tastendruck erkannt");
             if let key::Escape = key.get_keyval() {
                 debug!("Escape erkannt");
-                gtk::main_quit()
+                gtk::main_quit();
             }
             Inhibit(false)
         });
