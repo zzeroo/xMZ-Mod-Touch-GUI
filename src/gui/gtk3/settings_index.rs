@@ -6,7 +6,50 @@ use rustc_serialize::json;
 use xmz_client::client::Client;
 use std::sync::Arc;
 use gui::gtk3::module_index;
+use xmz_server::module::Module;
 
+
+/// Füllt den TreeStore mit den Daten der Module
+///
+/// # Params
+///
+/// `treestore` - TreeStore der die Daten hält
+/// `modules`   - Vector mit Modulen
+///
+///
+///
+pub fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+    for (id, module) in modules.iter().enumerate() {
+        fill_treestore_column(&treestore, &module, id);
+    }
+}
+
+/// Helper Funktion die den TreeStore nachträglich um eine weitere Zeile `id` (3. Parameter)
+/// mit den Daten des als 2. Parameter übergebenen `module` füllt.
+///
+/// #Parameters
+///
+/// `treestore`     - TreeStore der die Daten hält
+/// `module`        - Module Struct die die neuen Daten enthält
+/// `id`            - ID wo im TreeStore die Daten eingefügt werden sollen
+///
+fn fill_treestore_column(treestore: &TreeStore, module: &Module, id: usize) {
+    let module_iter = treestore.insert_with_values(None,
+                                                   None,
+                                                   &[0, 1, 2],
+                                                   &[&(id as u32 + 1),
+                                                     &module.modbus_slave_id(),
+                                                     &module.module_type()]);
+    for (i, sensor) in module.sensors.iter().enumerate() {
+        treestore.insert_with_values(Some(&module_iter),
+                                     None,
+                                     &[0, 2, 3, 4],
+                                     &[&(i as u32 + 1),
+                                       &sensor.sensor_type(),
+                                       &format!("{:.02}", sensor.concentration().unwrap_or(0.0)),
+                                       &sensor.si()]);
+    }
+}
 
 pub fn save_server_settings_interface(builder: &Builder) {
     // Dieses Array wird am Ende der Funktion serialisiert und an den Server übertragen,
@@ -66,6 +109,11 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<
     });
 
     button_reset_client_error_communication.connect_clicked(move |_| {
+    });
+
+    let treeview_settings_module_left = treeview_settings_module_left.clone();
+    treeview_settings_module_left.connect_row_activated(move |_, _, _| {
+        println!("Row activated");
     });
 
     Ok(())

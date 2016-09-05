@@ -65,6 +65,21 @@ fn update_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
     }
 }
 
+/// Füllt den TreeStore mit den Daten der Module
+///
+/// # Params
+///
+/// `treestore` - TreeStore der die Daten hält
+/// `modules`   - Vector mit Modulen
+///
+///
+///
+pub fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
+    for (id, module) in modules.iter().enumerate() {
+        fill_treestore_column(&treestore, &module, id);
+    }
+}
+
 /// Helper Funktion die den TreeStore nachträglich um eine weitere Zeile `id` (3. Parameter)
 /// mit den Daten des als 2. Parameter übergebenen `module` füllt.
 ///
@@ -132,21 +147,6 @@ fn setup_treeview(treeview: &TreeView) {
     treeview.expand_all();
 }
 
-/// Füllt den TreeStore mit den Daten der Module
-///
-/// # Params
-///
-/// `treestore` - TreeStore der die Daten hält
-/// `modules`   - Vector mit Modulen
-///
-///
-///
-pub fn fill_treestore(treestore: &TreeStore, modules: &Vec<Module>) {
-    for (id, module) in modules.iter().enumerate() {
-        fill_treestore_column(&treestore, &module, id);
-    }
-}
-
 /// Frage den Server, über den Client, nach den aktuellen Module Daten ab.
 ///
 /// Liefert ein Vector mit Modules zurück.
@@ -163,7 +163,7 @@ pub fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
 /// Komponenten des Fensters aus dem Builder File eingebunden, der TreeStore für die Module
 /// und Sensoren gebildet.
 /// **Hier ist auch der Timer definiert der (im Sekundentakt) die Module aktualisiert.**
-pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> {
+pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<()> {
     let treeview_modules: TreeView = builder.get_object("treeview_modules").unwrap();
     let info_bar_error: InfoBar = builder.get_object("info_bar_error").unwrap();
     let info_bar_error_label: Label = builder.get_object("info_bar_error_label").unwrap();
@@ -186,9 +186,14 @@ pub fn setup(builder: &Builder, window: &Window, client: &Client) -> Result<()> 
     // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
     treeview_modules.set_model(Some(&treestore_modules));
 
-    info_bar_error_action_button.connect_clicked(move |_| {
-        println!("{:#?}", client);
-    });
+    {
+        client.error_communication = 0;
+        let mut client = client.clone();
+        client.error_communication = 10;
+        info_bar_error_action_button.connect_clicked(move |_| {
+            debug!("Reset Client.error_communication Counter");
+        });
+    }
 
     let mut client = client.clone();
     if client.error_communication < 5 {

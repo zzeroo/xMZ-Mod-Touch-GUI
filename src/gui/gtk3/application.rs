@@ -50,7 +50,7 @@ impl App {
             info_bar.connect_response(move |info_bar, _| info_bar.hide());
         }
         // Module Index aufbauen
-        try!(module_index::setup(&builder, &window, &client).chain_err(|| "Module Index konnte nicht aufgebaut werden"));
+        try!(module_index::setup(&builder, &window, &mut client).chain_err(|| "Module Index konnte nicht aufgebaut werden"));
         // System Information bauen
         sysinfo_index::setup(&builder);
         // Einstellungen Fenster (Settings) bauen
