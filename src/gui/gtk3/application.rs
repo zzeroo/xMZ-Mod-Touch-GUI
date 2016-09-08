@@ -28,8 +28,7 @@ impl App {
         let mut client = Client::new();
 
         gtk::init().unwrap_or_else(|_| {
-            panic!(format!("{}: GTK konnte nicht initalisiert werden.",
-                           env!("CARGO_PKG_NAME")))
+            panic!("GTK konnte nicht initalisiert werden.");
         });
 
         unsafe{
