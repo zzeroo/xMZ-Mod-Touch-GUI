@@ -187,9 +187,7 @@ pub fn setup(builder: &Builder, window: &Window, client: &mut Client) -> Result<
     treeview_modules.set_model(Some(&treestore_modules));
 
     {
-        client.error_communication = 0;
         let mut client = client.clone();
-        client.error_communication = 10;
         info_bar_error_action_button.connect_clicked(move |_| {
             debug!("Reset Client.error_communication Counter");
         });

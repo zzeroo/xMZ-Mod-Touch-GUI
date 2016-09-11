@@ -31,6 +31,8 @@ impl App {
             panic!("GTK konnte nicht initalisiert werden.");
         });
 
+        // Disable Animationen
+        // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
         unsafe{
             self::gobject_ffi::g_object_set (gtk_ffi::gtk_settings_get_default () as gpointer,
             "gtk-enable-animations".to_glib_none().0, glib_ffi::GFALSE, ::std::ptr::null::<libc::c_void>());
