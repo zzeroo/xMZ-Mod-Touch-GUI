@@ -20,10 +20,11 @@ Description="xMZ-Mod-Touch-GUI (Graphical User Interface) der 'xMZ-Mod-Touch'-Pl
 After=weston.service
 
 [Service]
-Environment="XDG_RUNTIME_DIR=/run/shm/wayland"
-Environment="GDK_BACKEND=wayland"
-Environment="XMZ_HARDWARE=0.1.0"
-Environment="LANG=de_DE.UTF-8"
+Environment=XDG_RUNTIME_DIR=/run/shm/wayland
+Environment=LD_LIBRARY_PATH=/usr/lib
+Environment=GDK_BACKEND=wayland
+Environment=XMZ_HARDWARE=0.1.0
+Environment=LANG=de_DE.UTF-8
 ExecStart=/usr/bin/xmz-mod-touch-gui
 Restart=always
 RestartSec=10
