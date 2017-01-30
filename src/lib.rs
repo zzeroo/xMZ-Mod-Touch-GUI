@@ -1,14 +1,13 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server/master/share/xmz-logo.png",
        html_favicon_url = "https://raw.githubusercontent.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server/master/share/favicon.ico",
        html_root_url = "https://gaswarnanlagen.com/")]
-#![feature(stmt_expr_attributes)]
-#![recursion_limit = "1024"]
 
-#[macro_use]extern crate error_chain;
 #[macro_use] extern crate log;
-extern crate gtk;
 extern crate gdk;
 extern crate glib;
+extern crate gtk;
+extern crate hyper;
+extern crate serde_json;
 
 
 // pub mod gui {
@@ -17,6 +16,6 @@ extern crate glib;
 
 // pub mod sysinfo;
 // /// Fehlerhandling mit dem error-chain crate
-pub mod errors;
-// /// Gemeinsame Funktionen
-// pub mod common;
+pub mod error;
+
+pub use self::error::*;
