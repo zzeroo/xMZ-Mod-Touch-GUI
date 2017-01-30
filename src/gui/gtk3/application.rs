@@ -14,6 +14,25 @@ use gtk_sys;
 use gobject_sys;
 
 
+// make moving clones into closures more convenient
+macro_rules! clone {
+    (@param _) => ( _ );
+    (@param $x:ident) => ( $x );
+    ($($n:ident),+ => move || $body:expr) => (
+        {
+            $( let $n = $n.clone(); )+
+            move || $body
+        }
+    );
+    ($($n:ident),+ => move |$($p:tt),+| $body:expr) => (
+        {
+            $( let $n = $n.clone(); )+
+            move |$(clone!(@param $p),)+| $body
+        }
+    );
+}
+
+
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     let thread_poll = thread::spawn(move || {
         let client = Client::new(); // hyper::Client;
@@ -80,14 +99,15 @@ pub fn launch() -> Result<()> {
     use glib::translate::ToGlibPtr;
 
     let server = Arc::new(Mutex::new(Server::new()));
+    poll_server_web_interface(server.clone());
 
-    // Disable Animationen
-    // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
-    // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
-    unsafe{
-        gobject_sys::g_object_set (gtk_sys::gtk_settings_get_default() as *mut gobject_sys::GObject,
-        "gtk-enable-animations".to_glib_none().0, 0, 0);
-    }
+    // // Disable Animationen
+    // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
+    // // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
+    // unsafe{
+    //     gobject_sys::g_object_set (gtk_sys::gtk_settings_get_default() as *mut gobject_sys::GObject,
+    //     "gtk-enable-animations".to_glib_none().0, 0, 0);
+    // }
 
     let glade_str = include_str!("gui.glade");
     let builder = gtk::Builder::new();
@@ -114,17 +134,44 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
+    // Kombisensoren Index
     //
-    // loop {
-    //     // Update Server struct via http
-    //     poll_server_web_interface(server.clone())?;
-    //
-    //     // // print some
-    //     // print_some(server.clone())?;
-    //
-    //     // 1Sekunden Takt
-    //     thread::sleep(Duration::from_millis(1000));
-    // }
+    let server1 = server.clone();
+    {
+        let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
+
+        match server1.lock() {
+            Err(_) => {}
+            Ok(server) => {
+                for kombisensor in server.get_kombisensors().iter() {
+                    let iter = treestore_kombisensors.insert_with_values(None, None, &[0], &[&kombisensor.get_kombisensor_type()]);
+
+                    for sensor in kombisensor.get_sensors().iter() {
+                        treestore_kombisensors.insert_with_values(Some(&iter), None, &[0, 1, 2], &[
+                            &sensor.get_sensor_type(),
+                            &sensor.get_concentration(),
+                            &sensor.get_si(),
+                        ]);
+                    }
+                    treeview_kombisensors.expand_all();
+                }
+            }
+        }
+    }
+
+    // Server Update Task
+    gtk::idle_add(clone!(server => move || {
+        // Update Server struct via http
+        match poll_server_web_interface(server.clone()) {
+            Err(err) => {}
+            Ok(_) => {}
+        }
+
+        thread::sleep(Duration::from_millis(1000));
+
+        ::glib::Continue(true)
+    }));
 
     #[cfg(feature = "development")]
     window_main.connect_key_press_event(move |_, key| {
