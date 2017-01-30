@@ -1,19 +1,31 @@
-#![feature(stmt_expr_attributes)]
-
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate gtk;
-extern crate gdk;
-extern crate glib;
-extern crate rustc_serialize;
-extern crate xmz_client;
-extern crate xmz_server;
+extern crate xmz_mod_touch_gui;
+
+use gtk::prelude::*;
+use xmz_mod_touch_gui::error::*;
+use xmz_mod_touch_gui::gui;
 
 
-mod gui {
-    pub mod gtk3;
+fn run() -> Result<()> {
+    xmz_mod_touch_gui::application::launch()?;
+
+    Ok(())
 }
 
-pub mod sysinfo;
 
 fn main() {
-    gui::gtk3::launch();
+    // Initialisiere den Logger (erst nach diesem sind `trace!()`, `debug!()` usw funktional)
+    env_logger::init().unwrap();
+
+    if gtk::init().is_err() {
+        error!("Failed to initalize GTK.");
+
+        ::std::process::exit(1);
+    }
+
+    if let Err(ref e) = run() {
+        println!("error: {}", e);
+    }
 }

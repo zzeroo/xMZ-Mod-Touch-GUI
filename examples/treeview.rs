@@ -1,3 +1,5 @@
+#[macro_use] extern crate log;
+extern crate env_logger;
 extern crate xmz_server;
 extern crate gtk;
 extern crate gdk;
@@ -14,7 +16,7 @@ fn test_treestore(list: &TreeStore) -> i32 {
 
     if let Some(_iter) = list.get_iter_first() {
         num = list.iter_n_children(None);
-        println!("Nummer Children: {:?}", num);
+        debug!("Nummer Children: {:?}", num);
     }
     num
 }
@@ -33,7 +35,7 @@ fn update_window(treestore: &TreeStore) {
         let mut _valid = true;
         while _valid {
             let id = treestore.get_value(&iter, 0).get::<i64>().unwrap_or(0) as usize;
-            println!("Id: {}", id);
+            debug!("Id: {}", id);
             if let Some(m) = module.get(id) {
                 treestore.set(&iter, &[1, 2], &[&m.modbus_slave_id(), &m.module_type()]);
                 _valid = treestore.iter_next(&mut iter);
@@ -47,7 +49,8 @@ fn update_window(treestore: &TreeStore) {
 
 // Füll ein TreeStore mit den übergebenen Modulen
 fn populate_model(modules: &Vec<Module>) -> TreeStore {
-    // ModuleID, Modbus Slave Id, ModuleType,
+    // ModuleID, Modbus Slave Id,
+    //  ModuleType,
     let model = TreeStore::new(&[u32::static_type(),
                                  String::static_type(),
                                  String::static_type(),
@@ -150,10 +153,15 @@ fn create_and_setup_window() -> Window {
 
 
 fn main() {
-    if gtk::init().is_err() {
-        println!("Failed to initialise Gtk3.");
-        return;
-    }
+    trace!("Initialisiere den Logger");
+    env_logger::init().unwrap();
+
+    trace!("Initalisiere Gtk3");
+    gtk::init().unwrap_or_else(|_| {
+        panic!(format!("{}: GTK konnte nicht initalisiert werden.",
+                       env!("CARGO_PKG_NAME")))
+    });
+
     // Basis Fenster Erstellen. Hier wird das Fenster und einige Attribute und Signale erzeugt und
     // miteinander verbunden.
     let window = create_and_setup_window();
