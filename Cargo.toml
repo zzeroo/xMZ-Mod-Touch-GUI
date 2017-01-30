@@ -13,6 +13,9 @@ name = "xmz_mod_touch_gui"
 path = "src/main.rs"
 doc = false
 
+[features]
+development = []
+
 [dependencies]
 #xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
 env_logger = "0.3"
@@ -27,6 +30,8 @@ rand = "0.3"
 serde = "0.9"
 serde_json = "0.9"
 xmz_server = { path = "../xMZ-Mod-Touch-Server"}
+gobject-sys = { git = "https://github.com/gtk-rs/sys" }
+gtk-sys = { git = "https://github.com/gtk-rs/sys" }
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]

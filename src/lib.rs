@@ -8,14 +8,16 @@ extern crate glib;
 extern crate gtk;
 extern crate hyper;
 extern crate serde_json;
+extern crate xmz_server;
+extern crate gobject_sys;
+extern crate gtk_sys;
 
 
-// pub mod gui {
-//     pub mod gtk3;
-// }
+pub mod gui {
+    pub mod gtk3;
+}
 
-// pub mod sysinfo;
-// /// Fehlerhandling mit dem error-chain crate
 pub mod error;
 
 pub use self::error::*;
+pub use self::gui::gtk3::*;

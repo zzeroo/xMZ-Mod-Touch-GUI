@@ -4,12 +4,14 @@ use std::error::Error;
 use std::fmt;
 use std::io;
 use std::result;
+use glib;
 
 
 pub type Result<T> = result::Result<T, GuiError>;
 
 #[derive(Debug)]
 pub enum GuiError {
+    Glib(glib::Error),
     Hyper(hyper::Error),
     IoError(io::Error),
     SerdeJson(serde_json::Error),
@@ -19,6 +21,7 @@ pub enum GuiError {
 impl fmt::Display for GuiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
+            GuiError::Glib(ref err) => err.fmt(f),
             GuiError::Hyper(ref err) => err.fmt(f),
             GuiError::IoError(ref err) => err.fmt(f),
             GuiError::SerdeJson(ref err) => err.fmt(f),
@@ -30,6 +33,7 @@ impl fmt::Display for GuiError {
 impl Error for GuiError {
     fn description(&self) -> &str {
         match *self {
+            GuiError::Glib(ref err) => err.description(),
             GuiError::Hyper(ref err) => err.description(),
             GuiError::IoError(ref err) => err.description(),
             GuiError::SerdeJson(ref err) => err.description(),
@@ -39,11 +43,18 @@ impl Error for GuiError {
 
     fn cause(&self) -> Option<&Error> {
         match *self {
+            GuiError::Glib(ref err) => Some(err),
             GuiError::Hyper(ref err) => Some(err),
             GuiError::IoError(ref err) => Some(err),
             GuiError::SerdeJson(ref err) => Some(err),
             GuiError::Unknown => None,
         }
+    }
+}
+
+impl From<glib::Error> for GuiError {
+    fn from(err: glib::Error) -> GuiError {
+        GuiError::Glib(err)
     }
 }
 
