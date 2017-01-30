@@ -28,8 +28,8 @@ log = "0.3"
 rand = "0.3"
 serde = "0.9"
 serde_json = "0.9"
-# xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
-xmz_server = { path = "../xMZ-Mod-Touch-Server"}
+xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
+# xmz_server = { path = "../xMZ-Mod-Touch-Server"}
 gobject-sys = { git = "https://github.com/gtk-rs/sys" }
 gtk-sys = { git = "https://github.com/gtk-rs/sys" }
 
