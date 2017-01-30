@@ -1,3 +1,4 @@
+#[macro_use] extern crate log;
 extern crate env_logger;
 extern crate hyper;
 extern crate serde_json;
@@ -16,16 +17,23 @@ use std::time::Duration;
 fn poll_server_web_interface(server: Arc<Mutex<xmz_server::Server>>) -> Result<()> {
     let thread_poll = thread::spawn(move || {
         let client = Client::new(); // hyper::Client;
-        let mut res = client.get("http://localhost:3000/").send().unwrap();
-        assert_eq!(res.status, hyper::Ok);
+        let mut res = match client.get("http://localhost:3000/").send() {
+            Err(err) => { debug!("{:?}", err) }
+            Ok(mut res) => {
+                assert_eq!(res.status, hyper::Ok);
 
-        let mut s = String::new();
-        res.read_to_string(&mut s).unwrap();
-
-        {
-            let mut server = server.lock().unwrap();
-            *server = serde_json::from_str(&s).unwrap();
-        }
+                let mut s = String::new();
+                match res.read_to_string(&mut s) {
+                    Err(err) => { debug!("{:?}", err) }
+                    Ok(_) => {
+                        {
+                            let mut server = server.lock().unwrap();
+                            *server = serde_json::from_str(&s).unwrap();
+                        }
+                    }
+                }
+            }
+        };
     }).join();
 
     Ok(())
