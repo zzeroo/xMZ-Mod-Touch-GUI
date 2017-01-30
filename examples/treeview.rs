@@ -49,7 +49,8 @@ fn update_window(treestore: &TreeStore) {
 
 // Füll ein TreeStore mit den übergebenen Modulen
 fn populate_model(modules: &Vec<Module>) -> TreeStore {
-    // ModuleID, Modbus Slave Id, ModuleType,
+    // ModuleID, Modbus Slave Id,
+    //  ModuleType,
     let model = TreeStore::new(&[u32::static_type(),
                                  String::static_type(),
                                  String::static_type(),

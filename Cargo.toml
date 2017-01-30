@@ -16,22 +16,17 @@ doc = false
 [dependencies]
 env_logger = "0.3"
 error-chain = "0.4"
-gdk = { version = "0.5.0" }
-glib = "*"
-gtk = { version = "0.1.0", features = ["v3_16"] }
+gdk = { git = "https://github.com/gtk-rs/gdk.git" }
+glib = { git = "https://github.com/gtk-rs/glib.git" }
+gtk = { git = "https://github.com/gtk-rs/gtk.git" }
+hyper = "0.10"
 libc = "0.2"
 log = "0.3"
-nanomsg = { git = "https://github.com/thehydroimpulse/nanomsg.rs.git" }
-rand = "*"
-rustc-serialize = "0.3"
+rand = "0.3"
+serde = "0.9"
+serde_json = "0.9"
 xmz_client = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Client.git" }
-#xmz_client = { path = "../xMZ-Mod-Touch-Client/" }
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
-#xmz_server = { path = "../xMZ-Mod-Touch-Server/" }
-# No Animation Gtk Hack
-glib-sys = "*"
-gtk-sys = "*"
-gobject-sys = "*"
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]

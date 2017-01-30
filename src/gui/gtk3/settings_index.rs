@@ -1,13 +1,12 @@
+extern crate serde_json;
 use common::*;
 use errors::*;
 use gtk::{Builder, Button, ComboBox, TreeView, TreeStore, Window};
 use gtk::prelude::*;
-use rustc_serialize::json;
-use xmz_client::client::Client;
-use std::sync::Arc;
 use gui::gtk3::module_index;
+use std::sync::Arc;
+use xmz_client::client::Client;
 use xmz_server::module::Module;
-
 
 /// Füllt den TreeStore mit den Daten der Module
 ///
@@ -76,7 +75,7 @@ pub fn save_server_settings_interface(builder: &Builder) {
 
     let mut client = Client::new();
     // TODO: Eigene Fehlercodes einführen
-    let _ = client.execute(format!("server set interface_config {}", json::encode(&server_settings_interface).unwrap()));
+    let _ = client.execute(format!("server set interface_config {}", serde_json::from_str(&server_settings_interface).unwrap()));
 
 }
 

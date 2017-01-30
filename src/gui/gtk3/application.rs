@@ -7,12 +7,9 @@ use errors::*;
 use xmz_client::client::*;
 
 extern crate libc;
-extern crate glib_sys as glib_ffi;
-extern crate gtk_sys as gtk_ffi;
-extern crate gobject_sys as gobject_ffi;
 extern crate glib;
 use glib::translate::ToGlibPtr;
-use self::glib_ffi::gpointer;
+
 
 pub struct App {
 }
@@ -26,20 +23,24 @@ impl App {
     /// Konstruiert die Fensterelemente, Signale und so weiter und zeigt am Ende das Fenster an
     pub fn launch(&self) -> Result<()> {
         let mut client = Client::new();
+        client.set_socket_receive_timeout(200);
+        client.set_socket_send_timeout(200);
 
         gtk::init().unwrap_or_else(|_| {
             panic!("GTK konnte nicht initalisiert werden.");
         });
 
-        // Disable Animationen
-        // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
-        unsafe{
-            self::gobject_ffi::g_object_set (gtk_ffi::gtk_settings_get_default () as gpointer,
-            "gtk-enable-animations".to_glib_none().0, glib_ffi::GFALSE, ::std::ptr::null::<libc::c_void>());
-        }
+        // // Disable Animationen
+        // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
+        // // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
+        // unsafe{
+        //     self::gobject_ffi::g_object_set (gtk_ffi::gtk_settings_get_default () as gpointer,
+        //     "gtk-enable-animations".to_glib_none().0, glib_ffi::GFALSE, ::std::ptr::null::<libc::c_void>());
+        // }
 
         // Initialisiere alle Widgets die das Programm nutzt aus dem Glade File.
-        let builder = gtk::Builder::new_from_string(include_str!("interface.glade"));
+        let builder = gtk::Builder::new();
+        builder.add_from_string(include_str!("interface.glade")).unwrap();
         let window: gtk::Window = builder.get_object("main_window").unwrap();
         let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
         let info_bar_error: gtk::InfoBar = builder.get_object("info_bar_error").unwrap();

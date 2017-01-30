@@ -1,10 +1,10 @@
 /// Diese Datei representiert den Module Index View, die Übersichtsseite mit den Modulen und
 /// deren Sensoren.
+extern crate serde_json;
 use common::*;
 use errors::*;
 use gtk::{Builder, CellRendererText, InfoBar, Label, Button, TreeView, TreeViewColumn, TreeStore, Window};
 use gtk::prelude::*;
-use rustc_serialize::json;
 use std::collections::HashSet;
 use xmz_client::client::Client;
 use xmz_server::module::Module;
@@ -153,7 +153,7 @@ fn setup_treeview(treeview: &TreeView) {
 ///
 pub fn get_modules(client: &mut Client) -> Result<Vec<Module>> {
     let data = try!(client.execute("module list").chain_err(|| "Module konnten nicht vom Server gelesen werden"));
-    let modules = json::decode(&data).unwrap_or(vec![]);
+    let modules = serde_json::from_str(&data).unwrap_or(vec![]);
 
     Ok(modules)
 }

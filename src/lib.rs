@@ -9,17 +9,14 @@
 extern crate gtk;
 extern crate gdk;
 extern crate glib;
-extern crate rustc_serialize;
-extern crate xmz_client;
-extern crate xmz_server;
 
 
-pub mod gui {
-    pub mod gtk3;
-}
+// pub mod gui {
+//     pub mod gtk3;
+// }
 
-pub mod sysinfo;
-/// Fehlerhandling mit dem error-chain crate
-mod errors;
-/// Gemeinsame Funktionen
-pub mod common;
+// pub mod sysinfo;
+// /// Fehlerhandling mit dem error-chain crate
+pub mod errors;
+// /// Gemeinsame Funktionen
+// pub mod common;
