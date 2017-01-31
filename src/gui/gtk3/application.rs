@@ -99,7 +99,9 @@ pub fn launch() -> Result<()> {
     use glib::translate::ToGlibPtr;
 
     let server = Arc::new(Mutex::new(Server::new()));
-    poll_server_web_interface(server.clone());
+    {
+        poll_server_web_interface(server.clone());
+    }
 
     // // Disable Animationen
     // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
@@ -163,11 +165,12 @@ pub fn launch() -> Result<()> {
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
         // Update Server struct via http
-        match poll_server_web_interface(server.clone()) {
-            Err(err) => {}
-            Ok(_) => {}
+        {
+            match poll_server_web_interface(server.clone()) {
+                Err(err) => {}
+                Ok(_) => {}
+            }
         }
-
         thread::sleep(Duration::from_millis(1000));
 
         ::glib::Continue(true)
