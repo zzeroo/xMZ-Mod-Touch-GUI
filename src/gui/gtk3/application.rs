@@ -150,10 +150,10 @@ pub fn launch() -> Result<()> {
                     let iter = treestore_kombisensors.insert_with_values(None, None, &[0], &[&kombisensor.get_kombisensor_type()]);
 
                     for sensor in kombisensor.get_sensors().iter() {
-                        treestore_kombisensors.insert_with_values(Some(&iter), None, &[0, 1, 2], &[
+                        treestore_kombisensors.insert_with_values(Some(&iter), None, &[0], &[
                             &sensor.get_sensor_type(),
-                            &sensor.get_concentration(),
-                            &sensor.get_si(),
+                            // &sensor.get_concentration(),
+                            // &sensor.get_si(),
                         ]);
                     }
                     treeview_kombisensors.expand_all();
