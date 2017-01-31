@@ -77,7 +77,7 @@ fn window_main_setup(window: &gtk::Window) {
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     #[cfg(not(feature = "development"))]
-    window.fullscreen();
+    // window.fullscreen();
 }
 
 fn create_treestore() -> gtk::TreeStore {
