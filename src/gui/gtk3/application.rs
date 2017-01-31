@@ -34,7 +34,7 @@ macro_rules! clone {
 
 
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
-    let thread_poll = thread::spawn(move || {
+    let _ = thread::spawn(move || {
         let client = Client::new(); // hyper::Client;
         let mut res = match client.get("http://localhost:3000/").send() {
             Err(err) => { debug!("{:?}", err) }
@@ -53,21 +53,6 @@ fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
                 }
             }
         };
-    }).join();
-
-    Ok(())
-}
-
-fn print_some(server: Arc<Mutex<Server>>) -> Result<()> {
-    let _ = thread::spawn(move || {
-        let server = server.lock().unwrap();
-
-        for kombisensor in server.get_kombisensors().iter() {
-            println!("{}", kombisensor.get_modbus_slave_id());
-            for sensor in kombisensor.get_sensors().iter() {
-                println!("\t{}\t{}", sensor.get_sensor_type(), sensor.get_adc_value());
-            }
-        }
     }).join();
 
     Ok(())
@@ -151,8 +136,8 @@ pub fn launch() -> Result<()> {
                         None,
                         None,
                         &[0, 1, 4],
-                        &[&kombisensor.get_modbus_slave_id(),
-                            &kombisensor.get_kombisensor_type(),
+                        &[&format!("{}", kombisensor.get_modbus_slave_id()),
+                            &format!("{}", kombisensor.get_kombisensor_type()),
                             &format!("{}", kombisensor.get_error_count())]);
 
                     for sensor in kombisensor.get_sensors().iter() {
@@ -160,9 +145,9 @@ pub fn launch() -> Result<()> {
                             Some(&iter),
                             None,
                             &[1, 2, 3],
-                            &[&sensor.get_sensor_type(),
+                            &[&format!("{}", sensor.get_sensor_type()),
                                 &format!("{:.02}", sensor.get_concentration()),
-                                &sensor.get_si()]);
+                                &format!("{}", sensor.get_si())]);
                     }
                     treeview_kombisensors.expand_all();
                 }
@@ -179,7 +164,7 @@ pub fn launch() -> Result<()> {
                 Ok(_) => {}
             }
         }
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(100));
 
         ::glib::Continue(true)
     }));
