@@ -146,14 +146,14 @@ pub fn launch() -> Result<()> {
         match server1.lock() {
             Err(_) => {}
             Ok(server) => {
-                for kombisensor in server.get_kombisensors().iter() {
-                    let iter = treestore_kombisensors.insert_with_values(None, None, &[0], &[&kombisensor.get_kombisensor_type()]);
+"                for kombisensor in server.get_kombisensors().iter() {
+                    let iter = treestore_kombisensors.insert_with_values(None, None, &[0], &[&kombisensor.get_kombisensor_typ"e()]);
 
                     for sensor in kombisensor.get_sensors().iter() {
-                        treestore_kombisensors.insert_with_values(Some(&iter), None, &[0], &[
+                        treestore_kombisensors.insert_with_values(Some(&iter), None, &[0, 2], &[
                             &sensor.get_sensor_type(),
                             // &sensor.get_concentration(),
-                            // &sensor.get_si(),
+                            &sensor.get_si(),
                         ]);
                     }
                     treeview_kombisensors.expand_all();
