@@ -19,9 +19,9 @@ development = []
 [dependencies]
 env_logger = "0.3"
 error-chain = "0.4"
-gdk = { git = "https://github.com/gtk-rs/gdk.git" }
-glib = { git = "https://github.com/gtk-rs/glib.git" }
-gtk = { git = "https://github.com/gtk-rs/gtk.git" }
+gdk = "0.5.1"
+glib = "0.1.1"
+gtk = "0.1.1"
 hyper = "0.10"
 libc = "0.2.18"
 log = "0.3"
@@ -30,8 +30,8 @@ serde = "0.9"
 serde_json = "0.9"
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
 # xmz_server = { path = "../xMZ-Mod-Touch-Server"}
-gobject-sys = { git = "https://github.com/gtk-rs/sys" }
-gtk-sys = { git = "https://github.com/gtk-rs/sys" }
+gobject-sys = "0.3.2"
+gtk-sys = "0.3.2"
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]
