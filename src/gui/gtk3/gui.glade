@@ -2,20 +2,6 @@
 <!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkTreeStore" id="treestore_kombisensors">
-    <columns>
-      <!-- column-name Modbus -->
-      <column type="gchararray"/>
-      <!-- column-name Typ -->
-      <column type="gchararray"/>
-      <!-- column-name Value -->
-      <column type="gchararray"/>
-      <!-- column-name SI -->
-      <column type="gchararray"/>
-      <!-- column-name Errors -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
     <property name="border_width">20</property>
@@ -97,7 +83,6 @@
                   <object class="GtkTreeView" id="treeview_kombisensors">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="model">treestore_kombisensors</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
