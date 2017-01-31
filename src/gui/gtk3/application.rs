@@ -76,7 +76,7 @@ fn window_main_setup(window: &gtk::Window) {
     css_style_provider.load_from_data(css_interface).unwrap();
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    #[cfg(not(feature = "development"))]
+    // #[cfg(not(feature = "development"))]
     // window.fullscreen();
 }
 
