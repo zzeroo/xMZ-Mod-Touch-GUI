@@ -19,6 +19,9 @@ fn main() {
     // Initialisiere den Logger (erst nach diesem sind `trace!()`, `debug!()` usw funktional)
     env_logger::init().unwrap();
 
+    println!("xMZ-Mod-Touch-GUI Version: {}\n",
+             env!("CARGO_PKG_VERSION"));
+
     if gtk::init().is_err() {
         error!("Failed to initalize GTK.");
 
