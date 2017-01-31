@@ -124,39 +124,39 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
-    // // Kombisensoren Index
-    // //
-    // let server1 = server.clone();
-    // {
-    //     let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-    //     let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
+    // Kombisensoren Index
     //
-    //     match server1.lock() {
-    //         Err(_) => {}
-    //         Ok(server) => {
-    //             for kombisensor in server.get_kombisensors().iter() {
-    //                 let iter = treestore_kombisensors.insert_with_values(
-    //                     None,
-    //                     None,
-    //                     &[0, 1, 4],
-    //                     &[&kombisensor.get_modbus_slave_id(),
-    //                         &kombisensor.get_kombisensor_type(),
-    //                         &format!("{}", kombisensor.get_error_count())]);
-    //
-    //                 for sensor in kombisensor.get_sensors().iter() {
-    //                     treestore_kombisensors.insert_with_values(
-    //                         Some(&iter),
-    //                         None,
-    //                         &[1, 2, 3],
-    //                         &[&sensor.get_sensor_type(),
-    //                             &format!("{:.02}", sensor.get_concentration()),
-    //                             &sensor.get_si()]);
-    //                 }
-    //                 treeview_kombisensors.expand_all();
-    //             }
-    //         }
-    //     }
-    // }
+    let server1 = server.clone();
+    {
+        let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
+
+        match server1.lock() {
+            Err(_) => {}
+            Ok(server) => {
+                for kombisensor in server.get_kombisensors().iter() {
+                    let iter = treestore_kombisensors.insert_with_values(
+                        None,
+                        None,
+                        &[0, 1, 4],
+                        &[&kombisensor.get_modbus_slave_id(),
+                            &kombisensor.get_kombisensor_type(),
+                            &format!("{}", kombisensor.get_error_count())]);
+
+                    for sensor in kombisensor.get_sensors().iter() {
+                        treestore_kombisensors.insert_with_values(
+                            Some(&iter),
+                            None,
+                            &[1, 2, 3],
+                            &[&sensor.get_sensor_type(),
+                                &format!("{:.02}", sensor.get_concentration()),
+                                &sensor.get_si()]);
+                    }
+                    treeview_kombisensors.expand_all();
+                }
+            }
+        }
+    }
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
