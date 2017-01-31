@@ -10,12 +10,12 @@
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;
+extern crate gobject_sys;
+extern crate gtk_sys;
 extern crate gtk;
 extern crate hyper;
 extern crate serde_json;
 extern crate xmz_server;
-extern crate gobject_sys;
-extern crate gtk_sys;
 
 
 pub mod gui {

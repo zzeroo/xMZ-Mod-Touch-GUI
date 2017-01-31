@@ -1,6 +1,7 @@
-#[macro_use] use gui::gtk3::macros;
 use error::*;
 use gdk::enums::key;
+use gobject_sys;
+use gtk_sys;
 use gtk;
 use gtk::prelude::*;
 use hyper::{Client};
@@ -10,11 +11,10 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use xmz_server::server::{Server};
-use gtk_sys;
-use gobject_sys;
 
 
 // make moving clones into closures more convenient
+#[macro_export]
 macro_rules! clone {
     (@param _) => ( _ );
     (@param $x:ident) => ( $x );
@@ -31,6 +31,7 @@ macro_rules! clone {
         }
     );
 }
+
 
 
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
@@ -73,8 +74,8 @@ fn window_main_setup(window: &gtk::Window) {
 
     // CSS Datei einbinden
     let css_style_provider = gtk::CssProvider::new();
-    let css_interface = include_str!("interface.css");
-    css_style_provider.load_from_data(css_interface).unwrap();
+    let css_gui = include_str!("gui.css");
+    css_style_provider.load_from_data(css_gui).unwrap();
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     #[cfg(not(feature = "development"))]
@@ -86,9 +87,9 @@ pub fn launch() -> Result<()> {
 
     let server = Arc::new(Mutex::new(Server::new()));
 
-    // {
-    //     poll_server_web_interface(server.clone());
-    // }
+    {
+        poll_server_web_interface(server.clone());
+    }
 
     // // Disable Animationen
     // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
