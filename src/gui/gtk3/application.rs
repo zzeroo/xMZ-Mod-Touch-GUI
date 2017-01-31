@@ -58,20 +58,6 @@ fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     Ok(())
 }
 
-fn print_some(server: Arc<Mutex<Server>>) -> Result<()> {
-    let _ = thread::spawn(move || {
-        let server = server.lock().unwrap();
-
-        for kombisensor in server.get_kombisensors().iter() {
-            println!("{}", kombisensor.get_modbus_slave_id());
-            for sensor in kombisensor.get_sensors().iter() {
-                println!("\t{}\t{}", sensor.get_sensor_type(), sensor.get_adc_value());
-            }
-        }
-    }).join();
-
-    Ok(())
-}
 
 fn window_main_setup(window: &gtk::Window) {
     let window_title = format!("{} {}",
@@ -99,9 +85,10 @@ pub fn launch() -> Result<()> {
     use glib::translate::ToGlibPtr;
 
     let server = Arc::new(Mutex::new(Server::new()));
-    {
-        poll_server_web_interface(server.clone());
-    }
+
+    // {
+    //     poll_server_web_interface(server.clone());
+    // }
 
     // // Disable Animationen
     // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
@@ -136,39 +123,39 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
-    // Kombisensoren Index
+    // // Kombisensoren Index
+    // //
+    // let server1 = server.clone();
+    // {
+    //     let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+    //     let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
     //
-    let server1 = server.clone();
-    {
-        let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
-
-        match server1.lock() {
-            Err(_) => {}
-            Ok(server) => {
-                for kombisensor in server.get_kombisensors().iter() {
-                    let iter = treestore_kombisensors.insert_with_values(
-                        None,
-                        None,
-                        &[0, 1, 4],
-                        &[&kombisensor.get_modbus_slave_id(),
-                            &kombisensor.get_kombisensor_type(),
-                            &format!("{}", kombisensor.get_error_count())]);
-
-                    for sensor in kombisensor.get_sensors().iter() {
-                        treestore_kombisensors.insert_with_values(
-                            Some(&iter),
-                            None,
-                            &[1, 2, 3],
-                            &[&sensor.get_sensor_type(),
-                                &format!("{:.02}", sensor.get_concentration()),
-                                &sensor.get_si()]);
-                    }
-                    treeview_kombisensors.expand_all();
-                }
-            }
-        }
-    }
+    //     match server1.lock() {
+    //         Err(_) => {}
+    //         Ok(server) => {
+    //             for kombisensor in server.get_kombisensors().iter() {
+    //                 let iter = treestore_kombisensors.insert_with_values(
+    //                     None,
+    //                     None,
+    //                     &[0, 1, 4],
+    //                     &[&kombisensor.get_modbus_slave_id(),
+    //                         &kombisensor.get_kombisensor_type(),
+    //                         &format!("{}", kombisensor.get_error_count())]);
+    //
+    //                 for sensor in kombisensor.get_sensors().iter() {
+    //                     treestore_kombisensors.insert_with_values(
+    //                         Some(&iter),
+    //                         None,
+    //                         &[1, 2, 3],
+    //                         &[&sensor.get_sensor_type(),
+    //                             &format!("{:.02}", sensor.get_concentration()),
+    //                             &sensor.get_si()]);
+    //                 }
+    //                 treeview_kombisensors.expand_all();
+    //             }
+    //         }
+    //     }
+    // }
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
