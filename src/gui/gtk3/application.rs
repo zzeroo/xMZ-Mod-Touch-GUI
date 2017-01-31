@@ -34,7 +34,7 @@ macro_rules! clone {
 
 
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
-    let _ = thread::spawn(move || {
+    let thread_poll = thread::spawn(move || {
         let client = Client::new(); // hyper::Client;
         let mut res = match client.get("http://localhost:3000/").send() {
             Err(err) => { debug!("{:?}", err) }
@@ -58,6 +58,21 @@ fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     Ok(())
 }
 
+fn print_some(server: Arc<Mutex<Server>>) -> Result<()> {
+    let _ = thread::spawn(move || {
+        let server = server.lock().unwrap();
+
+        for kombisensor in server.get_kombisensors().iter() {
+            println!("{}", kombisensor.get_modbus_slave_id());
+            for sensor in kombisensor.get_sensors().iter() {
+                println!("\t{}\t{}", sensor.get_sensor_type(), sensor.get_adc_value());
+            }
+        }
+    }).join();
+
+    Ok(())
+}
+
 fn window_main_setup(window: &gtk::Window) {
     let window_title = format!("{} {}",
                 env!("CARGO_PKG_DESCRIPTION"),
@@ -76,25 +91,8 @@ fn window_main_setup(window: &gtk::Window) {
     css_style_provider.load_from_data(css_interface).unwrap();
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    // #[cfg(not(feature = "development"))]
-    // window.fullscreen();
-}
-
-fn create_treestore() -> gtk::TreeStore {
-    // FIXME: TreeStore aus dem Glade erzeugt Fehler in append_column(), und div. Segfaults auf der ARM Platform
-    // `column.add_attribute(&cell, "text", id);`
-    // let treestore_kombisensors: TreeStore = builder.get_object("treestore_kombisensors")
-    //     .expect("TreeStore konnte nicht aus dem Builder File geladen werden.");
-    // FIXME: Manuell erzeugter TreeStore, auch OK oder ><
-    let treestore_kombisensors = gtk::TreeStore::new(&[
-                                            u32::static_type(),  // [0] Modbus Slave ID
-                                            String::static_type(),         // [1] Type
-                                            String::static_type(),         // [2] Value
-                                            String::static_type(),         // [3] SI
-                                            String::static_type(),         // [4] Errors
-                                            ]);
-
-    treestore_kombisensors
+    #[cfg(not(feature = "development"))]
+    window.fullscreen();
 }
 
 pub fn launch() -> Result<()> {
@@ -119,13 +117,8 @@ pub fn launch() -> Result<()> {
 
     let window_main: gtk::Window = builder.get_object("window_main").unwrap();
     let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-    let treestore_kombisensors: gtk::TreeStore = create_treestore();
+    let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
-
-    // Verbinde View und Model (TreeView mit TreeStore)
-    // Das ist nur nötig, wenn der TreeStore nicht aus dem Glade File kommt
-    treeview_kombisensors.set_model(Some(&treestore_kombisensors));
-
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_main_setup(&window_main);
@@ -143,13 +136,12 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
-
-
     // Kombisensoren Index
     //
     let server1 = server.clone();
     {
         let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
 
         match server1.lock() {
             Err(_) => {}
@@ -160,7 +152,7 @@ pub fn launch() -> Result<()> {
                         None,
                         &[0, 1, 4],
                         &[&kombisensor.get_modbus_slave_id(),
-                            &format!("{}", kombisensor.get_kombisensor_type()),
+                            &kombisensor.get_kombisensor_type(),
                             &format!("{}", kombisensor.get_error_count())]);
 
                     for sensor in kombisensor.get_sensors().iter() {
@@ -168,9 +160,9 @@ pub fn launch() -> Result<()> {
                             Some(&iter),
                             None,
                             &[1, 2, 3],
-                            &[&format!("{}", sensor.get_sensor_type()),
+                            &[&sensor.get_sensor_type(),
                                 &format!("{:.02}", sensor.get_concentration()),
-                                &format!("{}", sensor.get_si())]);
+                                &sensor.get_si()]);
                     }
                     treeview_kombisensors.expand_all();
                 }
@@ -187,7 +179,7 @@ pub fn launch() -> Result<()> {
                 Ok(_) => {}
             }
         }
-        thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(1000));
 
         ::glib::Continue(true)
     }));
