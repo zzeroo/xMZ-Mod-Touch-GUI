@@ -87,75 +87,65 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkTreeView" id="treeview_kombisensors">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">never</property>
-                <property name="shadow_type">in</property>
-                <property name="max_content_width">1004</property>
-                <property name="max_content_height">500</property>
+                <property name="model">treestore_kombisensors</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
                 <child>
-                  <object class="GtkTreeView" id="treeview_kombisensors">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="model">treestore_kombisensors</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
+                  <object class="GtkTreeViewColumn" id="treeview_column_modbus_slave_id">
+                    <property name="title" translatable="yes">Modbus Slave ID</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="treeview_column_modbus_slave_id">
-                        <property name="title" translatable="yes">Modbus Slave ID</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext_modbus_slave_id"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
-                      </object>
+                      <object class="GtkCellRendererText" id="cellrenderertext_modbus_slave_id"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
                     </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeview_column_type">
+                    <property name="title" translatable="yes">Type</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="treeview_column_type">
-                        <property name="title" translatable="yes">Type</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext_type"/>
-                          <attributes>
-                            <attribute name="text">1</attribute>
-                          </attributes>
-                        </child>
-                      </object>
+                      <object class="GtkCellRendererText" id="cellrenderertext_type"/>
+                      <attributes>
+                        <attribute name="text">1</attribute>
+                      </attributes>
                     </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeview_column_Value">
+                    <property name="title" translatable="yes">Value</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="treeview_column_Value">
-                        <property name="title" translatable="yes">Value</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext_Value"/>
-                          <attributes>
-                            <attribute name="text">2</attribute>
-                          </attributes>
-                        </child>
-                      </object>
+                      <object class="GtkCellRendererText" id="cellrenderertext_Value"/>
+                      <attributes>
+                        <attribute name="text">2</attribute>
+                      </attributes>
                     </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeview_column_SI">
+                    <property name="title" translatable="yes">SI</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="treeview_column_SI">
-                        <property name="title" translatable="yes">SI</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext_SI"/>
-                          <attributes>
-                            <attribute name="text">3</attribute>
-                          </attributes>
-                        </child>
-                      </object>
+                      <object class="GtkCellRendererText" id="cellrenderertext_SI"/>
+                      <attributes>
+                        <attribute name="text">3</attribute>
+                      </attributes>
                     </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeview_column_Errors">
+                    <property name="title" translatable="yes">Errors</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="treeview_column_Errors">
-                        <property name="title" translatable="yes">Errors</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext_Errors"/>
-                          <attributes>
-                            <attribute name="text">4</attribute>
-                          </attributes>
-                        </child>
-                      </object>
+                      <object class="GtkCellRendererText" id="cellrenderertext_Errors"/>
+                      <attributes>
+                        <attribute name="text">4</attribute>
+                      </attributes>
                     </child>
                   </object>
                 </child>
