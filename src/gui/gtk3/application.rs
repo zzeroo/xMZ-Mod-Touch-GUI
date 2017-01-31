@@ -128,9 +128,6 @@ pub fn launch() -> Result<()> {
     //
     let server1 = server.clone();
     {
-        let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
-
         match server1.lock() {
             Err(_) => {}
             Ok(server) => {
@@ -141,17 +138,21 @@ pub fn launch() -> Result<()> {
                         &[0, 1, 4],
                         &[&kombisensor.get_modbus_slave_id(),
                             &kombisensor.get_kombisensor_type(),
-                            &format!("{}", kombisensor.get_error_count())]);
+                            &format!("{}", kombisensor.get_error_count())
+                            ]);
 
                     for sensor in kombisensor.get_sensors().iter() {
                         treestore_kombisensors.insert_with_values(
                             Some(&iter),
                             None,
                             &[1, 2, 3],
-                            &[&sensor.get_sensor_type(),
-                                &format!("{:.02}", sensor.get_concentration()),
-                                &sensor.get_si()]);
+                            &[
+                                &format!("{}", sensor.get_sensor_type()),
+                                &format!("{:.02}", &sensor.get_concentration()),
+                                &sensor.get_si()
+                                ]);
                     }
+
                     treeview_kombisensors.expand_all();
                 }
             }
@@ -167,12 +168,12 @@ pub fn launch() -> Result<()> {
                 Ok(_) => {}
             }
         }
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(100));
 
         ::glib::Continue(true)
     }));
 
-    #[cfg(feature = "development")]
+    // #[cfg(feature = "development")]
     window_main.connect_key_press_event(move |_, key| {
         if let key::Escape = key.get_keyval() {
             gtk::main_quit()
