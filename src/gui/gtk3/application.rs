@@ -125,37 +125,36 @@ pub fn launch() -> Result<()> {
     info_bar.hide();
 
     // Kombisensoren Index
-    //
+
     let server1 = server.clone();
-    {
-        match server1.lock() {
-            Err(_) => {}
-            Ok(server) => {
-                for kombisensor in server.get_kombisensors().iter() {
-                    let iter = treestore_kombisensors.insert_with_values(
+    match server1.lock() {
+        Err(_) => {}
+        Ok(server) => {
+            for kombisensor in server.get_kombisensors().iter() {
+                println!("{:?}", &treestore_kombisensors);
+                let iter = &treestore_kombisensors.insert_with_values(
+                    None,
+                    None,
+                    &[0],
+                    &[
+                        &format!("{}", kombisensor.get_modbus_slave_id()),
+                        // &format!("{}", kombisensor.get_kombisensor_type()),
+                        // &format!("{}", kombisensor.get_error_count())
+                        ]);
+
+                for sensor in kombisensor.get_sensors().iter() {
+                    &treestore_kombisensors.insert_with_values(
+                        Some(&iter),
                         None,
-                        None,
-                        &[0, 1],
+                        &[1],
                         &[
-                            &format!("{}", kombisensor.get_modbus_slave_id()),
-                            &format!("{}", kombisensor.get_kombisensor_type()),
-                            // &format!("{}", kombisensor.get_error_count())
+                            &format!("{}", sensor.get_sensor_type()),
+                            // &format!("{:.02}", &sensor.get_concentration()),
+                            // &format!("{}", sensor.get_si())
                             ]);
-
-                    for sensor in kombisensor.get_sensors().iter() {
-                        treestore_kombisensors.insert_with_values(
-                            Some(&iter),
-                            None,
-                            &[1, 2, 3],
-                            &[
-                                &format!("{}", sensor.get_sensor_type()),
-                                &format!("{:.02}", &sensor.get_concentration()),
-                                &format!("{}", sensor.get_si())
-                                ]);
-                    }
-
-                    treeview_kombisensors.expand_all();
                 }
+
+                treeview_kombisensors.expand_all();
             }
         }
     }
