@@ -136,8 +136,9 @@ pub fn launch() -> Result<()> {
                         None,
                         None,
                         &[0, 1, 4],
-                        &[&kombisensor.get_modbus_slave_id(),
-                            &kombisensor.get_kombisensor_type(),
+                        &[
+                            &format!("{}", kombisensor.get_modbus_slave_id()),
+                            &format!("{}", kombisensor.get_kombisensor_type()),
                             &format!("{}", kombisensor.get_error_count())
                             ]);
 
@@ -149,7 +150,7 @@ pub fn launch() -> Result<()> {
                             &[
                                 &format!("{}", sensor.get_sensor_type()),
                                 &format!("{:.02}", &sensor.get_concentration()),
-                                &sensor.get_si()
+                                &format!("{}", sensor.get_si())
                                 ]);
                     }
 
