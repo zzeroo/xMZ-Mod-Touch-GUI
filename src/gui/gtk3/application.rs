@@ -37,7 +37,7 @@ macro_rules! clone {
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     let thread_poll = thread::spawn(move || {
         let client = Client::new(); // hyper::Client;
-        let mut res = match client.get("http://localhost:3000/").send() {
+        let mut res = match client.get("http://127.0.0.1:3000/").send() {
             Err(err) => { debug!("{:?}", err) }
             Ok(mut res) => {
                 assert_eq!(res.status, ::hyper::Ok);
