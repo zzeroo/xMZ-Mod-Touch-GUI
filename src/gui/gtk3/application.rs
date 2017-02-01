@@ -137,9 +137,9 @@ pub fn launch() -> Result<()> {
                         None,
                         &[0, 1, 4],
                         &[
-                            &format!("{}", kombisensor.get_modbus_slave_id()),
-                            &format!("{}", kombisensor.get_kombisensor_type()),
-                            &format!("{}", kombisensor.get_error_count())
+                            &format!("0 {}", kombisensor.get_modbus_slave_id()),
+                            &format!("1 {}", kombisensor.get_kombisensor_type()),
+                            &format!("4 {}", kombisensor.get_error_count())
                             ]);
 
                     for sensor in kombisensor.get_sensors().iter() {
@@ -148,9 +148,9 @@ pub fn launch() -> Result<()> {
                             None,
                             &[1, 2, 3],
                             &[
-                                &format!("{}", sensor.get_sensor_type()),
-                                &format!("{:.02}", &sensor.get_concentration()),
-                                &format!("{}", sensor.get_si())
+                                &format!("1 {}", sensor.get_sensor_type()),
+                                &format!("2 {:.02}", &sensor.get_concentration()),
+                                &format!("3 {}", sensor.get_si())
                                 ]);
                     }
 
