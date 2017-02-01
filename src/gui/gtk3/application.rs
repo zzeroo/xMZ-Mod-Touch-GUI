@@ -78,8 +78,8 @@ fn window_main_setup(window: &gtk::Window) {
     css_style_provider.load_from_data(css_gui).unwrap();
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    #[cfg(not(feature = "development"))]
-    window.maximize();
+    #[cfg(not(feature = "dev"))]
+    window.fullscreen();
 }
 
 pub fn launch() -> Result<()> {
@@ -135,11 +135,11 @@ pub fn launch() -> Result<()> {
                     let iter = treestore_kombisensors.insert_with_values(
                         None,
                         None,
-                        &[0, 1, 4],
+                        &[0, 1],
                         &[
-                            &format!("0 {}", kombisensor.get_modbus_slave_id()),
-                            &format!("1 {}", kombisensor.get_kombisensor_type()),
-                            &format!("4 {}", kombisensor.get_error_count())
+                            &format!("{}", kombisensor.get_modbus_slave_id()),
+                            &format!("{}", kombisensor.get_kombisensor_type()),
+                            // &format!("{}", kombisensor.get_error_count())
                             ]);
 
                     for sensor in kombisensor.get_sensors().iter() {
@@ -148,9 +148,9 @@ pub fn launch() -> Result<()> {
                             None,
                             &[1, 2, 3],
                             &[
-                                &format!("1 {}", sensor.get_sensor_type()),
-                                &format!("2 {:.02}", &sensor.get_concentration()),
-                                &format!("3 {}", sensor.get_si())
+                                &format!("{}", sensor.get_sensor_type()),
+                                &format!("{:.02}", &sensor.get_concentration()),
+                                &format!("{}", sensor.get_si())
                                 ]);
                     }
 
@@ -174,7 +174,7 @@ pub fn launch() -> Result<()> {
         ::glib::Continue(true)
     }));
 
-    // #[cfg(feature = "development")]
+    #[cfg(feature = "dev")]
     window_main.connect_key_press_event(move |_, key| {
         if let key::Escape = key.get_keyval() {
             gtk::main_quit()
