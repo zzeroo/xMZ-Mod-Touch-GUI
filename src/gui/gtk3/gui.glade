@@ -91,8 +91,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
-                <property name="max_content_width">800</property>
-                <property name="max_content_height">600</property>
+                <property name="max_content_width">700</property>
+                <property name="max_content_height">400</property>
                 <child>
                   <object class="GtkTreeView" id="treeview_kombisensors">
                     <property name="visible">True</property>
