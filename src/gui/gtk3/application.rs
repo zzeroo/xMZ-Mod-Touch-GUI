@@ -82,32 +82,32 @@ fn window_main_setup(window: &gtk::Window) {
     window.fullscreen();
 }
 
-fn fill_treestore(server: Arc<Mutex<Server>>, treestore: gtk::TreeStore, treeview: gtk::TreeView) {
+fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treeview: &gtk::TreeView) {
     match server.lock() {
         Err(_) => {}
         Ok(server) => {
             for kombisensor in server.get_kombisensors().iter() {
-                println!("{:?}", &treestore);
-                let iter = &treestore.insert_with_values(
+                println!("{:?}", treestore);
+                let iter = treestore.insert_with_values(
                     None,
                     None,
                     &[0, 1, 4],
                     &[
-                        &format!("{}", kombisensor.get_modbus_slave_id()),
-                        &format!("{}", kombisensor.get_kombisensor_type()),
-                        &format!("{}", kombisensor.get_error_count())
+                        &kombisensor.get_modbus_slave_id(),
+                        &kombisensor.get_kombisensor_type(),
+                        &kombisensor.get_error_count()
                     ]
                 );
 
                 for sensor in kombisensor.get_sensors().iter() {
-                    &treestore.insert_with_values(
+                    treestore.insert_with_values(
                         Some(&iter),
                         None,
-                        &[1],
+                        &[1, 2, 3],
                         &[
-                            &format!("{}", sensor.get_sensor_type()),
+                            &sensor.get_sensor_type(),
                             &format!("{:.02}", &sensor.get_concentration()),
-                            &format!("{}", sensor.get_si())
+                            &sensor.get_si()
                         ]
                     );
                 }
@@ -115,6 +115,42 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: gtk::TreeStore, treevie
             }
         }
     }
+}
+
+
+/// Helper Funktion zum Anfügen weiterer Spalten (columns) in einen TreeView
+///
+/// # Params
+///
+/// `treeview`  - Der TreeView mit dem gearbeitet werden soll
+/// `id`        - ID der Spalte, Null basiert
+///
+/// FIXME: Auslagern in Glade!
+fn append_column(treeview: &gtk::TreeView, id: i32) {
+    let column = gtk::TreeViewColumn::new();
+    let cell = gtk::CellRendererText::new();
+
+    column.pack_start(&cell, true);
+    // // Die Daten und das View werden über `id` Spalte des Models und
+    // über die `id` Spalte des Stores verbunden.
+    column.add_attribute(&cell, "text", id);
+    // Diverse Attribute
+    column.set_resizable(false);
+    column.set_clickable(false);
+    treeview.append_column(&column);
+}
+
+/// Basis Setup des TreeViews
+///
+fn setup_treeview(treeview: &gtk::TreeView) {
+    // Header verstecken
+    treeview.set_headers_visible(false);
+
+    append_column(&treeview, 1);
+    append_column(&treeview, 2);
+    append_column(&treeview, 3);
+    append_column(&treeview, 4);
+    append_column(&treeview, 5);
 }
 
 pub fn launch() -> Result<()> {
@@ -139,8 +175,6 @@ pub fn launch() -> Result<()> {
     builder.add_from_string(&glade_str)?;
 
     let window_main: gtk::Window = builder.get_object("window_main").unwrap();
-    let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-    let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
@@ -159,9 +193,19 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
+    let treeview_kombisensors = gtk::TreeView::new();
+    let treestore_kombisensors = gtk::TreeStore::new(&[
+        u32::static_type(),     // Modbus Slave Id
+        String::static_type(),  // Type
+        String::static_type(),  // Value
+        String::static_type(),  // Si
+        String::static_type(),  // Errors
+    ]);
+    treeview_kombisensors.set_model(Some(&treestore_kombisensors));
+    // Setup des TreeViews
+    setup_treeview(&treeview_kombisensors);
     // Kombisensoren Index
-    fill_treestore(server.clone(), treestore_kombisensors.clone(), treeview_kombisensors.clone());
-
+    fill_treestore(server.clone(), &treestore_kombisensors, &treeview_kombisensors);
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
