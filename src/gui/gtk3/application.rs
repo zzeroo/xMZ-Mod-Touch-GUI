@@ -6,12 +6,12 @@ use gtk;
 use gtk::prelude::*;
 use hyper::{Client};
 use serde_json;
+use std::collections::HashSet;
 use std::io::Read;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use xmz_server::server::{Server};
-
 
 // make moving clones into closures more convenient
 #[macro_export]
@@ -31,8 +31,6 @@ macro_rules! clone {
         }
     );
 }
-
-
 
 fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     let thread_poll = thread::spawn(move || {
@@ -59,13 +57,17 @@ fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     Ok(())
 }
 
+fn update_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore) {
+    if let Some(mut iter) = treestore.get_iter_first() {
+        println!("{:?}", treestore.get_value(&iter, 1));
+    }
+}
+
 
 fn window_main_setup(window: &gtk::Window) {
     let window_title = format!("{} {}",
                 env!("CARGO_PKG_DESCRIPTION"),
                 env!("CARGO_PKG_VERSION"));
-
-    window.set_title(&window_title);
     window.set_default_size(1024, 600);
 
     let display = window.get_display().unwrap();
@@ -84,11 +86,11 @@ fn window_main_setup(window: &gtk::Window) {
 
 fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treeview: &gtk::TreeView) {
     match server.lock() {
-        Err(_) => {}
+        Err(_) => { println!("Server konnte nicht gelockt werden"); }
         Ok(server) => {
             for kombisensor in server.get_kombisensors().iter() {
                 println!("{:?}", treestore);
-                let iter = treestore.insert_with_values(
+                let iter = &treestore.insert_with_values(
                     None,
                     None,
                     &[0, 1, 4],
@@ -100,7 +102,7 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
                 );
 
                 for sensor in kombisensor.get_sensors().iter() {
-                    treestore.insert_with_values(
+                    &treestore.insert_with_values(
                         Some(&iter),
                         None,
                         &[1, 2, 3],
@@ -154,21 +156,16 @@ fn setup_treeview(treeview: &gtk::TreeView) {
 }
 
 pub fn launch() -> Result<()> {
-    use glib::translate::ToGlibPtr;
-
     let server = Arc::new(Mutex::new(Server::new()));
 
-    {
-        poll_server_web_interface(server.clone());
+    // Disable Animationen
+    // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
+    // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
+    unsafe{
+        use glib::translate::ToGlibPtr;
+        gobject_sys::g_object_set (gtk_sys::gtk_settings_get_default() as *mut gobject_sys::GObject,
+        "gtk-enable-animations".to_glib_none().0, 0, 0);
     }
-
-    // // Disable Animationen
-    // // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
-    // // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
-    // unsafe{
-    //     gobject_sys::g_object_set (gtk_sys::gtk_settings_get_default() as *mut gobject_sys::GObject,
-    //     "gtk-enable-animations".to_glib_none().0, 0, 0);
-    // }
 
     let glade_str = include_str!("gui.glade");
     let builder = gtk::Builder::new();
@@ -179,6 +176,10 @@ pub fn launch() -> Result<()> {
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_main_setup(&window_main);
+
+    { // Module Index aufbauen
+        try!(::module_index::setup(&builder, &window_main, server.clone()));
+    }
 
     { // Hide info_bar
             let info_bar = info_bar.clone();
@@ -201,6 +202,7 @@ pub fn launch() -> Result<()> {
         String::static_type(),  // Si
         String::static_type(),  // Errors
     ]);
+    // Verbinde View und Model (TreeStore)
     treeview_kombisensors.set_model(Some(&treestore_kombisensors));
     // Setup des TreeViews
     setup_treeview(&treeview_kombisensors);
@@ -210,11 +212,9 @@ pub fn launch() -> Result<()> {
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
         // Update Server struct via http
-        {
-            match poll_server_web_interface(server.clone()) {
-                Err(err) => {}
-                Ok(_) => {}
-            }
+        match poll_server_web_interface(server.clone()) {
+            Err(err) => { println!("Webinterface Fehler")}
+            Ok(_) => {}
         }
         thread::sleep(Duration::from_millis(100));
 
