@@ -94,9 +94,9 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
                     None,
                     &[0, 1, 4],
                     &[
-                        "foo",
-                        "bar",
-                        "baz",
+                        &"foo",
+                        &"bar",
+                        &"baz",
                         // &kombisensor.get_modbus_slave_id(),
                         // &kombisensor.get_kombisensor_type(),
                         // &kombisensor.get_error_count()
@@ -109,9 +109,9 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
                         None,
                         &[1, 2, 3],
                         &[
-                            "foo",
-                            "bar",
-                            "baz",
+                            &"foo",
+                            &"bar",
+                            &"baz",
                             // &format!("{}", &sensor.get_sensor_type()),
                             // &format!("{:.02}", &sensor.get_concentration()),
                             // &format!("{}", &sensor.get_si())
