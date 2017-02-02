@@ -192,9 +192,6 @@ pub fn launch() -> Result<()> {
         Inhibit(false)
     });
 
-    window_main.show_all();
-    // info_bar.hide();
-
     let treeview_kombisensors = gtk::TreeView::new();
     let treestore_kombisensors = gtk::TreeStore::new(&[
         u32::static_type(),     // Modbus Slave Id
@@ -210,6 +207,9 @@ pub fn launch() -> Result<()> {
     // Kombisensoren Index
     fill_treestore(server.clone(), &treestore_kombisensors, &treeview_kombisensors);
     scrolled_window.add(&treeview_kombisensors);
+
+    window_main.show_all();
+    // info_bar.hide();
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
