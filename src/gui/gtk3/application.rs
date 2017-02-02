@@ -101,16 +101,17 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
                 );
 
                 for sensor in kombisensor.get_sensors().iter() {
-                    &treestore.insert_with_values(
-                        Some(&iter),
-                        None,
-                        &[1, 2, 3],
-                        &[
-                            &format!("{}", &sensor.get_sensor_type()),
-                            &format!("{:.02}", &sensor.get_concentration()),
-                            &format!("{}", &sensor.get_si())
-                        ]
-                    );
+                    // &treestore.insert_with_values(
+                    //     Some(&iter),
+                    //     None,
+                    //     &[1, 2, 3],
+                    //     &[
+                    //         &format!("{}", &sensor.get_sensor_type()),
+                    //         &format!("{:.02}", &sensor.get_concentration()),
+                    //         &format!("{}", &sensor.get_si())
+                    //     ]
+                    // );
+                    println!("{:?}", sensor);
                 }
                 treeview.expand_all();
             }
