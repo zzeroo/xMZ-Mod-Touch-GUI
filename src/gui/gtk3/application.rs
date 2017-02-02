@@ -82,6 +82,41 @@ fn window_main_setup(window: &gtk::Window) {
     window.fullscreen();
 }
 
+fn fill_treestore(server: Arc<Mutex<Server>>, treestore: gtk::TreeStore, treeview: gtk::TreeView) {
+    match server.lock() {
+        Err(_) => {}
+        Ok(server) => {
+            for kombisensor in server.get_kombisensors().iter() {
+                println!("{:?}", &treestore);
+                let iter = &treestore.insert_with_values(
+                    None,
+                    None,
+                    &[0, 1, 4],
+                    &[
+                        &format!("{}", kombisensor.get_modbus_slave_id()),
+                        &format!("{}", kombisensor.get_kombisensor_type()),
+                        &format!("{}", kombisensor.get_error_count())
+                    ]
+                );
+
+                for sensor in kombisensor.get_sensors().iter() {
+                    &treestore.insert_with_values(
+                        Some(&iter),
+                        None,
+                        &[1],
+                        &[
+                            &format!("{}", sensor.get_sensor_type()),
+                            &format!("{:.02}", &sensor.get_concentration()),
+                            &format!("{}", sensor.get_si())
+                        ]
+                    );
+                }
+                treeview.expand_all();
+            }
+        }
+    }
+}
+
 pub fn launch() -> Result<()> {
     use glib::translate::ToGlibPtr;
 
@@ -125,39 +160,8 @@ pub fn launch() -> Result<()> {
     info_bar.hide();
 
     // Kombisensoren Index
+    fill_treestore(server.clone(), treestore_kombisensors.clone(), treeview_kombisensors.clone());
 
-    let server1 = server.clone();
-    match server1.lock() {
-        Err(_) => {}
-        Ok(server) => {
-            for kombisensor in server.get_kombisensors().iter() {
-                println!("{:?}", &treestore_kombisensors);
-                let iter = &treestore_kombisensors.insert_with_values(
-                    None,
-                    None,
-                    &[0],
-                    &[
-                        &format!("{}", kombisensor.get_modbus_slave_id()),
-                        // &format!("{}", kombisensor.get_kombisensor_type()),
-                        // &format!("{}", kombisensor.get_error_count())
-                        ]);
-
-                for sensor in kombisensor.get_sensors().iter() {
-                    &treestore_kombisensors.insert_with_values(
-                        Some(&iter),
-                        None,
-                        &[1],
-                        &[
-                            &format!("{}", sensor.get_sensor_type()),
-                            // &format!("{:.02}", &sensor.get_concentration()),
-                            // &format!("{}", sensor.get_si())
-                            ]);
-                }
-
-                treeview_kombisensors.expand_all();
-            }
-        }
-    }
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
