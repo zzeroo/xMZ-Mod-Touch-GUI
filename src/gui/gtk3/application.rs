@@ -89,7 +89,6 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
         Err(_) => { println!("Server konnte nicht gelockt werden"); }
         Ok(server) => {
             for kombisensor in server.get_kombisensors().iter() {
-                println!("{:?}", treestore);
                 let iter = &treestore.insert_with_values(
                     None,
                     None,
@@ -107,9 +106,9 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
                         None,
                         &[1, 2, 3],
                         &[
-                            &sensor.get_sensor_type(),
+                            &format!("{}", &sensor.get_sensor_type()),
                             &format!("{:.02}", &sensor.get_concentration()),
-                            &sensor.get_si()
+                            &format!("{}", &sensor.get_si())
                         ]
                     );
                 }
@@ -148,15 +147,16 @@ fn setup_treeview(treeview: &gtk::TreeView) {
     // Header verstecken
     treeview.set_headers_visible(false);
 
+    append_column(&treeview, 0);
     append_column(&treeview, 1);
     append_column(&treeview, 2);
     append_column(&treeview, 3);
     append_column(&treeview, 4);
-    append_column(&treeview, 5);
 }
 
 pub fn launch() -> Result<()> {
     let server = Arc::new(Mutex::new(Server::new()));
+    poll_server_web_interface(server.clone());
 
     // Disable Animationen
     // http://stackoverflow.com/questions/39271852/infobar-only-shown-on-window-change/39273438#39273438
@@ -194,7 +194,7 @@ pub fn launch() -> Result<()> {
 
     let treeview_kombisensors = gtk::TreeView::new();
     let treestore_kombisensors = gtk::TreeStore::new(&[
-        u32::static_type(),     // Modbus Slave Id
+        String::static_type(),  // Modbus Slave Id
         String::static_type(),  // Type
         String::static_type(),  // Value
         String::static_type(),  // Si
