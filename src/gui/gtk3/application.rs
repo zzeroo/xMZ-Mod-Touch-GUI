@@ -167,12 +167,13 @@ pub fn launch() -> Result<()> {
         "gtk-enable-animations".to_glib_none().0, 0, 0);
     }
 
-    let glade_str = include_str!("gui.glade");
+    let glade_str = include_str!("gui2.glade");
     let builder = gtk::Builder::new();
     builder.add_from_string(&glade_str)?;
 
     let window_main: gtk::Window = builder.get_object("window_main").unwrap();
-    let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
+    // let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
+    let scrolled_window: gtk::ScrolledWindow = builder.get_object("scrolled_window").unwrap();
 
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_main_setup(&window_main);
@@ -181,10 +182,10 @@ pub fn launch() -> Result<()> {
         try!(::module_index::setup(&builder, &window_main, server.clone()));
     }
 
-    { // Hide info_bar
-            let info_bar = info_bar.clone();
-            info_bar.connect_response(move |info_bar, _| info_bar.hide());
-    }
+    // { // Hide info_bar
+    //         let info_bar = info_bar.clone();
+    //         info_bar.connect_response(move |info_bar, _| info_bar.hide());
+    // }
 
     window_main.connect_delete_event(|_, _| {
         gtk::main_quit();
@@ -192,7 +193,7 @@ pub fn launch() -> Result<()> {
     });
 
     window_main.show_all();
-    info_bar.hide();
+    // info_bar.hide();
 
     let treeview_kombisensors = gtk::TreeView::new();
     let treestore_kombisensors = gtk::TreeStore::new(&[
@@ -208,6 +209,7 @@ pub fn launch() -> Result<()> {
     setup_treeview(&treeview_kombisensors);
     // Kombisensoren Index
     fill_treestore(server.clone(), &treestore_kombisensors, &treeview_kombisensors);
+    scrolled_window.add(&treeview_kombisensors);
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
