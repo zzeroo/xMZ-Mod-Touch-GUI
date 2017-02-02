@@ -1,7 +1,7 @@
 #[macro_use] extern crate log;
 extern crate env_logger;
 extern crate gtk;
-extern crate xmz_mod_touch_gui;
+#[macro_use] extern crate xmz_mod_touch_gui;
 
 use gtk::prelude::*;
 use xmz_mod_touch_gui::error::*;

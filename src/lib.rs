@@ -7,6 +7,7 @@
 //!
 //! Git Repository: https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
 
+
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;
@@ -17,12 +18,10 @@ extern crate hyper;
 extern crate serde_json;
 extern crate xmz_server;
 
-
 pub mod gui {
     pub mod gtk3;
 }
-
 pub mod error;
 
 pub use self::error::*;
-pub use self::gui::gtk3::*;
+#[macro_use] pub use self::gui::gtk3::*;
