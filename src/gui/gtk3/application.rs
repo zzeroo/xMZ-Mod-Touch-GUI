@@ -89,37 +89,45 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
         Err(_) => { println!("Server konnte nicht gelockt werden"); }
         Ok(server) => {
             for kombisensor in server.get_kombisensors().iter() {
-                let iter = &treestore.insert_with_values(
-                    None,
-                    None,
-                    &[0, 1, 4],
-                    &[
-                        &"foo",
-                        &"bar",
-                        &"baz",
-                        // &kombisensor.get_modbus_slave_id(),
-                        // &kombisensor.get_kombisensor_type(),
-                        // &kombisensor.get_error_count()
-                    ]
-                );
+                println!("{:?}", kombisensor.get_modbus_slave_id());
+                println!("{:?}", kombisensor.get_kombisensor_type());
+                println!("{:?}", kombisensor.get_error_count());
+
+                // let iter = &treestore.insert_with_values(
+                //     None,
+                //     None,
+                //     &[0, 1, 4],
+                //     &[
+                //         &"foo",
+                //         &"bar",
+                //         &"baz",
+                //         // &kombisensor.get_modbus_slave_id(),
+                //         // &kombisensor.get_kombisensor_type(),
+                //         // &kombisensor.get_error_count(),
+                //     ]
+                // );
 
                 for sensor in kombisensor.get_sensors().iter() {
-                    &treestore.insert_with_values(
-                        Some(&iter),
-                        None,
-                        &[1, 2, 3],
-                        &[
-                            &"foo",
-                            &"bar",
-                            &"baz",
-                            // &format!("{}", &sensor.get_sensor_type()),
-                            // &format!("{:.02}", &sensor.get_concentration()),
-                            // &format!("{}", &sensor.get_si())
-                        ]
-                    );
+                    println!("{:?}", format!("{}", &sensor.get_sensor_type()));
+                    println!("{:?}", format!("{:.02}", &sensor.get_concentration()));
+                    println!("{:?}", format!("{}", &sensor.get_si()));
+
+                //     &treestore.insert_with_values(
+                //         Some(&iter),
+                //         None,
+                //         &[1, 2, 3],
+                //         &[
+                //             &"foo",
+                //             &"bar",
+                //             &"baz",
+                //             // &format!("{}", &sensor.get_sensor_type()),
+                //             // &format!("{:.02}", &sensor.get_concentration()),
+                //             // &format!("{}", &sensor.get_si()),
+                //         ]
+                //     );
                 }
-                treeview.expand_all();
             }
+            treeview.expand_all();
         }
     }
 }
@@ -199,12 +207,11 @@ pub fn launch() -> Result<()> {
     });
 
     let treeview_kombisensors = gtk::TreeView::new();
-    let treestore_kombisensors = gtk::TreeStore::new(&[
-        String::static_type(),  // Modbus Slave Id
-        String::static_type(),  // Type
-        String::static_type(),  // Value
-        String::static_type(),  // Si
-        String::static_type(),  // Errors
+    let treestore_kombisensors = gtk::TreeStore::new(&[u32::static_type(),      // Modbus Slave Id
+                                                        String::static_type(),  // Type
+                                                        String::static_type(),  // Value
+                                                        String::static_type(),  // Si
+                                                        u32::static_type()      // Errors
     ]);
     // Verbinde View und Model (TreeStore)
     treeview_kombisensors.set_model(Some(&treestore_kombisensors));
