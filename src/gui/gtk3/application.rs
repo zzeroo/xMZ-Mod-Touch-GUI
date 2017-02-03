@@ -134,7 +134,7 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
 /// `id`        - ID der Spalte, Null basiert
 ///
 /// FIXME: Auslagern in Glade!
-fn append_column(treeview: &gtk::TreeView, id: i32) {
+fn append_column(treeview: &gtk::TreeView, id: i32, title: &str) {
     let column = gtk::TreeViewColumn::new();
     let cell = gtk::CellRendererText::new();
 
@@ -142,6 +142,7 @@ fn append_column(treeview: &gtk::TreeView, id: i32) {
     // // Die Daten und das View werden über `id` Spalte des Models und
     // über die `id` Spalte des Stores verbunden.
     column.add_attribute(&cell, "text", id);
+    column.set_title(title);
     // Diverse Attribute
     column.set_resizable(false);
     column.set_clickable(false);
@@ -154,11 +155,11 @@ fn setup_treeview(treeview: &gtk::TreeView) {
     // Header verstecken
     treeview.set_headers_visible(true);
 
-    append_column(&treeview, 1);
-    append_column(&treeview, 2);
-    append_column(&treeview, 3);
-    append_column(&treeview, 4);
-    append_column(&treeview, 5);
+    append_column(&treeview, 0, "Modbus Slave Id");
+    append_column(&treeview, 1, "Type");
+    append_column(&treeview, 2, "Value");
+    append_column(&treeview, 3, "SI");
+    append_column(&treeview, 4, "Errors");
 }
 
 pub fn launch() -> Result<()> {
