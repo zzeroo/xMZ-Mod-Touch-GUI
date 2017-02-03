@@ -152,7 +152,7 @@ fn append_column(treeview: &gtk::TreeView, id: i32) {
 ///
 fn setup_treeview(treeview: &gtk::TreeView) {
     // Header verstecken
-    treeview.set_headers_visible(false);
+    treeview.set_headers_visible(true);
 
     append_column(&treeview, 0);
     append_column(&treeview, 1);
