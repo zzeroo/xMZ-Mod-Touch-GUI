@@ -89,23 +89,16 @@ fn fill_treestore(server: Arc<Mutex<Server>>, treestore: &gtk::TreeStore, treevi
         Err(_) => { println!("Server konnte nicht gelockt werden"); }
         Ok(server) => {
             for kombisensor in server.get_kombisensors().iter() {
-                println!("{:?}", kombisensor.get_modbus_slave_id());
-                println!("{:?}", kombisensor.get_kombisensor_type());
-                println!("{:?}", kombisensor.get_error_count());
-
-                // let iter = &treestore.insert_with_values(
-                //     None,
-                //     None,
-                //     &[0, 1, 4],
-                //     &[
-                //         &"foo",
-                //         &"bar",
-                //         &"baz",
-                //         // &kombisensor.get_modbus_slave_id(),
-                //         // &kombisensor.get_kombisensor_type(),
-                //         // &kombisensor.get_error_count(),
-                //     ]
-                // );
+                let iter = &treestore.insert_with_values(
+                    None,
+                    None,
+                    &[0, 1, 4],
+                    &[
+                        &kombisensor.get_modbus_slave_id(),
+                        &format!("{}", kombisensor.get_kombisensor_type()),
+                        &kombisensor.get_error_count(),
+                    ]
+                );
 
                 for sensor in kombisensor.get_sensors().iter() {
                     println!("{:?}", format!("{}", &sensor.get_sensor_type()));
