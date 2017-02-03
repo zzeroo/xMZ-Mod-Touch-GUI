@@ -154,11 +154,11 @@ fn setup_treeview(treeview: &gtk::TreeView) {
     // Header verstecken
     treeview.set_headers_visible(true);
 
-    append_column(&treeview, 0);
     append_column(&treeview, 1);
     append_column(&treeview, 2);
     append_column(&treeview, 3);
     append_column(&treeview, 4);
+    append_column(&treeview, 5);
 }
 
 pub fn launch() -> Result<()> {
