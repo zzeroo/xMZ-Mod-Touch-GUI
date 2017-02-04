@@ -1,5 +1,5 @@
 // make moving clones into closures more convenient
-#[macro_export]
+#[macros_export]
 macro_rules! clone {
     (@param _) => ( _ );
     (@param $x:ident) => ( $x );

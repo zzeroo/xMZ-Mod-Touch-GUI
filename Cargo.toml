@@ -14,14 +14,14 @@ path = "src/main.rs"
 doc = false
 
 [features]
-dev = []
+development = []
 
 [dependencies]
 env_logger = "0.3"
 error-chain = "0.4"
 gdk = "0.5.1"
 glib = "0.1.1"
-gtk = { version = "0.1.1", features = ["v3_16"] }
+gtk = "0.1.1"
 hyper = "0.10"
 libc = "0.2.18"
 log = "0.3"
