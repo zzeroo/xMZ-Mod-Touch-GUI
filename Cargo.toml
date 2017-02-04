@@ -1,6 +1,6 @@
 [package]
 name = "xmz_mod_touch_gui"
-version = "0.21.3"
+version = "0.21.4"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
@@ -14,14 +14,14 @@ path = "src/main.rs"
 doc = false
 
 [features]
-dev = []
+development = []
 
 [dependencies]
 env_logger = "0.3"
 error-chain = "0.4"
-gdk = "0.5.1"
-glib = "0.1.1"
-gtk = { version = "0.1.1", features = ["v3_16"] }
+gdk = "^0"
+glib = "^0"
+gtk = "^0"
 hyper = "0.10"
 libc = "0.2.18"
 log = "0.3"
@@ -30,8 +30,8 @@ serde = "0.9"
 serde_json = "0.9"
 xmz_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git" }
 # xmz_server = { path = "../xMZ-Mod-Touch-Server"}
-gobject-sys = "0.3.2"
-gtk-sys = "0.3.2"
+gobject-sys = "^0"
+gtk-sys = "^0"
 
 # Aktiviere Log in Tests: https://github.com/rust-lang-nursery/log#in-tests
 [dev-dependencies]
