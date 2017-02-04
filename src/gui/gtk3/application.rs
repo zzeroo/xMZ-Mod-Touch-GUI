@@ -72,8 +72,8 @@ fn window_main_setup(window: &gtk::Window) {
 
     // CSS Datei einbinden
     let css_style_provider = gtk::CssProvider::new();
-    let css_interface = include_str!("interface.css");
-    css_style_provider.load_from_data(css_interface).unwrap();
+    let css_gui = include_str!("gui.css");
+    css_style_provider.load_from_data(css_gui).unwrap();
     gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     #[cfg(not(feature = "development"))]
