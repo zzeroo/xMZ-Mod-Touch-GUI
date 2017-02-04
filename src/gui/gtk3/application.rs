@@ -125,6 +125,8 @@ pub fn launch() -> Result<()> {
     //
     let server1 = server.clone();
     {
+        use glib::Value;
+
         let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
         let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
 
@@ -136,18 +138,20 @@ pub fn launch() -> Result<()> {
                         None,
                         None,
                         &[0u32, 1, 4],
-                        &[&format!("{}", kombisensor.get_modbus_slave_id()),
-                            &format!("{}", kombisensor.get_kombisensor_type()),
-                            &format!("{}", kombisensor.get_error_count())]);
+                        &[&Value::from(&format!("{}", kombisensor.get_modbus_slave_id())),
+                            &Value::from(&format!("{}", kombisensor.get_kombisensor_type())),
+                            &Value::from(&format!("{}", kombisensor.get_error_count())),
+                        ]);
 
                     for sensor in kombisensor.get_sensors().iter() {
                         treestore_kombisensors.insert_with_values(
                             Some(&iter),
                             None,
                             &[1u32, 2, 3],
-                            &[&format!("{}", sensor.get_sensor_type()),
-                                &format!("{:.02}", sensor.get_concentration()),
-                                &format!("{}", sensor.get_si())]);
+                            &[&Value::from(&format!("{}", sensor.get_sensor_type())),
+                                &Value::from(&format!("{:.02}", sensor.get_concentration())),
+                                &Value::from(&format!("{}", sensor.get_si())),
+                            ]);
                     }
                     treeview_kombisensors.expand_all();
                 }
