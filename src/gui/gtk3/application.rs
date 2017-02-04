@@ -135,7 +135,7 @@ pub fn launch() -> Result<()> {
                     let iter = treestore_kombisensors.insert_with_values(
                         None,
                         None,
-                        &[0, 1, 4],
+                        &[0u32, 1, 4],
                         &[&format!("{}", kombisensor.get_modbus_slave_id()),
                             &format!("{}", kombisensor.get_kombisensor_type()),
                             &format!("{}", kombisensor.get_error_count())]);
@@ -144,7 +144,7 @@ pub fn launch() -> Result<()> {
                         treestore_kombisensors.insert_with_values(
                             Some(&iter),
                             None,
-                            &[1, 2, 3],
+                            &[1u32, 2, 3],
                             &[&format!("{}", sensor.get_sensor_type()),
                                 &format!("{:.02}", sensor.get_concentration()),
                                 &format!("{}", sensor.get_si())]);
