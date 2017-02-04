@@ -133,25 +133,17 @@ pub fn launch() -> Result<()> {
         match server1.lock() {
             Err(_) => {}
             Ok(server) => {
-                for kombisensor in server.get_kombisensors().iter() {
-                    let iter = treestore_kombisensors.insert_with_values(
-                        None,
-                        None,
-                        &[0u32, 1, 4],
-                        &[&Value::from(&format!("{}", kombisensor.get_modbus_slave_id())),
-                            &Value::from(&format!("{}", kombisensor.get_kombisensor_type())),
-                            &Value::from(&format!("{}", kombisensor.get_error_count())),
-                        ]);
+                for (i, kombisensor) in server.get_kombisensors().iter().enumerate() {
+                    let iter = treestore_kombisensors.append(None);
+                    treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&format!("{}", kombisensor.get_modbus_slave_id())));
+                    treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
+                    treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
 
                     for sensor in kombisensor.get_sensors().iter() {
-                        treestore_kombisensors.insert_with_values(
-                            Some(&iter),
-                            None,
-                            &[1u32, 2, 3],
-                            &[&Value::from(&format!("{}", sensor.get_sensor_type())),
-                                &Value::from(&format!("{:.02}", sensor.get_concentration())),
-                                &Value::from(&format!("{}", sensor.get_si())),
-                            ]);
+                        let iter = treestore_kombisensors.append(Some(&iter));
+                        treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
+                        treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
+                        treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
                     }
                     treeview_kombisensors.expand_all();
                 }
