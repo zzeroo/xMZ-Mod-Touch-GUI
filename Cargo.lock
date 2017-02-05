@@ -1,6 +1,6 @@
 [root]
 name = "xmz_mod_touch_gui"
-version = "0.21.3"
+version = "0.21.4"
 dependencies = [
  "env_logger 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",

@@ -12,6 +12,8 @@ use std::time::Duration;
 use xmz_server::server::{Server};
 use gtk_sys;
 use gobject_sys;
+use glib;
+use glib::Value;
 
 
 // make moving clones into closures more convenient
@@ -80,6 +82,65 @@ fn window_main_setup(window: &gtk::Window) {
     window.fullscreen();
 }
 
+fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
+    let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+    let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
+
+    match server.lock() {
+        Err(_) => {}
+        Ok(server) => {
+            for kombisensor in server.get_kombisensors().iter() {
+                let iter = treestore_kombisensors.append(None);
+                treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&kombisensor.get_modbus_slave_id()));
+                treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
+                treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
+
+                for sensor in kombisensor.get_sensors().iter() {
+                    let iter = treestore_kombisensors.append(Some(&iter));
+                    treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
+                    treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
+                    treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
+                }
+                treeview_kombisensors.expand_all();
+            }
+        }
+    }
+}
+
+fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
+    let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
+    let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
+
+    match server.lock() {
+        Err(_) => {}
+        Ok(server) => {
+            if let Some(iter) = treestore_kombisensors.get_iter_first() {
+                println!("{:?}", treestore_kombisensors.get_path(&iter).unwrap());
+                let mut valid = true;
+                while valid {
+                    for kombisensor in server.get_kombisensors().iter() {
+                        treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&kombisensor.get_modbus_slave_id()));
+                        treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
+                        treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
+
+                        for (i, sensor) in kombisensor.get_sensors().iter().enumerate() {
+                            if let Some(iter) = treestore_kombisensors.iter_nth_child(Some(&iter), i as i32) {
+                                treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
+                                treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
+                                treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
+                            }
+                        }
+
+                        // treeview_kombisensors.expand_all();
+                    }
+                    valid = treestore_kombisensors.iter_next(&iter);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
 pub fn launch() -> Result<()> {
     use glib::translate::ToGlibPtr;
 
@@ -121,46 +182,24 @@ pub fn launch() -> Result<()> {
     window_main.show_all();
     info_bar.hide();
 
-    // Kombisensoren Index
-    //
-    let server1 = server.clone();
-    {
-        use glib::Value;
-
-        let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
-        let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
-
-        match server1.lock() {
-            Err(_) => {}
-            Ok(server) => {
-                for (i, kombisensor) in server.get_kombisensors().iter().enumerate() {
-                    let iter = treestore_kombisensors.append(None);
-                    treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&format!("{}", kombisensor.get_modbus_slave_id())));
-                    treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
-                    treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
-
-                    for sensor in kombisensor.get_sensors().iter() {
-                        let iter = treestore_kombisensors.append(Some(&iter));
-                        treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
-                        treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
-                        treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
-                    }
-                    treeview_kombisensors.expand_all();
-                }
-            }
-        }
-    }
+    create_treestore(&builder, server.clone());
 
     // Server Update Task
     gtk::idle_add(clone!(server => move || {
         // Update Server struct via http
-        {
-            match poll_server_web_interface(server.clone()) {
-                Err(err) => {}
-                Ok(_) => {}
-            }
+        match poll_server_web_interface(server.clone()) {
+            Err(err) => {}
+            Ok(_) => {}
         }
         thread::sleep(Duration::from_millis(100));
+
+        ::glib::Continue(true)
+    }));
+
+    // TreeStore Update Task
+    gtk::idle_add(clone!(server => move || {
+        update_treestore(&builder, server.clone());
+        thread::sleep(Duration::from_millis(1000));
 
         ::glib::Continue(true)
     }));
