@@ -115,7 +115,6 @@ fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
         Err(_) => {}
         Ok(server) => {
             if let Some(iter) = treestore_kombisensors.get_iter_first() {
-                println!("{:?}", treestore_kombisensors.get_path(&iter).unwrap());
                 let mut valid = true;
                 while valid {
                     for kombisensor in server.get_kombisensors().iter() {
@@ -132,8 +131,8 @@ fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
                         }
 
                         // treeview_kombisensors.expand_all();
+                        valid = treestore_kombisensors.iter_next(&iter);
                     }
-                    valid = treestore_kombisensors.iter_next(&iter);
                 }
             }
         }
