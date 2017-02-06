@@ -1,19 +1,20 @@
 #[macro_use] use gui::gtk3::macros;
 use error::*;
 use gdk::enums::key;
+use glib;
+use glib::Value;
+use gobject_sys;
+use gtk_sys;
 use gtk;
 use gtk::prelude::*;
 use hyper::{Client};
 use serde_json;
+use std::collections::HashSet;
 use std::io::Read;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use xmz_server::server::{Server};
-use gtk_sys;
-use gobject_sys;
-use glib;
-use glib::Value;
 
 
 // make moving clones into closures more convenient
@@ -111,27 +112,37 @@ fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
     let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
     let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
 
+    let mut seen: HashSet<u32> = HashSet::new();
+
     match server.lock() {
         Err(_) => {}
         Ok(server) => {
             if let Some(iter) = treestore_kombisensors.get_iter_first() {
                 let mut valid = true;
                 while valid {
-                    for kombisensor in server.get_kombisensors().iter() {
-                        treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&kombisensor.get_modbus_slave_id()));
-                        treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
-                        treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
+                    // Only if we get a Modbus Slave Id
+                    if let Some(modbus_slave_id) = treestore_kombisensors.get_value(&iter, 0).get::<u32>() {
+                        println!("modbus_slave_id: {}", modbus_slave_id);
 
-                        for (i, sensor) in kombisensor.get_sensors().iter().enumerate() {
-                            if let Some(iter) = treestore_kombisensors.iter_nth_child(Some(&iter), i as i32) {
-                                treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
-                                treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
-                                treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
+                        if let Some(kombisensor) = server.get_kombisensor_by_modbus_id(modbus_slave_id as u8) {
+                            println!("Kombisensor: {:?}", kombisensor.get_kombisensor_type());
+
+                            treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&modbus_slave_id));
+                            treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
+                            treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
+
+                            for (i, sensor) in kombisensor.get_sensors().iter().enumerate() {
+                                if let Some(iter) = treestore_kombisensors.iter_nth_child(Some(&iter), i as i32) {
+                                    treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
+                                    treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
+                                    treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
+                                }
                             }
+                            valid = treestore_kombisensors.iter_next(&iter);
+                            seen.insert(modbus_slave_id);
+                        } else {
+                            valid = treestore_kombisensors.remove(&iter);
                         }
-
-                        // treeview_kombisensors.expand_all();
-                        valid = treestore_kombisensors.iter_next(&iter);
                     }
                 }
             }
