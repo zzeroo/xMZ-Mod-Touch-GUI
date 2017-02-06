@@ -5,7 +5,7 @@
   <object class="GtkTreeStore" id="treestore_kombisensors">
     <columns>
       <!-- column-name Modbus -->
-      <column type="gchararray"/>
+      <column type="guint"/>
       <!-- column-name Typ -->
       <column type="gchararray"/>
       <!-- column-name Value -->
