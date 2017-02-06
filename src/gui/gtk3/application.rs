@@ -15,6 +15,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use xmz_server::server::{Server};
+use xmz_server::Kombisensor;
 
 
 // make moving clones into closures more convenient
@@ -122,11 +123,8 @@ fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
                 while valid {
                     // Only if we get a Modbus Slave Id
                     if let Some(modbus_slave_id) = treestore_kombisensors.get_value(&iter, 0).get::<u32>() {
-                        println!("modbus_slave_id: {}", modbus_slave_id);
 
                         if let Some(kombisensor) = server.get_kombisensor_by_modbus_id(modbus_slave_id as u8) {
-                            println!("Kombisensor: {:?}", kombisensor.get_kombisensor_type());
-
                             treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&modbus_slave_id));
                             treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
                             treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
@@ -138,16 +136,40 @@ fn update_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
                                     treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
                                 }
                             }
-                            valid = treestore_kombisensors.iter_next(&iter);
-                            seen.insert(modbus_slave_id);
+
                         } else {
                             valid = treestore_kombisensors.remove(&iter);
                         }
+
+                        seen.insert(modbus_slave_id);
+                        valid = treestore_kombisensors.iter_next(&iter);
                     }
                 }
             }
+
+            for kombisensor in server.get_kombisensors().iter() {
+                let modbus_slave_id = kombisensor.get_modbus_slave_id() as u32;
+                if !seen.contains(&modbus_slave_id) {
+                    println!("Fuelle column Modbus Slave Id: {}", &modbus_slave_id);
+                    fill_treestore_column(&treestore_kombisensors, &kombisensor);
+                    treeview_kombisensors.expand_all();
+                }
+            }
         }
-        _ => {}
+    }
+}
+
+fn fill_treestore_column(treestore_kombisensors: &gtk::TreeStore, kombisensor: &Kombisensor) {
+    let iter = treestore_kombisensors.append(None);
+    treestore_kombisensors.set_value(&iter, 0u32, &Value::from(&kombisensor.get_modbus_slave_id()));
+    treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", kombisensor.get_kombisensor_type())));
+    treestore_kombisensors.set_value(&iter, 4u32, &Value::from(&format!("{}", kombisensor.get_error_count())));
+
+    for sensor in kombisensor.get_sensors().iter() {
+        let iter = treestore_kombisensors.append(Some(&iter));
+        treestore_kombisensors.set_value(&iter, 1u32, &Value::from(&format!("{}", sensor.get_sensor_type())));
+        treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
+        treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
     }
 }
 
@@ -209,7 +231,7 @@ pub fn launch() -> Result<()> {
     // TreeStore Update Task
     gtk::idle_add(clone!(server => move || {
         update_treestore(&builder, server.clone());
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(200));
 
         ::glib::Continue(true)
     }));
