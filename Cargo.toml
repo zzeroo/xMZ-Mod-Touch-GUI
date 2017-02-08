@@ -18,7 +18,7 @@ development = []
 
 [dependencies]
 env_logger = "0.3"
-error-chain = "0.4"
+error-chain = "^0"
 gdk = "^0"
 glib = "^0"
 gtk = "^0"
