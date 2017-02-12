@@ -69,35 +69,6 @@ fn poll_server_web_interface(server: Arc<Mutex<Server>>) -> Result<()> {
     Ok(())
 }
 
-fn window_main_setup(window: &gtk::Window) -> Result<()> {
-    let window_title = format!("{} {}",
-                env!("CARGO_PKG_DESCRIPTION"),
-                env!("CARGO_PKG_VERSION"));
-
-    window.set_title(&window_title);
-    window.set_default_size(1024, 600);
-
-    if let Some(display) = window.get_display() {
-        let screen = display.get_screen(0);
-        screen.set_resolution(130.0);
-
-        // CSS Datei einbinden
-        let css_style_provider = gtk::CssProvider::new();
-        let css_gui = include_str!("gui.css");
-        match css_style_provider.load_from_data(css_gui) {
-            Ok(_) => {
-                gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
-            }
-            Err(e) => {error!("Error: css_style_provider.load_from_data() failed: {}", e)}
-        }
-    }
-
-    #[cfg(not(feature = "development"))]
-    window.fullscreen();
-
-    Ok(())
-}
-
 fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) {
     let treeview_kombisensors: gtk::TreeView = builder.get_object("treeview_kombisensors").unwrap();
     let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
@@ -185,6 +156,35 @@ fn fill_treestore_column(treestore_kombisensors: &gtk::TreeStore, kombisensor: &
         treestore_kombisensors.set_value(&iter, 2u32, &Value::from(&format!("{:.02}", sensor.get_concentration())));
         treestore_kombisensors.set_value(&iter, 3u32, &Value::from(&format!("{}", sensor.get_si())));
     }
+}
+
+fn window_main_setup(window: &gtk::Window) -> Result<()> {
+    let window_title = format!("{} {}",
+                env!("CARGO_PKG_DESCRIPTION"),
+                env!("CARGO_PKG_VERSION"));
+
+    window.set_title(&window_title);
+    window.set_default_size(1024, 600);
+
+    if let Some(display) = window.get_display() {
+        let screen = display.get_screen(0);
+        screen.set_resolution(130.0);
+
+        // CSS Datei einbinden
+        let css_style_provider = gtk::CssProvider::new();
+        let css_gui = include_str!("gui.css");
+        match css_style_provider.load_from_data(css_gui) {
+            Ok(_) => {
+                gtk::StyleContext::add_provider_for_screen(&screen, &css_style_provider, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION);
+            }
+            Err(e) => {error!("Error: css_style_provider.load_from_data() failed: {}", e)}
+        }
+    }
+
+    #[cfg(not(feature = "development"))]
+    window.fullscreen();
+
+    Ok(())
 }
 
 pub fn launch() -> Result<()> {
