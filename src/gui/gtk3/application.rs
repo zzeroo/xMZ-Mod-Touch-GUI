@@ -231,21 +231,19 @@ pub fn launch() -> Result<()> {
     create_treestore(&builder, server.clone());
 
     // Server Update Task
-    gtk::idle_add(clone!(server => move || {
+    gtk::timeout_add(100, clone!(server => move || {
         // Update Server struct via http
         match poll_server_web_interface(server.clone()) {
             Err(err) => {}
             Ok(_) => {}
         }
-        thread::sleep(Duration::from_millis(100));
 
         ::glib::Continue(true)
     }));
 
     // TreeStore Update Task
-    gtk::idle_add(clone!(server => move || {
+    gtk::timeout_add(100, clone!(server => move || {
         update_treestore(&builder, server.clone());
-        thread::sleep(Duration::from_millis(200));
 
         ::glib::Continue(true)
     }));
