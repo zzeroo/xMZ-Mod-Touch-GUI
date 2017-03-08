@@ -225,9 +225,9 @@ pub fn launch() -> Result<()> {
 
     if let Some(buffer) = text_view_network.get_buffer() {
         use std::process::Command;
-        let output = Command::new("sh").arg("ip addr").output();
+        let output = Command::new("ip").arg("addr").output();
         if let Ok(ifconfig) = output {
-            buffer.set_text(&format!("{:?}", ifconfig));
+            buffer.set_text(&format!("{}", String::from_utf8_lossy(&ifconfig.stdout)));
         }
     }
 
