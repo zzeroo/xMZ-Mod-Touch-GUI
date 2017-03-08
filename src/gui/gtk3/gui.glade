@@ -85,7 +85,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="scrolled_window_kombisensors">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
@@ -173,6 +173,7 @@
             </child>
             <child>
               <object class="GtkBox">
+                <property name="name">box_info</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -180,8 +181,8 @@
                   <object class="GtkFrame" id="frame_version">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">10</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
@@ -219,7 +220,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
-                    <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
