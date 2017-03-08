@@ -212,6 +212,25 @@ pub fn launch() -> Result<()> {
     let treestore_kombisensors: gtk::TreeStore = builder.get_object("treestore_kombisensors").unwrap();
     let info_bar: gtk::InfoBar = builder.get_object("info_bar").unwrap();
 
+    // Information
+    // TODO: In eigenes Modul auslagern
+    let text_view_network: gtk::TextView = build!(builder, "text_view_network");
+    let text_view_version: gtk::TextView = build!(builder, "text_view_version");
+
+    if let Some(buffer) = text_view_version.get_buffer() {
+        let version = env!("CARGO_PKG_VERSION");
+        let name = env!("CARGO_PKG_NAME");
+        buffer.set_text(&format!("{}: {}", name, version));
+    }
+
+    if let Some(buffer) = text_view_network.get_buffer() {
+        use std::process::Command;
+        let output = Command::new("sh").arg("ifconfig").output();
+        if let Ok(ifconfig) = output {
+            buffer.set_text(&format!("{:?}", ifconfig));
+        }
+    }
+
     // Rufe Funktion für die Basis Fenster Konfiguration auf
     window_main_setup(&window_main);
 
