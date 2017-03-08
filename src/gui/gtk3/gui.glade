@@ -176,6 +176,7 @@
                 <property name="name">box_info</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="border_width">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame_version">
@@ -187,6 +188,7 @@
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="border_width">10</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkTextView" id="text_view_version">
@@ -224,6 +226,7 @@
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="border_width">10</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkTextView" id="text_view_network">
