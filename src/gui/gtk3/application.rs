@@ -225,7 +225,7 @@ pub fn launch() -> Result<()> {
 
     if let Some(buffer) = text_view_network.get_buffer() {
         use std::process::Command;
-        let output = Command::new("sh").arg("ifconfig").output();
+        let output = Command::new("sh").arg("ip addr").output();
         if let Ok(ifconfig) = output {
             buffer.set_text(&format!("{:?}", ifconfig));
         }
