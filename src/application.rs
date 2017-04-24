@@ -1,7 +1,8 @@
 use error::*;
+use gdk::enums::key;
 use gtk;
 use gtk::prelude::*;
-use gdk::enums::key;
+
 
 fn window_main_setup(window: &gtk::Window) -> Result<()> {
     let window_title = format!("{} {}",
@@ -13,7 +14,7 @@ fn window_main_setup(window: &gtk::Window) -> Result<()> {
 
     if let Some(display) = window.get_display() {
         let screen = display.get_screen(0);
-        screen.set_resolution(130.0);
+        screen.set_resolution(180.0);
 
         // CSS Datei einbinden
         let css_style_provider = gtk::CssProvider::new();
