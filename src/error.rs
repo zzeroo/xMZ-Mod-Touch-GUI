@@ -7,10 +7,10 @@ use std::result;
 use glib;
 
 
-pub type Result<T> = result::Result<T, GuiError>;
+pub type Result<T> = result::Result<T, XMZModTouchGuiError>;
 
 #[derive(Debug)]
-pub enum GuiError {
+pub enum XMZModTouchGuiError {
     Glib(glib::Error),
     Hyper(hyper::Error),
     IoError(io::Error),
@@ -18,60 +18,60 @@ pub enum GuiError {
     Unknown,
 }
 
-impl fmt::Display for GuiError {
+impl fmt::Display for XMZModTouchGuiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            GuiError::Glib(ref err) => err.fmt(f),
-            GuiError::Hyper(ref err) => err.fmt(f),
-            GuiError::IoError(ref err) => err.fmt(f),
-            GuiError::SerdeJson(ref err) => err.fmt(f),
-            GuiError::Unknown => write!(f, "A Unknown error happens."),
+            XMZModTouchGuiError::Glib(ref err) => err.fmt(f),
+            XMZModTouchGuiError::Hyper(ref err) => err.fmt(f),
+            XMZModTouchGuiError::IoError(ref err) => err.fmt(f),
+            XMZModTouchGuiError::SerdeJson(ref err) => err.fmt(f),
+            XMZModTouchGuiError::Unknown => write!(f, "A Unknown error happens."),
         }
     }
 }
 
-impl Error for GuiError {
+impl Error for XMZModTouchGuiError {
     fn description(&self) -> &str {
         match *self {
-            GuiError::Glib(ref err) => err.description(),
-            GuiError::Hyper(ref err) => err.description(),
-            GuiError::IoError(ref err) => err.description(),
-            GuiError::SerdeJson(ref err) => err.description(),
-            GuiError::Unknown => "Unknown",
+            XMZModTouchGuiError::Glib(ref err) => err.description(),
+            XMZModTouchGuiError::Hyper(ref err) => err.description(),
+            XMZModTouchGuiError::IoError(ref err) => err.description(),
+            XMZModTouchGuiError::SerdeJson(ref err) => err.description(),
+            XMZModTouchGuiError::Unknown => "Unknown",
         }
     }
 
     fn cause(&self) -> Option<&Error> {
         match *self {
-            GuiError::Glib(ref err) => Some(err),
-            GuiError::Hyper(ref err) => Some(err),
-            GuiError::IoError(ref err) => Some(err),
-            GuiError::SerdeJson(ref err) => Some(err),
-            GuiError::Unknown => None,
+            XMZModTouchGuiError::Glib(ref err) => Some(err),
+            XMZModTouchGuiError::Hyper(ref err) => Some(err),
+            XMZModTouchGuiError::IoError(ref err) => Some(err),
+            XMZModTouchGuiError::SerdeJson(ref err) => Some(err),
+            XMZModTouchGuiError::Unknown => None,
         }
     }
 }
 
-impl From<glib::Error> for GuiError {
-    fn from(err: glib::Error) -> GuiError {
-        GuiError::Glib(err)
+impl From<glib::Error> for XMZModTouchGuiError {
+    fn from(err: glib::Error) -> XMZModTouchGuiError {
+        XMZModTouchGuiError::Glib(err)
     }
 }
 
-impl From<hyper::Error> for GuiError {
-    fn from(err: hyper::Error) -> GuiError {
-        GuiError::Hyper(err)
+impl From<hyper::Error> for XMZModTouchGuiError {
+    fn from(err: hyper::Error) -> XMZModTouchGuiError {
+        XMZModTouchGuiError::Hyper(err)
     }
 }
 
-impl From<io::Error> for GuiError {
-    fn from(err: io::Error) -> GuiError {
-        GuiError::IoError(err)
+impl From<io::Error> for XMZModTouchGuiError {
+    fn from(err: io::Error) -> XMZModTouchGuiError {
+        XMZModTouchGuiError::IoError(err)
     }
 }
 
-impl From<serde_json::Error> for GuiError {
-    fn from(err: serde_json::Error) -> GuiError {
-        GuiError::SerdeJson(err)
+impl From<serde_json::Error> for XMZModTouchGuiError {
+    fn from(err: serde_json::Error) -> XMZModTouchGuiError {
+        XMZModTouchGuiError::SerdeJson(err)
     }
 }
