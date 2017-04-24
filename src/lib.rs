@@ -10,19 +10,17 @@
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;
+extern crate gobject_sys;
+extern crate gtk_sys;
 extern crate gtk;
 extern crate hyper;
 extern crate serde_json;
-extern crate xmz_server;
-extern crate gobject_sys;
-extern crate gtk_sys;
+extern crate xmz_mod_touch_server;
 
-
-pub mod gui {
-    pub mod gtk3;
-}
-
+// Die Reihenfolge bei #[macro_use] ist wichtig!!! Immer über die anderen Includes stellen
+#[macro_use] mod macros;
+pub mod application;
 pub mod error;
+pub mod xmz_mod_touch_client;
 
-pub use self::error::*;
-pub use self::gui::gtk3::*;
+pub use self::xmz_mod_touch_client::XMZModTouchClient;
