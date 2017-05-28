@@ -19,6 +19,7 @@ impl XMZModTouchClient {
 
     /// # Examples
     ///
+    ///
     /// ```
     /// assert!(true);
     /// ```

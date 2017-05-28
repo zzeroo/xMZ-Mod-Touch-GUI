@@ -1,0 +1,14 @@
+language: rust
+addons:
+  apt:
+    packages:
+      - libgtk-3-dev
+os:
+  - linux
+  # - osx
+rust:
+  - stable
+  - beta
+  - nightly
+sudo: false
+cache: cargo

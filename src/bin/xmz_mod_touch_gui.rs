@@ -9,7 +9,7 @@ use xmz_mod_touch_gui::error::*;
 
 
 fn run() -> Result<()> {
-    application::launch()?;
+    // application::launch()?;
 
     Ok(())
 }

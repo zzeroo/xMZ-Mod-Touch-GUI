@@ -1,10 +1,10 @@
+use glib;
 use hyper;
 use serde_json;
 use std::error::Error;
 use std::fmt;
 use std::io;
 use std::result;
-use glib;
 
 
 pub type Result<T> = result::Result<T, XMZModTouchGuiError>;
