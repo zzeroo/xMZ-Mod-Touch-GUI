@@ -44,7 +44,7 @@ pub fn launch() -> Result<()> {
     let builder = gtk::Builder::new();
     builder.add_from_string(&glade_str)?;
 
-    let window_main: gtk::Window = builder.get_object("window_main").unwrap();
+    let window_main: gtk::Window = build!(builder, "window_main");
     window_main_setup(&window_main)?;
 
     #[cfg(feature = "development")]
