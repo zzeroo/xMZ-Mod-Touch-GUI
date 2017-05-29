@@ -1,5 +1,5 @@
-#[macro_use] extern crate log;
-#[macro_use] extern crate xmz_mod_touch_gui;
+extern crate log;
+extern crate xmz_mod_touch_gui;
 extern crate env_logger;
 
 use xmz_mod_touch_gui::error::*;

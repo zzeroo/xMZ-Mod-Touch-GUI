@@ -7,10 +7,6 @@
 //!
 //! Git Repository: https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
 
-// `error_chain!` can recurse deeply(3)
-#![recursion_limit = "1024"]
-
-#[macro_use] extern crate error_chain;
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;

@@ -29,4 +29,5 @@ log = "0.3"
 rand = "0.3"
 serde = "1"
 serde_json = "1"
-xmz_mod_touch_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = "0.51" }
+# xmz_mod_touch_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = "0.51" }
+xmz_mod_touch_server = { path = "../xMZ-Mod-Touch-Server" }
