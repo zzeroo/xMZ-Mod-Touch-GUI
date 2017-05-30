@@ -1,10 +1,15 @@
 use error::*;
 use gdk::enums::key;
-use gtk;
 use glib;
+use gobject_sys;
+use gtk_sys;
+use gtk;
 use gtk::prelude::*;
 use std::sync::{Arc, Mutex};
 use xmz_mod_touch_server::XMZModTouchServer;
+use gdk::DisplayExt;
+use gdk::ScreenExt;
+use glib::translate::ToGlibPtr;
 
 
 fn window_main_setup(window: &gtk::Window) -> Result<()> {
@@ -100,12 +105,24 @@ pub fn launch() -> Result<()> {
         ::std::process::exit(1);
     }
 
+    // Disable Animationen
+    // http://stackoverflow.com/questions/39271852/info_bar-only-shown-on-window-change/39273438#39273438
+    // https://gitter.im/gtk-rs/gtk?at=57c8681f6efec7117c9d6b5e
+    unsafe{
+        gobject_sys::g_object_set (gtk_sys::gtk_settings_get_default() as *mut gobject_sys::GObject,
+        "gtk-enable-animations".to_glib_none().0, 0, 0);
+    }
+
     let glade_str = include_str!("main.glade");
     let builder = gtk::Builder::new();
     builder.add_from_string(&glade_str)?;
 
     let window_main: gtk::Window = build!(builder, "window_main");
     window_main_setup(&window_main)?;
+
+    let info_bar: gtk::InfoBar = build!(builder, "info_bar");
+    let label_info_bar_msg: gtk::Label = build!(builder, "label_info_bar_msg");
+    label_info_bar_msg.set_text("Anwendung erfolgreich gestartet!");
 
     // #[cfg(feature = "development")]
     window_main.connect_key_press_event(move |_, key| {
@@ -115,6 +132,12 @@ pub fn launch() -> Result<()> {
         Inhibit(false)
     });
 
+    // Close Action der InfoBar
+    info_bar.connect_response(clone!(info_bar => move |info_bar, _| {
+        info_bar.hide();
+    }));
+
+    // Gtk main thread
     window_main.connect_delete_event(|_, _| {
         gtk::main_quit();
         Inhibit(false)
@@ -130,6 +153,8 @@ pub fn launch() -> Result<()> {
 
 
     window_main.show_all();
+    info_bar.hide();
+
 
     gtk::main();
 
