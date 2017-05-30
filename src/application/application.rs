@@ -17,7 +17,7 @@ fn window_main_setup(window: &gtk::Window) -> Result<()> {
 
     if let Some(display) = window.get_display() {
         let screen = display.get_screen(0);
-        screen.set_resolution(180.0);
+        screen.set_resolution(150.0);
 
         // CSS Datei einbinden
         let css_style_provider = gtk::CssProvider::new();
@@ -107,7 +107,7 @@ pub fn launch() -> Result<()> {
     let window_main: gtk::Window = build!(builder, "window_main");
     window_main_setup(&window_main)?;
 
-    #[cfg(feature = "development")]
+    // #[cfg(feature = "development")]
     window_main.connect_key_press_event(move |_, key| {
         if let key::Escape = key.get_keyval() {
             gtk::main_quit()
