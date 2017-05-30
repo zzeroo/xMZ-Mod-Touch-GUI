@@ -5,12 +5,14 @@ use std::error::Error;
 use std::fmt;
 use std::io;
 use std::result;
+use gdk::Error as GdkError;
 
 
 pub type Result<T> = result::Result<T, XMZModTouchGuiError>;
 
 #[derive(Debug)]
 pub enum XMZModTouchGuiError {
+    Gdk(GdkError),
     Glib(glib::Error),
     Hyper(hyper::Error),
     IoError(io::Error),
@@ -21,6 +23,7 @@ pub enum XMZModTouchGuiError {
 impl fmt::Display for XMZModTouchGuiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
+            XMZModTouchGuiError::Gdk(ref err) => err.fmt(f),
             XMZModTouchGuiError::Glib(ref err) => err.fmt(f),
             XMZModTouchGuiError::Hyper(ref err) => err.fmt(f),
             XMZModTouchGuiError::IoError(ref err) => err.fmt(f),
@@ -33,6 +36,7 @@ impl fmt::Display for XMZModTouchGuiError {
 impl Error for XMZModTouchGuiError {
     fn description(&self) -> &str {
         match *self {
+            XMZModTouchGuiError::Gdk(ref err) => err.description(),
             XMZModTouchGuiError::Glib(ref err) => err.description(),
             XMZModTouchGuiError::Hyper(ref err) => err.description(),
             XMZModTouchGuiError::IoError(ref err) => err.description(),
@@ -43,6 +47,7 @@ impl Error for XMZModTouchGuiError {
 
     fn cause(&self) -> Option<&Error> {
         match *self {
+            XMZModTouchGuiError::Gdk(ref err) => Some(err),
             XMZModTouchGuiError::Glib(ref err) => Some(err),
             XMZModTouchGuiError::Hyper(ref err) => Some(err),
             XMZModTouchGuiError::IoError(ref err) => Some(err),

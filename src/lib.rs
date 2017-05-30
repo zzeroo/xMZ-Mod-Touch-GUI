@@ -10,7 +10,6 @@
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;
-extern crate gobject_sys;
 extern crate gtk_sys;
 extern crate gtk;
 extern crate hyper;
@@ -21,6 +20,3 @@ extern crate xmz_mod_touch_server;
 #[macro_use] mod macros;
 pub mod application;
 pub mod error;
-pub mod xmz_mod_touch_client;
-
-pub use self::xmz_mod_touch_client::XMZModTouchClient;

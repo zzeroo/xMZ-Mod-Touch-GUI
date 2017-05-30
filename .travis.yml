@@ -10,5 +10,7 @@ rust:
   - stable
   - beta
   - nightly
+env:
+  - RUST_BACKTRACE=1
 sudo: false
 cache: cargo
