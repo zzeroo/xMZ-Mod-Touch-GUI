@@ -1,18 +1,18 @@
+label { color: #222; }
 
-notebook#notebook_main tab { padding: 20px; }
-/* notebook#notebook_main tab:first-child { background-color: #96b3c4; } */
+.small { font-size: .7em; }
+.double_size { font-size: 2em; }
 
-#textview_ifconfig { font-size: 12px; color: blue; }
+.bold { font-weight: bold; }
 
-infobar.info {  }
-infobar.error { 	background-color: #DA0000; }
+.monospace { font-family: "monospace"; }
 
-.border-left-light  { border-left: 1px solid #666666;  }
-.border-bottom  { border-bottom: 2px solid #666666;  }
+/* Wartungsmeldung */
+box#box_test { background: #FFEC42; }
+button#button_wartung { font-weight: bolder; }
+label#label_wartung_title { font-weight: bolder; font-size: 3em; }
 
-#direktwert, #mittelwert  {
-	font-size: 100px;
-	font-weight: bold;
-}
+label#label_wartung_text { font-size: 1.5em; }
 
-.bolder { font-weight: bolder }
+label#label_wartung_text,
+label#label_wartung_title { color: red; }
