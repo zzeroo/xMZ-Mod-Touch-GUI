@@ -72,6 +72,8 @@ Tel.: +49 7151 275211</property>
       <column type="gchararray"/>
       <!-- column-name errors -->
       <column type="gchararray"/>
+      <!-- column-name index -->
+      <column type="guint"/>
     </columns>
   </object>
   <object class="GtkWindow" id="window_main">
