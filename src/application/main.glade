@@ -170,6 +170,29 @@ Tel.: +49 7151 275211</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
+                  <object class="GtkBox" id="box_exceptions">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="label_notebook_exceptions">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Alarme</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkScrolledWindow" id="scolled_window_kombisensors">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -188,8 +211,8 @@ Tel.: +49 7151 275211</property>
                           <object class="GtkTreeSelection"/>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeview_column_modbus_slave_id">
-                            <property name="title" translatable="yes">Modbus ID</property>
+                          <object class="GtkTreeViewColumn" id="treeview_column_zone">
+                            <property name="title" translatable="yes">Zone</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_modbus_slave_id"/>
                               <attributes>
@@ -199,8 +222,8 @@ Tel.: +49 7151 275211</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeview_column_type">
-                            <property name="title" translatable="yes">Bezeichnung</property>
+                          <object class="GtkTreeViewColumn" id="treeview_column_modbus_address">
+                            <property name="title" translatable="yes">Modbus Adresse</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_type"/>
@@ -211,8 +234,8 @@ Tel.: +49 7151 275211</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeview_column_value">
-                            <property name="title" translatable="yes">Direktwert</property>
+                          <object class="GtkTreeViewColumn" id="treeview_column_type">
+                            <property name="title" translatable="yes">Typ</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_value"/>
@@ -223,8 +246,8 @@ Tel.: +49 7151 275211</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeview_column_average">
-                            <property name="title" translatable="yes">Mittelwert</property>
+                          <object class="GtkTreeViewColumn" id="treeview_column_value">
+                            <property name="title" translatable="yes">Direktwert</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_average"/>
@@ -235,7 +258,8 @@ Tel.: +49 7151 275211</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeview_column_si">
+                          <object class="GtkTreeViewColumn" id="treeview_column_average">
+                            <property name="title" translatable="yes">15min Mittelwert</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_si"/>
@@ -245,43 +269,29 @@ Tel.: +49 7151 275211</property>
                             </child>
                           </object>
                         </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="treeview_column_si">
+                            <property name="title" translatable="yes">SI</property>
+                            <child>
+                              <object class="GtkCellRendererText"/>
+                              <attributes>
+                                <attribute name="text">5</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn">
+                            <property name="title" translatable="yes">column</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="treeview_column_errors"/>
+                              <attributes>
+                                <attribute name="text">6</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
                       </object>
-                    </child>
-                  </object>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="label_notebook_alarms">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Alarme</property>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                    <property name="tab_fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box_alarms">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label_notebook_label_unimplemented">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Noch nicht implementiert!</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                   <packing>
@@ -289,52 +299,13 @@ Tel.: +49 7151 275211</property>
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label_notebook_kombisensoren">
+                  <object class="GtkLabel" id="label_notebook_kombisensors">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Kombisensoren</property>
+                    <property name="label" translatable="yes">Zone1</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
-                    <property name="tab_fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box_info">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="box_info_label_unimplemented">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Noch nicht implementiert!</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="label_notebook_info">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Informationen</property>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
                     <property name="tab_fill">False</property>
                   </packing>
                 </child>
