@@ -1,8 +1,10 @@
 extern crate gtk;
 extern crate gdk;
 
-use gtk::prelude::*;
+use gdk::DisplayExt;
 use gdk::enums::key;
+use gtk::prelude::*;
+
 
 fn main() {
     gtk::init().unwrap_or_else(|_| {
