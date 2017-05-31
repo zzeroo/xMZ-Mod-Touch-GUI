@@ -2,6 +2,7 @@
 name = "xmz_mod_touch_gui"
 version = "0.33.1"
 dependencies = [
+ "clap 2.24.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "gdk 0.5.3 (git+https://github.com/gtk-rs/gdk.git)",
  "glib 0.1.3 (git+https://github.com/gtk-rs/glib.git)",

@@ -1,15 +1,16 @@
 use error::*;
+use gdk::DisplayExt;
 use gdk::enums::key;
+use gdk::ScreenExt;
 use glib;
+use glib::translate::ToGlibPtr;
 use gobject_sys;
 use gtk_sys;
 use gtk;
 use gtk::prelude::*;
 use std::sync::{Arc, Mutex};
+use xmz_mod_touch_client::XMZModTouchClient;
 use xmz_mod_touch_server::XMZModTouchServer;
-use gdk::DisplayExt;
-use gdk::ScreenExt;
-use glib::translate::ToGlibPtr;
 
 
 fn window_main_setup(window: &gtk::Window) -> Result<()> {
@@ -50,8 +51,8 @@ fn update_server(server: &Arc<Mutex<XMZModTouchServer>>) {
     use hyper;
     use serde_json;
 
-    // let host = "localhost";
-    let host = "192.168.89.188";
+    let host = "localhost";
+    // let host = "192.168.89.188";
     let client = hyper::Client::new();
     if let Ok(mut response) = client.get(&format!("http://{}:3000/api/v1", host)).send() {
         let mut s = String::new();
@@ -155,10 +156,6 @@ fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer
                                         });
                                     });
                                 });
-                                // println!("Sensor Type 2{:?}", treestore.get_value(&iter, 2));
-                                // println!("Sensor Concentration 3{:?}", treestore.get_value(&iter, 3));
-                                // println!("Sensor Average 4{:?}", treestore.get_value(&iter, 4));
-                                // println!("Sensor Si 5{:?}", treestore.get_value(&iter, 5));
 
                                 valid_sensors = treestore.iter_next(&mut iter);
                             }
@@ -174,7 +171,7 @@ fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer
     }
 }
 
-pub fn launch() -> Result<()> {
+pub fn launch(client: &XMZModTouchClient) -> Result<()> {
     // Create a XMZModTouchServer in a Arc Mutex
     let server = Arc::new(Mutex::new(XMZModTouchServer::new()));
     // Einmal den Server "von Hand" aktualisieren

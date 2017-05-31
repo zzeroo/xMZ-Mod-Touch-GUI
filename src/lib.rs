@@ -21,3 +21,6 @@ extern crate xmz_mod_touch_server;
 #[macro_use] mod macros;
 pub mod application;
 pub mod error;
+pub mod xmz_mod_touch_client;
+
+pub use self::xmz_mod_touch_client::XMZModTouchClient;
