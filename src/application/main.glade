@@ -72,11 +72,14 @@ Tel.: +49 7151 275211</property>
       <column type="gchararray"/>
       <!-- column-name errors -->
       <column type="gchararray"/>
+      <!-- column-name index -->
+      <column type="guint"/>
     </columns>
   </object>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
-    <property name="default_width">1000</property>
+    <property name="border_width">20</property>
+    <property name="default_width">1024</property>
     <property name="default_height">600</property>
     <child>
       <object class="GtkOverlay" id="overlay_wartung">
@@ -197,22 +200,26 @@ Tel.: +49 7151 275211</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="shadow_type">in</property>
-                    <property name="propagate_natural_width">True</property>
+                    <property name="max_content_width">600</property>
                     <property name="propagate_natural_height">True</property>
                     <child>
                       <object class="GtkTreeView" id="treeview_kombisensors">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="model">treestore_kombisensors</property>
+                        <property name="headers_clickable">False</property>
                         <property name="rules_hint">True</property>
+                        <property name="enable_search">False</property>
                         <property name="enable_grid_lines">horizontal</property>
-                        <property name="enable_tree_lines">True</property>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection"/>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_zone">
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">80</property>
                             <property name="title" translatable="yes">Zone</property>
+                            <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_modbus_slave_id"/>
                               <attributes>
@@ -223,7 +230,10 @@ Tel.: +49 7151 275211</property>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_modbus_address">
-                            <property name="title" translatable="yes">Modbus Adresse</property>
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">80</property>
+                            <property name="title" translatable="yes">Modbus
+Adresse</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_type"/>
@@ -235,7 +245,8 @@ Tel.: +49 7151 275211</property>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_type">
-                            <property name="title" translatable="yes">Typ</property>
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">360</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_value"/>
@@ -247,7 +258,10 @@ Tel.: +49 7151 275211</property>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_value">
-                            <property name="title" translatable="yes">Direktwert</property>
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">100</property>
+                            <property name="title" translatable="yes">Direkt-
+wert</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_average"/>
@@ -259,7 +273,10 @@ Tel.: +49 7151 275211</property>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_average">
-                            <property name="title" translatable="yes">15min Mittelwert</property>
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">100</property>
+                            <property name="title" translatable="yes">Mittelw.
+Ø 15min</property>
                             <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext_si"/>
@@ -271,7 +288,9 @@ Tel.: +49 7151 275211</property>
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeview_column_si">
-                            <property name="title" translatable="yes">SI</property>
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">80</property>
+                            <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText"/>
                               <attributes>
@@ -281,8 +300,11 @@ Tel.: +49 7151 275211</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="title" translatable="yes">column</property>
+                          <object class="GtkTreeViewColumn" id="treeview_column_error">
+                            <property name="sizing">fixed</property>
+                            <property name="fixed_width">80</property>
+                            <property name="title" translatable="yes">Errors</property>
+                            <property name="expand">True</property>
                             <child>
                               <object class="GtkCellRendererText" id="treeview_column_errors"/>
                               <attributes>

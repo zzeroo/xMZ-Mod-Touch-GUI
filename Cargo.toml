@@ -1,6 +1,6 @@
 [package]
 name = "xmz_mod_touch_gui"
-version = "0.33.1"
+version = "0.33.2"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
@@ -17,12 +17,13 @@ doc = false
 development = []
 
 [dependencies]
+clap = "2"
 env_logger = "0.4"
-error-chain = "0.10"
-gdk = "*"
-gtk = "*"
-glib = "*"
-gtk-sys = "*"
+gdk = { git = "https://github.com/gtk-rs/gdk.git" }
+glib = { git = "https://github.com/gtk-rs/glib.git" }
+gobject-sys = { git = "https://github.com/gtk-rs/sys" }
+gtk = { git = "https://github.com/gtk-rs/gtk.git", features = ["v3_22"] }
+gtk-sys = { git = "https://github.com/gtk-rs/sys.git" }
 hyper = "*"
 libc = "*"
 log = "0.3"

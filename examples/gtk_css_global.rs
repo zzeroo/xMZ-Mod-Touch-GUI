@@ -1,10 +1,12 @@
 #[macro_use] extern crate log;
 extern crate env_logger;
-extern crate gtk;
 extern crate gdk;
+extern crate gtk;
 
-use gtk::prelude::*;
+use gdk::DisplayExt;
 use gdk::enums::key;
+use gtk::prelude::*;
+
 
 // Basic Setup des Fensters
 fn window_setup(window: &gtk::Window) {

@@ -1,13 +1,16 @@
 //! # Builder Basics Sample
 //!
 //! This sample demonstrates how to use the builder with an imported glade file
-
+extern crate gdk;
 extern crate gtk;
 
+
 mod example {
+    use gdk::DisplayExt;
+    use gdk::ScreenExt;
     use gtk;
-    use gtk::prelude::*;
     use gtk::{Builder, Button, MessageDialog, Window};
+    use gtk::prelude::*;
 
 
     pub fn main() {
