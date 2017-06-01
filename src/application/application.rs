@@ -73,11 +73,13 @@ fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>
     let treestore_kombisensors: gtk::TreeStore = build!(builder, "treestore_kombisensors");
 
     if let Ok(server) = server.lock() {
+        // Zones
         for (zone_id, zone) in server.get_zones().iter().enumerate() {
             let iter = treestore_kombisensors.append(None);
             treestore_kombisensors.set_value(&iter, 0, &glib::Value::from( &( (zone_id as i32) + 1 )) );
             treestore_kombisensors.set_value(&iter, 7, &glib::Value::from( &(zone_id as i32) ));
 
+            // Kombisensors
             for (kombisensor_id, kombisensor) in zone.get_kombisensors().iter().enumerate() {
                 let iter = treestore_kombisensors.append(Some(&iter));
                 treestore_kombisensors.set_value(&iter, 1, &glib::Value::from( &format!("{}", kombisensor.get_modbus_address()) ));
@@ -85,13 +87,16 @@ fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>
                 treestore_kombisensors.set_value(&iter, 6, &glib::Value::from( &format!("{}", kombisensor.get_error_count()) ));
                 treestore_kombisensors.set_value(&iter, 7, &glib::Value::from( &(kombisensor_id as i32) ));
 
+                // Sensors
                 for (sensor_id, sensor) in kombisensor.get_sensors().iter().enumerate() {
-                    let iter = treestore_kombisensors.append(Some(&iter));
-                    treestore_kombisensors.set_value(&iter, 2, &glib::Value::from( &format!("{}", sensor.get_sensor_type() )));
-                    treestore_kombisensors.set_value(&iter, 3, &glib::Value::from( &format!("{:.02}", sensor.get_concentration() )));
-                    treestore_kombisensors.set_value(&iter, 4, &glib::Value::from( &format!("{:.02}", sensor.get_concentration_average_15min() )));
-                    treestore_kombisensors.set_value(&iter, 5, &glib::Value::from( &format!("{}", sensor.get_si() )));
-                    treestore_kombisensors.set_value(&iter, 7, &glib::Value::from( &(sensor_id as i32) ));
+                    if sensor.is_enabled() {
+                        let iter = treestore_kombisensors.append(Some(&iter));
+                        treestore_kombisensors.set_value(&iter, 2, &glib::Value::from( &format!("{}", sensor.get_sensor_type() )));
+                        treestore_kombisensors.set_value(&iter, 3, &glib::Value::from( &format!("{:.02}", sensor.get_concentration() )));
+                        treestore_kombisensors.set_value(&iter, 4, &glib::Value::from( &format!("{:.02}", sensor.get_concentration_average_15min() )));
+                        treestore_kombisensors.set_value(&iter, 5, &glib::Value::from( &format!("{}", sensor.get_si() )));
+                        treestore_kombisensors.set_value(&iter, 7, &glib::Value::from( &(sensor_id as i32) ));
+                    }
                 }
             }
         }
