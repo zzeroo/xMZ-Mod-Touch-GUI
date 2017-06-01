@@ -46,15 +46,14 @@ fn window_main_setup(window: &gtk::Window) -> Result<()> {
 /// Holt via http/ json request aktuelle Serverdaten
 ///
 ///
-fn update_server(server: &Arc<Mutex<XMZModTouchServer>>) {
+fn update_server(server: &Arc<Mutex<XMZModTouchServer>>, hostname: Arc<String>) {
     use std::io::Read;
     use hyper;
     use serde_json;
 
-    let host = "localhost";
-    // let host = "192.168.89.188";
     let client = hyper::Client::new();
-    if let Ok(mut response) = client.get(&format!("http://{}:3000/api/v1", host)).send() {
+    let url = format!("http://{}:3000", &*hostname);
+    if let Ok(mut response) = client.get(&url).send() {
         let mut s = String::new();
         match response.read_to_string(&mut s) {
             Err(e) => println!("Error: {}", e),
@@ -172,10 +171,11 @@ fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer
 }
 
 pub fn launch(client: &XMZModTouchClient) -> Result<()> {
+    let hostname = Arc::new(client.get_hostname().to_string());
     // Create a XMZModTouchServer in a Arc Mutex
     let server = Arc::new(Mutex::new(XMZModTouchServer::new()));
     // Einmal den Server "von Hand" aktualisieren
-    update_server(&server.clone());
+    update_server(&server.clone(), hostname.clone());
 
     if gtk::init().is_err() {
         error!("Failed to initalize GTK.");
@@ -223,9 +223,8 @@ pub fn launch(client: &XMZModTouchClient) -> Result<()> {
     });
 
     let treestore_kombisensors = create_treestore(&builder, server.clone());
-
-    gtk::timeout_add(5000, clone!(builder, server, treestore_kombisensors => move || {
-        update_server(&server);
+    gtk::timeout_add(5000, clone!(builder, server, hostname, treestore_kombisensors => move || {
+        update_server(&server, hostname.clone());
         update_treestore(&builder, &server, &treestore_kombisensors);
 
         ::glib::Continue(true)
