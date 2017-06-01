@@ -1,6 +1,6 @@
 [package]
 name = "xmz_mod_touch_gui"
-version = "0.34.1"
+version = "0.99.0"
 authors = ["Stefan Müller <s.mueller@it.kls-glt.de>"]
 description = "Grafische Oberfläche der 'xMZ-Mod-Touch'-Platform"
 documentation = "https://gaswarnanlagen.com/xmz-mod-touch"
@@ -30,5 +30,5 @@ log = "0.3"
 rand = "0.3"
 serde = "1"
 serde_json = "1"
-xmz_mod_touch_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = "0.51" }
+xmz_mod_touch_server = { git = "https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git", branch = "master", version = "0.99" }
 # xmz_mod_touch_server = { path = "../xMZ-Mod-Touch-Server" }
