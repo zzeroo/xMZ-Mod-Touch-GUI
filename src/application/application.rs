@@ -58,7 +58,7 @@ fn update_server(server: &Arc<Mutex<XMZModTouchServer>>, hostname: Arc<String>) 
         match response.read_to_string(&mut s) {
             Err(e) => println!("Error: {}", e),
             Ok(_size) => {
-                if let Ok(mut server) = server.lock() {
+                if let Ok(mut server) = server.try_lock() {
                     if let Ok(s) = serde_json::from_str::<XMZModTouchServer>(&s) {
                         *server = s;
                     }
@@ -72,7 +72,7 @@ fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>
     let treeview_kombisensors: gtk::TreeView   = build!(builder, "treeview_kombisensors");
     let treestore_kombisensors: gtk::TreeStore = build!(builder, "treestore_kombisensors");
 
-    if let Ok(server) = server.lock() {
+    if let Ok(server) = server.try_lock() {
         // Zones
         for (zone_id, zone) in server.get_zones().iter().enumerate() {
             let iter = treestore_kombisensors.append(None);
@@ -107,7 +107,7 @@ fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>
 }
 
 fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer>>, treestore: &gtk::TreeStore) {
-    if let Ok(server) = server.lock() {
+    if let Ok(server) = server.try_lock() {
         // Zone
         if let Some(mut iter) = treestore.get_iter_first() {
             let mut valid_zones = true;
