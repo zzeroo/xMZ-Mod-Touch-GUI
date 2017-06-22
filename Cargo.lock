@@ -1,6 +1,6 @@
 [root]
 name = "xmz_mod_touch_gui"
-version = "0.99.1"
+version = "0.99.2"
 dependencies = [
  "clap 2.24.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -15,7 +15,7 @@ dependencies = [
  "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "xmz_mod_touch_server 0.99.4 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git?branch=development)",
+ "xmz_mod_touch_server 0.99.4 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)",
 ]
 
 [[package]]
@@ -1120,7 +1120,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "xmz_mod_touch_server"
 version = "0.99.4"
-source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git?branch=development#cb284047619f0eed7e1389909bec608e676b0d98"
+source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git#16ea5211c8f63a1a5143eb5c273db2cc383de466"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.24.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1267,4 +1267,4 @@ dependencies = [
 "checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 "checksum winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "167dc9d6949a9b857f3451275e911c3f44255842c1f7a76f33c55103a909087a"
 "checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
-"checksum xmz_mod_touch_server 0.99.4 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git?branch=development)" = "<none>"
+"checksum xmz_mod_touch_server 0.99.4 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)" = "<none>"
