@@ -1,33 +1,33 @@
 use error::*;
-use hyper::{self, Client};
+use hyper::{self, Client as HyperClient};
 use serde_json;
 use std::io::Read;
 use std::sync::Mutex;
-use xmz_mod_touch_server::xmz_mod_touch_server::XMZModTouchServer;
+use xmz_mod_touch_server::Server;
 
 
 #[derive(Debug)]
-pub struct XMZModTouchClient<'a> {
-    hyperclient: Client,
-    server_data: Mutex<XMZModTouchServer>,
+pub struct Client<'a> {
+    hyperclient: HyperClient,
+    server_data: Mutex<Server>,
     hostname: &'a str,
 }
 
-impl<'a> XMZModTouchClient<'a> {
+impl<'a> Client<'a> {
     /// Erzeugt einen neuen Clienten
     ///
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::XMZModTouchClient;
-    /// let client = XMZModTouchClient::new("localhost");
+    /// use xmz_mod_touch_gui::Client;
+    /// let client = Client::new("localhost");
     ///
     /// assert_eq!(client.get_hostname(), "localhost");
     /// ```
     pub fn new(hostname: &'a str) -> Self {
-        XMZModTouchClient {
-            hyperclient: Client::new(),
-            server_data: Mutex::new(XMZModTouchServer::new()),
+        Client {
+            hyperclient: HyperClient::new(),
+            server_data: Mutex::new(Server::new()),
             hostname: hostname,
         }
     }
@@ -37,8 +37,8 @@ impl<'a> XMZModTouchClient<'a> {
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::XMZModTouchClient;
-    /// let client = XMZModTouchClient::new("localhost");
+    /// use xmz_mod_touch_gui::Client;
+    /// let client = Client::new("localhost");
     ///
     /// assert_eq!(client.get_hostname(), "localhost");
     /// ```
@@ -51,12 +51,12 @@ impl<'a> XMZModTouchClient<'a> {
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::XMZModTouchClient;
-    /// let client = XMZModTouchClient::new("localhost");
+    /// use xmz_mod_touch_gui::Client;
+    /// let client = Client::new("localhost");
     ///
     /// client.get_server_data().lock().unwrap().get_version();
     /// ```
-    pub fn get_server_data(&self) -> &Mutex<XMZModTouchServer> {
+    pub fn get_server_data(&self) -> &Mutex<Server> {
         &self.server_data
     }
 
@@ -73,8 +73,8 @@ impl<'a> XMZModTouchClient<'a> {
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::XMZModTouchClient;
-    /// let client = XMZModTouchClient::new("localhost");
+    /// use xmz_mod_touch_gui::Client;
+    /// let client = Client::new("localhost");
     ///
     /// client.update_server_data();
     /// ```
@@ -91,7 +91,7 @@ impl<'a> XMZModTouchClient<'a> {
                 Err(e) => println!("Error: {}", e),
                 Ok(_size) => {
                     if let Ok(mut server_data) = self.server_data.lock() {
-                        if let Ok(server) = serde_json::from_str::<XMZModTouchServer>(&s) {
+                        if let Ok(server) = serde_json::from_str::<Server>(&s) {
                             *server_data = server;
                         }
                     }
