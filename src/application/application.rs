@@ -9,8 +9,8 @@ use gtk_sys;
 use gtk;
 use gtk::prelude::*;
 use std::sync::{Arc, Mutex};
-use xmz_mod_touch_client::XMZModTouchClient;
-use xmz_mod_touch_server::XMZModTouchServer;
+use client::Client;
+use xmz_mod_touch_server::Server;
 
 
 fn window_main_setup(window: &gtk::Window) -> Result<()> {
@@ -46,7 +46,7 @@ fn window_main_setup(window: &gtk::Window) -> Result<()> {
 /// Holt via http/ json request aktuelle Serverdaten
 ///
 ///
-fn update_server(server: &Arc<Mutex<XMZModTouchServer>>, hostname: Arc<String>) {
+fn update_server(server: &Arc<Mutex<Server>>, hostname: Arc<String>) {
     use std::io::Read;
     use hyper;
     use serde_json;
@@ -59,7 +59,7 @@ fn update_server(server: &Arc<Mutex<XMZModTouchServer>>, hostname: Arc<String>) 
             Err(e) => println!("Error: {}", e),
             Ok(_size) => {
                 if let Ok(mut server) = server.try_lock() {
-                    if let Ok(s) = serde_json::from_str::<XMZModTouchServer>(&s) {
+                    if let Ok(s) = serde_json::from_str::<Server>(&s) {
                         *server = s;
                     }
                 }
@@ -68,7 +68,7 @@ fn update_server(server: &Arc<Mutex<XMZModTouchServer>>, hostname: Arc<String>) 
     }
 }
 
-fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>>) -> gtk::TreeStore {
+fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<Server>>) -> gtk::TreeStore {
     let treeview_kombisensors: gtk::TreeView   = build!(builder, "treeview_kombisensors");
     let treestore_kombisensors: gtk::TreeStore = build!(builder, "treestore_kombisensors");
 
@@ -106,7 +106,7 @@ fn create_treestore(builder: &gtk::Builder, server: Arc<Mutex<XMZModTouchServer>
     treestore_kombisensors
 }
 
-fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer>>, treestore: &gtk::TreeStore) {
+fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<Server>>, treestore: &gtk::TreeStore) {
     if let Ok(server) = server.try_lock() {
         // Zone
         if let Some(mut iter) = treestore.get_iter_first() {
@@ -175,10 +175,10 @@ fn update_treestore(builder: &gtk::Builder, server: &Arc<Mutex<XMZModTouchServer
     }
 }
 
-pub fn launch(client: &XMZModTouchClient) -> Result<()> {
+pub fn launch(client: &Client) -> Result<()> {
     let hostname = Arc::new(client.get_hostname().to_string());
-    // Create a XMZModTouchServer in a Arc Mutex
-    let server = Arc::new(Mutex::new(XMZModTouchServer::new()));
+    // Create a Server in a Arc Mutex
+    let server = Arc::new(Mutex::new(Server::new()));
     // Einmal den Server "von Hand" aktualisieren
     update_server(&server.clone(), hostname.clone());
 

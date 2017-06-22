@@ -4,7 +4,7 @@ extern crate xmz_mod_touch_gui;
 extern crate env_logger;
 
 use clap::{App, Arg, ArgMatches};
-use xmz_mod_touch_gui::XMZModTouchClient;
+use xmz_mod_touch_gui::Client;
 use xmz_mod_touch_gui::error::*;
 use xmz_mod_touch_gui::application;
 
@@ -12,7 +12,7 @@ use xmz_mod_touch_gui::application;
 fn run(matches: &ArgMatches) -> Result<()> {
     let hostname = matches.value_of("hostname").unwrap();
 
-    let client = XMZModTouchClient::new(hostname);
+    let client = Client::new(hostname);
 
     application::launch(&client)?;
 
