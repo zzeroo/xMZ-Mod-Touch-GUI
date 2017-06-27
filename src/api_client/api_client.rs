@@ -1,33 +1,32 @@
-use error::*;
+use errors::*;
 use hyper::{self, Client as HyperClient};
 use serde_json;
 use std::io::Read;
-use std::sync::Mutex;
 use xmz_mod_touch_server::Server;
 
 
 #[derive(Debug)]
-pub struct Client<'a> {
+pub struct ApiClient<'a> {
     hyperclient: HyperClient,
-    server_data: Mutex<Server>,
+    server_data: Server,
     hostname: &'a str,
 }
 
-impl<'a> Client<'a> {
+impl<'a> ApiClient<'a> {
     /// Erzeugt einen neuen Clienten
     ///
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::Client;
-    /// let client = Client::new("localhost");
+    /// use xmz_mod_touch_gui::ApiClient;
+    /// let client = ApiClient::new("localhost");
     ///
     /// assert_eq!(client.get_hostname(), "localhost");
     /// ```
     pub fn new(hostname: &'a str) -> Self {
-        Client {
+        ApiClient {
             hyperclient: HyperClient::new(),
-            server_data: Mutex::new(Server::new()),
+            server_data: Server::new(),
             hostname: hostname,
         }
     }
@@ -37,8 +36,8 @@ impl<'a> Client<'a> {
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::Client;
-    /// let client = Client::new("localhost");
+    /// use xmz_mod_touch_gui::ApiClient;
+    /// let client = ApiClient::new("localhost");
     ///
     /// assert_eq!(client.get_hostname(), "localhost");
     /// ```
@@ -51,34 +50,26 @@ impl<'a> Client<'a> {
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::Client;
-    /// let client = Client::new("localhost");
+    /// use xmz_mod_touch_gui::ApiClient;
+    /// let client = ApiClient::new("localhost");
     ///
-    /// client.get_server_data().lock().unwrap().get_version();
+    /// client.get_server_data().get_version();
     /// ```
-    pub fn get_server_data(&self) -> &Mutex<Server> {
+    pub fn get_server_data(&self) -> &Server {
         &self.server_data
     }
-
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// assert!(true);
-    /// ```
-
 
     /// Update der Server Daten
     ///
     /// # Examples
     ///
     /// ```
-    /// use xmz_mod_touch_gui::Client;
-    /// let client = Client::new("localhost");
+    /// use xmz_mod_touch_gui::ApiClient;
+    /// let mut client = ApiClient::new("localhost");
     ///
     /// client.update_server_data();
     /// ```
-    pub fn update_server_data(&self) {
+    pub fn update_server_data(&mut self) {
         // construct a remote url
         let remote_url = format!("http://{}:3000/api/v1", self.hostname);
 
@@ -90,10 +81,8 @@ impl<'a> Client<'a> {
             match response.read_to_string(&mut s) {
                 Err(e) => println!("Error: {}", e),
                 Ok(_size) => {
-                    if let Ok(mut server_data) = self.server_data.lock() {
-                        if let Ok(server) = serde_json::from_str::<Server>(&s) {
-                            *server_data = server;
-                        }
+                    if let Ok(server) = serde_json::from_str::<Server>(&s) {
+                        self.server_data = server;
                     }
                 }
             }
