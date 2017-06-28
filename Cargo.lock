@@ -14,7 +14,7 @@ dependencies = [
  "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "xmz_mod_touch_server 0.99.5 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)",
+ "xmz_mod_touch_server 0.99.6 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)",
 ]
 
 [[package]]
@@ -271,7 +271,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "gdk"
 version = "0.5.3"
-source = "git+https://github.com/gtk-rs/gdk.git#c8c6a8fafb035856ae604fcdc39161f18da3ea0d"
+source = "git+https://github.com/gtk-rs/gdk.git#0f6687312538779627dd6316a3f847d575549741"
 dependencies = [
  "bitflags 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cairo-rs 0.1.3 (git+https://github.com/gtk-rs/cairo)",
@@ -391,7 +391,7 @@ dependencies = [
 [[package]]
 name = "gtk"
 version = "0.1.3"
-source = "git+https://github.com/gtk-rs/gtk.git#7a535657d806e779cf8a39c48596cf680166946c"
+source = "git+https://github.com/gtk-rs/gtk.git#182ddcd9f8b0463b7255594bedfaba2222256328"
 dependencies = [
  "bitflags 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cairo-rs 0.1.3 (git+https://github.com/gtk-rs/cairo)",
@@ -1109,8 +1109,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "xmz_mod_touch_server"
-version = "0.99.5"
-source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git#6e74f1f937a930e8c0dbe1801e342848d64fe30e"
+version = "0.99.6"
+source = "git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git#e8f0736df22df13b3868346915d8a31f0f513bed"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.24.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1256,4 +1256,4 @@ dependencies = [
 "checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 "checksum winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "167dc9d6949a9b857f3451275e911c3f44255842c1f7a76f33c55103a909087a"
 "checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
-"checksum xmz_mod_touch_server 0.99.5 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)" = "<none>"
+"checksum xmz_mod_touch_server 0.99.6 (git+https://github.com/Kliemann-Service-GmbH/xMZ-Mod-Touch-Server.git)" = "<none>"
