@@ -14,12 +14,22 @@ use std::sync::{Arc, Mutex};
 use xmz_mod_touch_server::{Kombisensor, Sensor, Zone};
 
 
-// Helper function, to contruct the model>view join
-fn append_text_column(treeview: &TreeView, title: Option<&str>, id: i32) {
+// Helper function, to construct the model>view join
+fn append_text_column(treeview: &TreeView, title: Option<&str>, id: i32, width: Option<i32>) {
     let column = TreeViewColumn::new();
     let cell = CellRendererText::new();
 
-    if let Some(title) = title { column.set_title(&title); }
+
+    if let Some(title) = title { 
+        column.set_title(&title); 
+    }
+    // Wenn der Parameter `width` ein Wert enthält, dann wird dieser als feste Weiter der Spalte
+    // verwendet. Und die Ausrichtung des Textes wird nach Links festgelegt, für Header `column` und Content `cell`
+    if let Some(width) = width { 
+        column.set_fixed_width(width);
+        column.set_alignment(1.0); 
+        cell.set_alignment(1.0, 0.0);
+    }
     column.pack_start(&cell, true);
     column.add_attribute(&cell, "text", id);
     treeview.append_column(&column);
@@ -35,6 +45,7 @@ fn create_and_fill_model_zone(treestore: &TreeStore, zone_id: usize) -> TreeIter
         ]
     )
 }
+
 fn create_and_fill_model_kombisensor(treestore: &TreeStore, iter_zones: &TreeIter, kombisensor: &Kombisensor, kombisensor_id: usize) -> TreeIter {
     treestore.insert_with_values(
         Some(&iter_zones),
@@ -47,6 +58,7 @@ fn create_and_fill_model_kombisensor(treestore: &TreeStore, iter_zones: &TreeIte
         ]
     )
 }
+
 fn create_and_fill_model_sensor(treestore: &TreeStore, iter_kombisensors: &TreeIter, sensor: &Sensor, sensor_id: usize) -> TreeIter {
     treestore.insert_with_values(
         Some(&iter_kombisensors),
@@ -61,6 +73,7 @@ fn create_and_fill_model_sensor(treestore: &TreeStore, iter_kombisensors: &TreeI
         ]
     )
 }
+
 // Nur wenn Zonen im Server sind, hat diese Funktion ein effekt
 fn treestore_fill(client: &Arc<Mutex<ApiClient>>, treestore: &TreeStore, treeview: &TreeView) {
     if let Ok(client) = client.try_lock() {
@@ -91,6 +104,7 @@ fn update_client(client: &Arc<Mutex<ApiClient>>) -> Result<()> {
     Ok(())
 }
 
+// Controller
 fn treestore_update(client: &Arc<Mutex<ApiClient>>, treestore: &TreeStore, treeview: &TreeView) {
     if let Ok(client) = client.try_lock() {
         // HashSet<Zone Vector Index>
@@ -185,7 +199,6 @@ fn treestore_update(client: &Arc<Mutex<ApiClient>>, treestore: &TreeStore, treev
         // Unbekannte Zone erfassen
         for (zone_id, zone) in client.get_server_data().get_zones().iter().enumerate() {
             if !seen_zones.contains(&zone_id) {
-                println!("erfasse Zone: {}", &zone_id);
                 let iter_zones = create_and_fill_model_zone(treestore, zone_id);
                 for (kombisensor_id, kombisensor) in zone.get_kombisensors().iter().enumerate() {
                     let iter_kombisensors = create_and_fill_model_kombisensor(treestore, &iter_zones, &kombisensor, kombisensor_id);
@@ -197,7 +210,6 @@ fn treestore_update(client: &Arc<Mutex<ApiClient>>, treestore: &TreeStore, treev
                 // Unbekannte Kombisensor erfassen
                 for (kombisensor_id, kombisensor) in zone.get_kombisensors().iter().enumerate() {
                     if !seen_kombisensors.contains(&(zone_id, kombisensor_id)) {
-                        println!("erfasse Kombisensor: {}", &kombisensor_id);
                         if let Some(iter_zones) = treestore.get_iter_from_string(&format!("{}", zone_id)) {
                             let iter_kombisensors = create_and_fill_model_kombisensor(treestore, &iter_zones, &kombisensor, kombisensor_id);
                             for (sensor_id, sensor) in kombisensor.get_sensors().iter().enumerate() {
@@ -208,7 +220,6 @@ fn treestore_update(client: &Arc<Mutex<ApiClient>>, treestore: &TreeStore, treev
                         // Unbekannten Sensor erfassen
                         for (sensor_id, sensor) in kombisensor.get_sensors().iter().enumerate() {
                             if !seen_sensors.contains(&(zone_id, kombisensor_id, sensor_id)) {
-                                println!("erfasse Sensor: {}", &sensor_id);
                                 if let Some(iter_kombisensors) = treestore.get_iter_from_string(&format!("{}:{}", zone_id, kombisensor_id)) {
                                     let _iter_sensors = create_and_fill_model_sensor(treestore, &iter_kombisensors, &sensor, sensor_id);
                                 }
@@ -246,12 +257,12 @@ fn setup_treeview() -> Result<TreeView> {
 
     treeview.set_headers_visible(true);
     #[cfg(feature = "development")]
-    append_text_column(&treeview, None, 0); // "ID"
-    append_text_column(&treeview, Some("Typ"), 1);
-    append_text_column(&treeview, Some("Modbus"), 2);
-    append_text_column(&treeview, Some("DIW"), 3);
-    append_text_column(&treeview, Some("Ø 15min"), 4);
-    append_text_column(&treeview, None, 5); // "SI"
+    append_text_column(&treeview, None, 0, None); // "ID"
+    append_text_column(&treeview, Some("Typ"), 1, None);
+    append_text_column(&treeview, Some("Modbus"), 2, Some(100));
+    append_text_column(&treeview, Some("DIW"), 3, Some(150));
+    append_text_column(&treeview, Some("Ø 15min"), 4, Some(150));
+    append_text_column(&treeview, None, 5, Some(100)); // "SI"
 
     Ok(treeview)
 }
@@ -269,6 +280,7 @@ fn setup_window() -> Result<Window> {
    #[cfg(not(feature = "development"))]
    window.fullscreen();
 
+   // Höhere DPI einstellen und ein CCS einbinden
     if let Some(display) = window.get_display() {
         let screen = display.get_screen(0);
         screen.set_resolution(150.0);
@@ -284,12 +296,15 @@ fn setup_window() -> Result<Window> {
         }
     }
 
+    // Gtk Quit mit dem delete Event verbinden
     window.connect_delete_event(|_, _| {
         gtk::main_quit();
         Inhibit(false)
     });
 
-    // Connect `ESC` key event to gtk main_quit
+    // `ESC` key zum Beenden der Anwendung, nur für die Entwicklung wichtig, da die
+    // "echte" Hardware kein Keyboard besitzt.
+    #[cfg(feature = "development")]
     window.connect_key_press_event(move |_, key| {
         if let key::Escape = key.get_keyval() {
             gtk::main_quit()
@@ -300,12 +315,13 @@ fn setup_window() -> Result<Window> {
     Ok(window)
 }
 
-pub fn launch(hostname: &str) -> Result<()> {
+
+pub fn launch(hostname: String) -> Result<()> {
     if gtk::init().is_err() {
         bail!("Failed to initalize GTK.");
     }
 
-    let client = ApiClient::new("0.0.0.0");
+    let client = ApiClient::new(hostname);
     let client = Arc::new(Mutex::new(client));
     let window = setup_window()?;
     let treeview = setup_treeview()?;
@@ -321,7 +337,7 @@ pub fn launch(hostname: &str) -> Result<()> {
     window.add(&scrolled_window);
 
 
-    gtk::timeout_add(100, clone!(client, treestore, treeview => move || {
+    gtk::timeout_add(5000, clone!(client, treestore, treeview => move || {
         update_client(&client);
         treestore_update(&client, &treestore, &treeview);
 

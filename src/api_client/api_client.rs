@@ -6,28 +6,28 @@ use xmz_mod_touch_server::Server;
 
 
 #[derive(Debug)]
-pub struct ApiClient<'a> {
+pub struct ApiClient {
     hyperclient: HyperClient,
     server_data: Server,
-    hostname: &'a str,
+    hostname: String,
 }
 
-impl<'a> ApiClient<'a> {
+impl ApiClient {
     /// Erzeugt einen neuen Clienten
     ///
     /// # Examples
     ///
     /// ```
     /// use xmz_mod_touch_gui::ApiClient;
-    /// let client = ApiClient::new("localhost");
+    /// let client = ApiClient::new("localhost".to_string());
     ///
-    /// assert_eq!(client.get_hostname(), "localhost");
+    /// assert_eq!(client.get_hostname(), "localhost".to_string());
     /// ```
-    pub fn new(hostname: &'a str) -> Self {
+    pub fn new(hostname: String) -> Self {
         ApiClient {
             hyperclient: HyperClient::new(),
             server_data: Server::new(),
-            hostname: hostname,
+            hostname,
         }
     }
 
@@ -37,12 +37,12 @@ impl<'a> ApiClient<'a> {
     ///
     /// ```
     /// use xmz_mod_touch_gui::ApiClient;
-    /// let client = ApiClient::new("localhost");
+    /// let client = ApiClient::new("localhost".to_string());
     ///
-    /// assert_eq!(client.get_hostname(), "localhost");
+    /// assert_eq!(client.get_hostname(), "localhost".to_string());
     /// ```
-    pub fn get_hostname(&self) -> &str {
-        self.hostname
+    pub fn get_hostname(&self) -> String {
+        self.hostname.clone()
     }
 
     /// Get server_data
@@ -51,7 +51,7 @@ impl<'a> ApiClient<'a> {
     ///
     /// ```
     /// use xmz_mod_touch_gui::ApiClient;
-    /// let client = ApiClient::new("localhost");
+    /// let client = ApiClient::new("localhost".to_string());
     ///
     /// client.get_server_data().get_version();
     /// ```
@@ -65,7 +65,7 @@ impl<'a> ApiClient<'a> {
     ///
     /// ```
     /// use xmz_mod_touch_gui::ApiClient;
-    /// let mut client = ApiClient::new("localhost");
+    /// let mut client = ApiClient::new("localhost".to_string());
     ///
     /// client.update_server_data();
     /// ```

@@ -12,7 +12,7 @@ use xmz_mod_touch_gui::application;
 fn run(matches: &ArgMatches) -> Result<()> {
     let hostname = matches.value_of("hostname").expect("Konnte Hostname nicht lesen!");
 
-    application::launch(hostname)?;
+    application::launch(hostname.to_string())?;
 
     Ok(())
 }
