@@ -7,11 +7,13 @@
 //!
 //! Git Repository: https://github.com/zzeroo/xMZ-Mod-Touch-GUI.git
 
+// `error_chain!` can recurse deeply(3)
+#![recursion_limit = "1024"]
+
+#[macro_use] extern crate error_chain;
 #[macro_use] extern crate log;
 extern crate gdk;
 extern crate glib;
-extern crate gobject_sys;
-extern crate gtk_sys;
 extern crate gtk;
 extern crate hyper;
 extern crate serde_json;
@@ -19,8 +21,9 @@ extern crate xmz_mod_touch_server;
 
 // Die Reihenfolge bei #[macro_use] ist wichtig!!! Immer über die anderen Includes stellen
 #[macro_use] mod macros;
+pub mod api_client;
 pub mod application;
-pub mod error;
-pub mod client;
+pub mod errors;
 
-pub use self::client::Client;
+pub use self::api_client::ApiClient;
+pub use self::errors::*;
