@@ -12,9 +12,7 @@ use xmz_mod_touch_gui::application;
 fn run(matches: &ArgMatches) -> Result<()> {
     let hostname = matches.value_of("hostname").expect("Konnte Hostname nicht lesen!");
 
-    let client = ApiClient::new(hostname);
-
-    application::launch(&client)?;
+    application::launch(hostname)?;
 
     Ok(())
 }
